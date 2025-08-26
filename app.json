@@ -1,0 +1,13 @@
+{
+  "expo": {
+    "name": "Kids Learn Math",
+    "slug": "kids-learn-math",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "assetBundlePatterns": ["**/*"],
+    "android": {
+      "package": "com.example.kidslearnmath"
+    }
+  }
+}

@@ -6,8 +6,14 @@
     "orientation": "portrait",
     "userInterfaceStyle": "light",
     "assetBundlePatterns": ["**/*"],
+    "splash": {
+      "backgroundColor": "#ffffff"
+    },
     "android": {
-      "package": "com.example.kidslearnmath"
+      "package": "com.example.kidslearnmath",
+      "splash": {
+        "backgroundColor": "#ffffff"
+      }
     }
   }
 }

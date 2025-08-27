@@ -7,14 +7,14 @@
     "userInterfaceStyle": "light",
     "assetBundlePatterns": ["**/*"],
     "splash": {
-      "image": "./assets/professor-corgi.png",
+      "image": "./assets/professor-corgi.jpeg",
       "resizeMode": "contain",
       "backgroundColor": "#AEE1F9"
     },
     "android": {
       "package": "com.example.kidslearnmath",
       "splash": {
-        "image": "./assets/professor-corgi.png",
+        "image": "./assets/professor-corgi.jpeg",
         "resizeMode": "contain",
         "backgroundColor": "#AEE1F9"
       }

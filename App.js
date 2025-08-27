@@ -45,7 +45,7 @@ export default function App() {
 
   return (
     <ImageBackground
-      source={require('./assets/professor-corgi.png')}
+      source={require('./assets/professor-corgi.jpeg')}
       style={styles.background}
       resizeMode="cover"
     >

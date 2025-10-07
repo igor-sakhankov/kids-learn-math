@@ -1,23 +1,4 @@
 {
-  "expo": {
-    "name": "Kids Learn Math",
-    "slug": "kids-learn-math",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "userInterfaceStyle": "light",
-    "assetBundlePatterns": ["**/*"],
-    "splash": {
-      "image": "./assets/professor-corgi.jpeg",
-      "resizeMode": "contain",
-      "backgroundColor": "#AEE1F9"
-    },
-    "android": {
-      "package": "com.example.kidslearnmath",
-      "splash": {
-        "image": "./assets/professor-corgi.jpeg",
-        "resizeMode": "contain",
-        "backgroundColor": "#AEE1F9"
-      }
-    }
-  }
+  "name": "KidsLearnMath",
+  "displayName": "Kids Learn Math"
 }

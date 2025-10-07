@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TextInput, Button, ImageBackground } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
+import { StyleSheet, Text, View, TextInput, Button, ImageBackground, StatusBar } from 'react-native';
 
 const colors = {
   sky: '#AEE1F9',
@@ -59,7 +58,7 @@ export default function App() {
         />
         <Button title="Check" color={colors.path} onPress={checkAnswer} />
         <Text style={styles.feedback}>{feedback}</Text>
-        <StatusBar style="auto" />
+        <StatusBar barStyle="dark-content" />
       </View>
     </ImageBackground>
   );

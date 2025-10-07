@@ -1,43 +1,61 @@
 # Kids Learn Math
 
-A simple React Native application for Android that helps children (ages 4-7) practice basic addition and subtraction.
+A fun educational React Native app for kids to practice basic math (addition and subtraction) with a friendly professor corgi mascot.
 
-## Features
+## About
 
-- Randomly generates addition or subtraction questions using numbers from 0 to 10.
-- Ensures subtraction never results in a negative number.
-- Provides immediate feedback and generates a new question after a correct answer.
+This is a bare React Native application that presents kids with random math questions (addition and subtraction in the 0-10 range) and provides immediate feedback. The app features a kid-friendly UI with a cute professor corgi background.
 
-## Getting Started
+## Running Locally
 
-1. Install dependencies:
-   ```bash
-   npm install
-   ```
-2. Start the development server:
-   ```bash
-   npm start
-   ```
-3. Run on an Android device or emulator:
-   ```bash
-   npm run android
-   ```
+### Prerequisites
 
-## Building an APK
+- **Node.js** (v16 or higher)
+- **Java Development Kit (JDK)** 17 or higher
+- **Android Studio** with Android SDK
+- **Android SDK Platform 34** and Build Tools 34.0.0
+- **Android Emulator** or physical Android device with USB debugging enabled
 
-This project uses [Expo](https://expo.dev/). To create an Android APK:
+### Environment Setup
+
+Add to your `~/.zshrc` or `~/.bash_profile`:
 
 ```bash
-npm install -g eas-cli
-npx eas build -p android --profile preview
+export ANDROID_HOME=$HOME/Library/Android/sdk
+export PATH=$PATH:$ANDROID_HOME/emulator
+export PATH=$PATH:$ANDROID_HOME/platform-tools
 ```
 
-Follow the EAS CLI prompts to complete the build process.
+Then reload: `source ~/.zshrc`
 
-## Testing
+### Installation & Running
 
-This project currently has no automated tests. Running `npm test` will simply print a message.
+```bash
+# Install dependencies
+npm install
+
+# Start Metro bundler (Terminal 1)
+npm start
+
+# Run on Android (Terminal 2)
+npm run android
+```
+
+Make sure you have either an Android emulator running or a physical device connected before running `npm run android`. Verify with: `adb devices`
+
+## Troubleshooting
+
+**Port 8081 already in use:**
+```bash
+lsof -ti:8081 | xargs kill -9
+```
+
+**Clean build:**
+```bash
+cd android && ./gradlew clean && cd ..
+npm start -- --reset-cache
+```
 
 ## License
 
-This project is released under the terms of the [MIT License](LICENSE).
+MIT License - see LICENSE file for details.

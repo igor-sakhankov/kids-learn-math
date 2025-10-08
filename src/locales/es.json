@@ -1,0 +1,154 @@
+{
+  "common": {
+    "continue": "Continuar",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "start": "Comenzar",
+    "try_again": "Inténtalo de nuevo",
+    "check": "Verificar",
+    "hint": "Pista",
+    "great_job": "¡Buen trabajo!",
+    "correct": "¡Correcto!",
+    "incorrect": "¡Inténtalo otra vez!",
+    "loading": "Cargando..."
+  },
+  "welcome": {
+    "greeting": "¡Hola! ¡Soy Robot Lógico!",
+    "question": "¿Quieres ayudarme a construir la Ciudad de Números?",
+    "lets_start": "¡Empecemos!"
+  },
+  "menu": {
+    "title": "Elige tu Aventura",
+    "learn_math": "Aprender Matemáticas",
+    "play_games": "Jugar Juegos",
+    "my_progress": "Mi Árbol de la Razón",
+    "settings": "Configuración"
+  },
+  "difficulty": {
+    "easy": "Fácil-fácil",
+    "easy_desc": "Números 0-10",
+    "medium": "Puedo con las Mates",
+    "medium_desc": "Números 0-20",
+    "hard": "Profesional de Mates",
+    "hard_desc": "Números 0-50",
+    "choose_level": "Elige tu Nivel"
+  },
+  "learning": {
+    "addition": "Suma",
+    "subtraction": "Resta",
+    "story_problems": "Problemas con Historia",
+    "visual_learning": "Aprendizaje Visual",
+    "lets_learn": "Aprendamos sobre",
+    "combine_objects": "¡Combina los objetos!",
+    "remove_objects": "¡Quita los objetos!",
+    "how_many_total": "¿Cuántos en total?",
+    "how_many_left": "¿Cuántos quedan?"
+  },
+  "games": {
+    "number_labyrinth": "Laberinto de Números",
+    "find_pair": "Encuentra el Par",
+    "lost_numbers": "Números Perdidos",
+    "help_robot": "¡Ayuda a Robot Lógico a encontrar el camino!",
+    "match_cards": "¡Empareja ecuaciones con respuestas!",
+    "complete_sequence": "¡Completa la secuencia!"
+  },
+  "feedback": {
+    "thinking": "Déjame pensar...",
+    "almost": "¡Casi!",
+    "excellent": "¡Excelente!",
+    "keep_going": "¡Sigue así!",
+    "you_can_do_it": "¡Tú puedes!",
+    "amazing": "¡Increíble trabajo!",
+    "brilliant": "¡Brillante!"
+  },
+  "robot": {
+    "encourage_1": "¡Estás pensando como un matemático!",
+    "encourage_2": "¡Gran razonamiento!",
+    "encourage_3": "¡Sabía que podías hacerlo!",
+    "hint_1": "¡Contemos juntos!",
+    "hint_2": "¡Intenta contar con tus dedos!",
+    "hint_3": "¡Mira la imagen con atención!",
+    "celebrate_1": "¡Maravilloso! ¡Continuemos!",
+    "celebrate_2": "¡Lo resolviste!",
+    "celebrate_3": "¡Así se hace!"
+  },
+  "progress": {
+    "title": "Tu Árbol de la Razón",
+    "leaves_earned": "Hojas Ganadas",
+    "sparks_earned": "Chispas de Lógica",
+    "lessons_completed": "Lecciones Completadas",
+    "games_played": "Juegos Jugados",
+    "skills_developing": "Habilidades que Estás Desarrollando",
+    "understanding_addition": "Comprensión de la Suma",
+    "understanding_subtraction": "Comprensión de la Resta",
+    "pattern_recognition": "Reconocimiento de Patrones",
+    "logical_thinking": "Pensamiento Lógico"
+  },
+  "achievements": {
+    "title": "Logros",
+    "first_step": "Primer Paso Lógico",
+    "first_step_desc": "Completa tu primera lección",
+    "pattern_seeker": "Buscador de Patrones",
+    "pattern_seeker_desc": "Resuelve 5 problemas de secuencias",
+    "mathematician": "Pensador Matemático",
+    "mathematician_desc": "3 respuestas correctas seguidas",
+    "persistent": "Persistencia",
+    "persistent_desc": "Inténtalo de nuevo después de un error"
+  },
+  "settings": {
+    "title": "Configuración",
+    "language": "Idioma",
+    "sound": "Sonido",
+    "music": "Música",
+    "sound_effects": "Efectos de Sonido",
+    "voice": "Guía de Voz",
+    "accessibility": "Accesibilidad",
+    "high_contrast": "Alto Contraste",
+    "large_text": "Texto Grande",
+    "reduced_motion": "Movimiento Reducido"
+  },
+  "story_problems": {
+    "birds_tree": "Había {{first}} pájaros en un árbol. Volaron {{second}} pájaros más. ¿Cuántos pájaros hay en el árbol ahora?",
+    "candies": "Petya tenía {{first}} caramelos. Le dio {{second}} a su amigo. ¿Cuántos caramelos le quedan a Petya?",
+    "apples_basket": "Hay {{first}} manzanas en una canasta. Mamá añadió {{second}} manzanas más. ¿Cuántas manzanas hay en la canasta ahora?",
+    "toys": "María tenía {{first}} juguetes. Le dio {{second}} juguetes a su hermana. ¿Cuántos juguetes tiene María ahora?",
+    "flowers": "Había {{first}} flores en el jardín. {{second}} flores se marchitaron. ¿Cuántas flores quedan?",
+    "books": "En el estante hay {{first}} libros. Papá puso {{second}} libros más. ¿Cuántos libros hay en el estante?"
+  },
+  "parent": {
+    "weekly_report": "Informe Semanal",
+    "what_learned": "Lo que tu Hijo Aprendió Esta Semana",
+    "time_spent": "Tiempo Dedicado al Aprendizaje",
+    "areas_growth": "Áreas de Crecimiento",
+    "suggestions": "Sugerencias",
+    "try_next": "¡Prueba {{activity}} a continuación!"
+  },
+  "onboarding": {
+    "welcome_title": "¡Bienvenido a la Ciudad de Números!",
+    "choose_language": "Elige tu Idioma",
+    "select_age": "¿Cuántos años tienes?",
+    "age_6": "6 años",
+    "age_7": "7 años",
+    "age_8": "8 años",
+    "age_9": "9 años",
+    "age_10": "10 años",
+    "tutorial_1": "Toca los objetos para interactuar con ellos",
+    "tutorial_2": "Ayuda a Robot Lógico a resolver problemas",
+    "tutorial_3": "Gana hojas para tu Árbol de la Razón",
+    "ready": "¡Estoy Listo!"
+  },
+  "game_ui": {
+    "question": "Pregunta",
+    "score": "Puntuación",
+    "level": "Nivel",
+    "time": "Tiempo",
+    "lives": "Vidas",
+    "game_over": "¡Juego Terminado!",
+    "your_score": "Tu Puntuación",
+    "play_again": "Jugar de Nuevo",
+    "main_menu": "Menú Principal",
+    "pause": "Pausa",
+    "resume": "Reanudar"
+  }
+}
+

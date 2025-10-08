@@ -1,0 +1,154 @@
+{
+  "common": {
+    "continue": "Continue",
+    "back": "Back",
+    "next": "Next",
+    "start": "Start",
+    "try_again": "Try Again",
+    "check": "Check",
+    "hint": "Hint",
+    "great_job": "Great job!",
+    "correct": "Correct!",
+    "incorrect": "Try again!",
+    "loading": "Loading..."
+  },
+  "welcome": {
+    "greeting": "Hello! I'm Robot Logik!",
+    "question": "Do you want to help me build the Number City?",
+    "lets_start": "Let's Start!"
+  },
+  "menu": {
+    "title": "Choose Your Adventure",
+    "learn_math": "Learn Math",
+    "play_games": "Play Games",
+    "my_progress": "My Tree of Reason",
+    "settings": "Settings"
+  },
+  "difficulty": {
+    "easy": "Easy-Peasy",
+    "easy_desc": "Numbers 0-10",
+    "medium": "I Can Do Math",
+    "medium_desc": "Numbers 0-20",
+    "hard": "Math Pro",
+    "hard_desc": "Numbers 0-50",
+    "choose_level": "Choose Your Level"
+  },
+  "learning": {
+    "addition": "Addition",
+    "subtraction": "Subtraction",
+    "story_problems": "Story Problems",
+    "visual_learning": "Visual Learning",
+    "lets_learn": "Let's learn about",
+    "combine_objects": "Combine the objects!",
+    "remove_objects": "Remove the objects!",
+    "how_many_total": "How many in total?",
+    "how_many_left": "How many are left?"
+  },
+  "games": {
+    "number_labyrinth": "Number Labyrinth",
+    "find_pair": "Find the Pair",
+    "lost_numbers": "Lost Numbers",
+    "help_robot": "Help Robot Logik find the way!",
+    "match_cards": "Match equations with answers!",
+    "complete_sequence": "Complete the sequence!"
+  },
+  "feedback": {
+    "thinking": "Let me think...",
+    "almost": "Almost there!",
+    "excellent": "Excellent!",
+    "keep_going": "Keep going!",
+    "you_can_do_it": "You can do it!",
+    "amazing": "Amazing work!",
+    "brilliant": "Brilliant!"
+  },
+  "robot": {
+    "encourage_1": "You're thinking like a mathematician!",
+    "encourage_2": "Great reasoning!",
+    "encourage_3": "I knew you could do it!",
+    "hint_1": "Let's count together!",
+    "hint_2": "Try counting with your fingers!",
+    "hint_3": "Look at the picture carefully!",
+    "celebrate_1": "Wonderful! Let's continue!",
+    "celebrate_2": "You solved it!",
+    "celebrate_3": "That's the way!"
+  },
+  "progress": {
+    "title": "Your Tree of Reason",
+    "leaves_earned": "Leaves Earned",
+    "sparks_earned": "Logic Sparks",
+    "lessons_completed": "Lessons Completed",
+    "games_played": "Games Played",
+    "skills_developing": "Skills You're Developing",
+    "understanding_addition": "Understanding Addition",
+    "understanding_subtraction": "Understanding Subtraction",
+    "pattern_recognition": "Pattern Recognition",
+    "logical_thinking": "Logical Thinking"
+  },
+  "achievements": {
+    "title": "Achievements",
+    "first_step": "First Logical Step",
+    "first_step_desc": "Complete your first lesson",
+    "pattern_seeker": "Pattern Seeker",
+    "pattern_seeker_desc": "Solve 5 sequence problems",
+    "mathematician": "Mathematician Thinker",
+    "mathematician_desc": "3 correct answers in a row",
+    "persistent": "Persistence",
+    "persistent_desc": "Try again after a mistake"
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "sound": "Sound",
+    "music": "Music",
+    "sound_effects": "Sound Effects",
+    "voice": "Voice Guidance",
+    "accessibility": "Accessibility",
+    "high_contrast": "High Contrast",
+    "large_text": "Large Text",
+    "reduced_motion": "Reduced Motion"
+  },
+  "story_problems": {
+    "birds_tree": "There were {{first}} birds on a tree. {{second}} more birds flew in. How many birds are on the tree now?",
+    "candies": "Petya had {{first}} candies. He gave {{second}} to his friend. How many candies does Petya have left?",
+    "apples_basket": "There are {{first}} apples in a basket. Mom added {{second}} more apples. How many apples are in the basket now?",
+    "toys": "Maria had {{first}} toys. She gave {{second}} toys to her sister. How many toys does Maria have now?",
+    "flowers": "There were {{first}} flowers in the garden. {{second}} flowers wilted. How many flowers are left?",
+    "books": "On the shelf there are {{first}} books. Dad put {{second}} more books. How many books are on the shelf?"
+  },
+  "parent": {
+    "weekly_report": "Weekly Report",
+    "what_learned": "What Your Child Learned This Week",
+    "time_spent": "Time Spent Learning",
+    "areas_growth": "Areas of Growth",
+    "suggestions": "Suggestions",
+    "try_next": "Try {{activity}} next!"
+  },
+  "onboarding": {
+    "welcome_title": "Welcome to Number City!",
+    "choose_language": "Choose Your Language",
+    "select_age": "How old are you?",
+    "age_6": "6 years",
+    "age_7": "7 years",
+    "age_8": "8 years",
+    "age_9": "9 years",
+    "age_10": "10 years",
+    "tutorial_1": "Tap objects to interact with them",
+    "tutorial_2": "Help Robot Logik solve problems",
+    "tutorial_3": "Earn leaves for your Tree of Reason",
+    "ready": "I'm Ready!"
+  },
+  "game_ui": {
+    "question": "Question",
+    "score": "Score",
+    "level": "Level",
+    "time": "Time",
+    "lives": "Lives",
+    "game_over": "Game Over!",
+    "your_score": "Your Score",
+    "play_again": "Play Again",
+    "main_menu": "Main Menu",
+    "pause": "Pause",
+    "resume": "Resume"
+  }
+}
+

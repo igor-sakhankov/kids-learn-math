@@ -33,6 +33,14 @@ local.properties
 *.keystore
 !debug.keystore
 
+# VSCode
+#
+.vscode/
+
+# Cursor
+#
+.cursor/
+
 # Expo (legacy)
 .expo/
 .expo-shared/

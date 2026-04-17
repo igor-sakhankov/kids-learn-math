@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, ImageBackground, StatusBar, TouchableOpacity } from 'react-native';
 import { t } from '../../utils/i18n';
 import { generatePairs } from '../../utils/questionGenerator';
@@ -132,7 +132,7 @@ const FindPairScreen = ({ navigation }) => {
             <Text style={styles.subtitle}>{t('games.match_cards')}</Text>
             <Text style={styles.instruction}>{t('difficulty.choose_level')}</Text>
             
-            {Object.entries(DIFFICULTY_LEVELS).map(([key, level]) => (
+            {Object.keys(DIFFICULTY_LEVELS).map((key) => (
               <Button
                 key={key}
                 title={t(`difficulty.${key}`)}
@@ -164,8 +164,12 @@ const FindPairScreen = ({ navigation }) => {
       <View style={styles.gameContainer}>
         <Card style={styles.headerCard}>
           <View style={styles.header}>
-            <Text style={styles.scoreText}>Pairs: {matchedPairs.length} / {pairs.length}</Text>
-            <Text style={styles.movesText}>Moves: {moves}</Text>
+            <Text style={styles.scoreText}>
+              {t('game_ui.pairs')}: {matchedPairs.length} / {pairs.length}
+            </Text>
+            <Text style={styles.movesText}>
+              {t('game_ui.moves')}: {moves}
+            </Text>
           </View>
         </Card>
 

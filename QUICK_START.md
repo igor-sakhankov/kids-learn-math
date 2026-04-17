@@ -224,8 +224,8 @@ ls -lh /tmp/bundle.js
 ## Support
 
 - **Documentation**: See README.md for full details
-- **Issues**: Check IMPLEMENTATION_SUMMARY.md for known limitations
-- **Architecture**: See AGENTS.md for code structure
+- **Architecture**: See AGENTS.md (or CLAUDE.md) for code structure
+- **Product spec**: See requirements/prd.md and requirements/1. MVP.md
 - **Assets**: See ASSET_SPECIFICATIONS.md for design guidelines
 
 ## Success Criteria

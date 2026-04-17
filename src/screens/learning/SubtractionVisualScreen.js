@@ -16,8 +16,7 @@ const SubtractionVisualScreen = ({ navigation }) => {
   const [questionCount, setQuestionCount] = useState(0);
   const [score, setScore] = useState(0);
   const [sessionStart] = useState(Date.now());
-  const [removedCount, setRemovedCount] = useState(0);
-  
+
   const { recordAttempt, completeLesson } = useProgress();
   const { addLeaves } = useReward();
 
@@ -31,12 +30,11 @@ const SubtractionVisualScreen = ({ navigation }) => {
     setQuestion(newQuestion);
     setUserAnswer('');
     setFeedback('');
-    setRemovedCount(0);
   };
 
   const checkAnswer = async () => {
     const answer = parseInt(userAnswer, 10);
-    
+
     if (isNaN(answer)) {
       setFeedback(t('common.incorrect'));
       return;
@@ -48,29 +46,19 @@ const SubtractionVisualScreen = ({ navigation }) => {
     if (isCorrect) {
       setFeedback(t('common.correct'));
       setScore(score + 1);
-      
-      setTimeout(() => {
-        const nextCount = questionCount + 1;
-        if (nextCount >= GAME_CONFIG.TOTAL_QUESTIONS) {
-          finishLesson();
-        } else {
-          setQuestionCount(nextCount);
-          generateNewQuestion(difficulty);
-        }
-      }, GAME_CONFIG.FEEDBACK_DELAY);
     } else {
       setFeedback(t('common.incorrect'));
-      
-      setTimeout(() => {
-        const nextCount = questionCount + 1;
-        if (nextCount >= GAME_CONFIG.TOTAL_QUESTIONS) {
-          finishLesson();
-        } else {
-          setQuestionCount(nextCount);
-          generateNewQuestion(difficulty);
-        }
-      }, GAME_CONFIG.FEEDBACK_DELAY);
     }
+
+    setTimeout(() => {
+      const nextCount = questionCount + 1;
+      if (nextCount >= GAME_CONFIG.TOTAL_QUESTIONS) {
+        finishLesson();
+      } else {
+        setQuestionCount(nextCount);
+        generateNewQuestion(difficulty);
+      }
+    }, GAME_CONFIG.FEEDBACK_DELAY);
   };
 
   const finishLesson = async () => {
@@ -117,7 +105,7 @@ const SubtractionVisualScreen = ({ navigation }) => {
             <Text style={styles.title}>{t('learning.subtraction')}</Text>
             <Text style={styles.subtitle}>{t('difficulty.choose_level')}</Text>
             
-            {Object.entries(DIFFICULTY_LEVELS).map(([key, level]) => (
+            {Object.keys(DIFFICULTY_LEVELS).map((key) => (
               <Button
                 key={key}
                 title={t(`difficulty.${key}`)}

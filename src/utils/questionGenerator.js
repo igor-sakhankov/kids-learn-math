@@ -171,81 +171,22 @@ export const generatePairs = (difficulty, count = 6) => {
 };
 
 /**
- * Generate labyrinth puzzle
- * Returns a grid with positions and questions
+ * Generate `count` plausible-but-wrong distractors plus the correct answer,
+ * shuffled. Distractors are chosen near the correct answer (±5) and are
+ * unique and non-negative.
  */
-export const generateLabyrinthLevel = (difficulty, size = 4) => {
-  const grid = [];
-  const path = []; // Correct path through the maze
-  
-  // Generate simple path (for MVP: straight or simple turns)
-  let currentPos = { x: 0, y: 0 };
-  path.push({ ...currentPos });
-  
-  // Create path to end (simplified for MVP)
-  while (currentPos.x < size - 1 || currentPos.y < size - 1) {
-    const canGoRight = currentPos.x < size - 1;
-    const canGoDown = currentPos.y < size - 1;
-    
-    if (canGoRight && canGoDown) {
-      // Randomly choose
-      if (Math.random() < 0.5) {
-        currentPos.x++;
-      } else {
-        currentPos.y++;
-      }
-    } else if (canGoRight) {
-      currentPos.x++;
-    } else {
-      currentPos.y++;
-    }
-    
-    path.push({ ...currentPos });
-  }
-  
-  // Generate questions for each position
-  for (let y = 0; y < size; y++) {
-    for (let x = 0; x < size; x++) {
-      const isOnPath = path.some(p => p.x === x && p.y === y);
-      const question = generateQuestion(difficulty);
-      
-      grid.push({
-        x,
-        y,
-        isOnPath,
-        question: question.text,
-        answer: question.answer,
-        options: generateOptions(question.answer, 3),
-      });
-    }
-  }
-  
-  return {
-    grid,
-    path,
-    size,
-    start: { x: 0, y: 0 },
-    end: { x: size - 1, y: size - 1 },
-  };
-};
-
-/**
- * Generate multiple choice options including the correct answer
- */
-const generateOptions = (correctAnswer, count = 3) => {
+export const generateOptions = (correctAnswer, count = 3) => {
   const options = [correctAnswer];
-  
+
   while (options.length < count + 1) {
-    // Generate similar numbers (±1 to ±5)
     const offset = Math.floor(Math.random() * 10) - 5;
     const option = correctAnswer + offset;
-    
+
     if (option >= 0 && !options.includes(option)) {
       options.push(option);
     }
   }
-  
-  // Shuffle options
+
   return options.sort(() => Math.random() - 0.5);
 };
 

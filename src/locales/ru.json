@@ -82,7 +82,13 @@
     "understanding_addition": "Понимание сложения",
     "understanding_subtraction": "Понимание вычитания",
     "pattern_recognition": "Распознавание закономерностей",
-    "logical_thinking": "Логическое мышление"
+    "logical_thinking": "Логическое мышление",
+    "until_next": "Ещё {{count}} листочков до стадии «{{stage}}»",
+    "tree_stage": {
+      "sapling": "Росток",
+      "young_tree": "Молодое дерево",
+      "flowering": "Цветущее дерево"
+    }
   },
   "achievements": {
     "title": "Достижения",
@@ -148,7 +154,12 @@
     "play_again": "Играть ещё",
     "main_menu": "Главное меню",
     "pause": "Пауза",
-    "resume": "Продолжить"
+    "resume": "Продолжить",
+    "pairs": "Пары",
+    "moves": "Ходы",
+    "round": "Раунд",
+    "choose_missing_number": "Выбери пропущенное число:",
+    "open_door": "Выбери правильный ответ, чтобы открыть дверь!"
   }
 }
 

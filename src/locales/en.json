@@ -82,7 +82,13 @@
     "understanding_addition": "Understanding Addition",
     "understanding_subtraction": "Understanding Subtraction",
     "pattern_recognition": "Pattern Recognition",
-    "logical_thinking": "Logical Thinking"
+    "logical_thinking": "Logical Thinking",
+    "until_next": "{{count}} more leaves until {{stage}}",
+    "tree_stage": {
+      "sapling": "Sapling",
+      "young_tree": "Young Tree",
+      "flowering": "Flowering Tree"
+    }
   },
   "achievements": {
     "title": "Achievements",
@@ -148,7 +154,12 @@
     "play_again": "Play Again",
     "main_menu": "Main Menu",
     "pause": "Pause",
-    "resume": "Resume"
+    "resume": "Resume",
+    "pairs": "Pairs",
+    "moves": "Moves",
+    "round": "Round",
+    "choose_missing_number": "Choose the missing number:",
+    "open_door": "Choose the correct answer to open the door!"
   }
 }
 

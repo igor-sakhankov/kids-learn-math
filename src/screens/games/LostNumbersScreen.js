@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ImageBackground, StatusBar, TouchableOpacity } from 'react-native';
 import { t } from '../../utils/i18n';
-import { generateSequence } from '../../utils/questionGenerator';
+import { generateSequence, generateOptions } from '../../utils/questionGenerator';
 import { useProgress } from '../../contexts/ProgressContext';
 import { useReward } from '../../contexts/RewardContext';
 import Button from '../../components/common/Button';
@@ -35,7 +35,6 @@ const LostNumbersScreen = ({ navigation }) => {
   };
 
   const handleNumberSelect = async (number) => {
-    const currentMissingPos = sequence.missingIndices[currentMissingIndex];
     const correctAnswer = sequence.answers[currentMissingIndex];
     const isCorrect = number === correctAnswer;
     
@@ -80,21 +79,9 @@ const LostNumbersScreen = ({ navigation }) => {
 
   const getNumberOptions = () => {
     if (!sequence) return [];
-    
-    const currentAnswer = sequence.answers[currentMissingIndex];
-    const options = [currentAnswer];
-    const used = new Set([currentAnswer]);
-    
-    while (options.length < 6) {
-      const offset = Math.floor(Math.random() * 10) - 5;
-      const option = currentAnswer + offset;
-      if (option >= 0 && !used.has(option)) {
-        options.push(option);
-        used.add(option);
-      }
-    }
-    
-    return options.sort((a, b) => a - b);
+    const correct = sequence.answers[currentMissingIndex];
+    // 1 correct + 5 distractors, sorted ascending for a stable layout
+    return generateOptions(correct, 5).sort((a, b) => a - b);
   };
 
   if (!difficulty) {
@@ -111,7 +98,7 @@ const LostNumbersScreen = ({ navigation }) => {
             <Text style={styles.subtitle}>{t('games.complete_sequence')}</Text>
             <Text style={styles.instruction}>{t('difficulty.choose_level')}</Text>
             
-            {Object.entries(DIFFICULTY_LEVELS).map(([key, level]) => (
+            {Object.keys(DIFFICULTY_LEVELS).map((key) => (
               <Button
                 key={key}
                 title={t(`difficulty.${key}`)}
@@ -153,8 +140,12 @@ const LostNumbersScreen = ({ navigation }) => {
       <View style={styles.container}>
         <Card style={styles.card}>
           <View style={styles.header}>
-            <Text style={styles.scoreText}>Round: {roundCount + 1} / 5</Text>
-            <Text style={styles.scoreText}>{t('game_ui.score')}: {score}</Text>
+            <Text style={styles.scoreText}>
+              {t('game_ui.round')}: {roundCount + 1} / 5
+            </Text>
+            <Text style={styles.scoreText}>
+              {t('game_ui.score')}: {score}
+            </Text>
           </View>
 
           <Text style={styles.instruction}>{t('games.complete_sequence')}</Text>
@@ -187,7 +178,7 @@ const LostNumbersScreen = ({ navigation }) => {
             })}
           </View>
 
-          <Text style={styles.optionsLabel}>Choose the missing number:</Text>
+          <Text style={styles.optionsLabel}>{t('game_ui.choose_missing_number')}</Text>
 
           <View style={styles.optionsGrid}>
             {options.map((option, index) => (

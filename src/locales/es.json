@@ -82,7 +82,13 @@
     "understanding_addition": "Comprensión de la Suma",
     "understanding_subtraction": "Comprensión de la Resta",
     "pattern_recognition": "Reconocimiento de Patrones",
-    "logical_thinking": "Pensamiento Lógico"
+    "logical_thinking": "Pensamiento Lógico",
+    "until_next": "{{count}} hojas más para {{stage}}",
+    "tree_stage": {
+      "sapling": "Retoño",
+      "young_tree": "Árbol Joven",
+      "flowering": "Árbol en Flor"
+    }
   },
   "achievements": {
     "title": "Logros",
@@ -148,7 +154,12 @@
     "play_again": "Jugar de Nuevo",
     "main_menu": "Menú Principal",
     "pause": "Pausa",
-    "resume": "Reanudar"
+    "resume": "Reanudar",
+    "pairs": "Pares",
+    "moves": "Movimientos",
+    "round": "Ronda",
+    "choose_missing_number": "Elige el número que falta:",
+    "open_door": "¡Elige la respuesta correcta para abrir la puerta!"
   }
 }
 

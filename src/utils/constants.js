@@ -19,21 +19,9 @@ export const COLORS = {
 
 // Difficulty levels configuration
 export const DIFFICULTY_LEVELS = {
-  easy: {
-    name: 'easy',
-    maxNumber: 10,
-    minigameLevels: 3,
-  },
-  medium: {
-    name: 'medium',
-    maxNumber: 20,
-    minigameLevels: 5,
-  },
-  hard: {
-    name: 'hard',
-    maxNumber: 50,
-    minigameLevels: 8,
-  },
+  easy: { maxNumber: 10 },
+  medium: { maxNumber: 20 },
+  hard: { maxNumber: 50 },
 };
 
 // Game configuration
@@ -41,8 +29,6 @@ export const GAME_CONFIG = {
   TOTAL_QUESTIONS: 10,
   HINT_AFTER_ATTEMPTS: 2,
   FEEDBACK_DELAY: 800,
-  SESSION_MIN_DURATION: 5, // minutes
-  SESSION_MAX_DURATION: 12, // minutes
 };
 
 // Tree of Reason growth stages

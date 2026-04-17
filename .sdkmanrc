@@ -1,0 +1,3 @@
+# Enable auto-env through the sdkman_auto_env config
+# Install the required JDK via: sdk env install
+java=17.0.18-tem

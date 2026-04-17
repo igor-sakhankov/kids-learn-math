@@ -103,7 +103,7 @@ const StoryProblemsScreen = ({ navigation }) => {
             <Text style={styles.title}>{t('learning.story_problems')}</Text>
             <Text style={styles.subtitle}>{t('difficulty.choose_level')}</Text>
             
-            {Object.entries(DIFFICULTY_LEVELS).map(([key, level]) => (
+            {Object.keys(DIFFICULTY_LEVELS).map((key) => (
               <Button
                 key={key}
                 title={t(`difficulty.${key}`)}

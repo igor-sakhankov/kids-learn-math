@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ImageBackground, StatusBar } from 'react-native';
 import { t } from '../../utils/i18n';
-import { generateQuestion } from '../../utils/questionGenerator';
+import { generateQuestion, generateOptions } from '../../utils/questionGenerator';
 import { useProgress } from '../../contexts/ProgressContext';
 import { useReward } from '../../contexts/RewardContext';
 import Button from '../../components/common/Button';
@@ -53,24 +53,8 @@ const NumberLabyrinthScreen = ({ navigation }) => {
     navigation.goBack();
   };
 
-  // Generate multiple choice options
-  const getOptions = () => {
-    if (!question) return [];
-    
-    const options = [question.answer];
-    const used = new Set([question.answer]);
-    
-    while (options.length < 4) {
-      const offset = Math.floor(Math.random() * 10) - 5;
-      const option = question.answer + offset;
-      if (option >= 0 && !used.has(option)) {
-        options.push(option);
-        used.add(option);
-      }
-    }
-    
-    return options.sort(() => Math.random() - 0.5);
-  };
+  // 1 correct + 3 distractors, shuffled
+  const getOptions = () => (question ? generateOptions(question.answer, 3) : []);
 
   if (!difficulty) {
     return (
@@ -86,7 +70,7 @@ const NumberLabyrinthScreen = ({ navigation }) => {
             <Text style={styles.subtitle}>{t('games.help_robot')}</Text>
             <Text style={styles.instruction}>{t('difficulty.choose_level')}</Text>
             
-            {Object.entries(DIFFICULTY_LEVELS).map(([key, level]) => (
+            {Object.keys(DIFFICULTY_LEVELS).map((key) => (
               <Button
                 key={key}
                 title={t(`difficulty.${key}`)}
@@ -128,8 +112,12 @@ const NumberLabyrinthScreen = ({ navigation }) => {
       <View style={styles.container}>
         <Card style={styles.card}>
           <View style={styles.header}>
-            <Text style={styles.scoreText}>{t('game_ui.score')}: {score} / 10</Text>
-            <Text style={styles.movesText}>Moves: {moves}</Text>
+            <Text style={styles.scoreText}>
+              {t('game_ui.score')}: {score} / 10
+            </Text>
+            <Text style={styles.movesText}>
+              {t('game_ui.moves')}: {moves}
+            </Text>
           </View>
 
           <Text style={styles.robotEmoji}>🤖</Text>
@@ -138,7 +126,7 @@ const NumberLabyrinthScreen = ({ navigation }) => {
             <Text style={styles.questionText}>{question.text} = ?</Text>
           </View>
 
-          <Text style={styles.instruction}>Choose the correct answer to open the door!</Text>
+          <Text style={styles.instruction}>{t('game_ui.open_door')}</Text>
 
           <View style={styles.optionsGrid}>
             {options.map((option, index) => (

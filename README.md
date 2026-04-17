@@ -252,7 +252,7 @@ cd ..
 - [ ] Performance optimization
 - [ ] iOS support
 
-See `/mvp-development-plan.plan.md` for complete roadmap.
+See `requirements/1. MVP.md` and `requirements/prd.md` for the full product spec and roadmap.
 
 ## Asset Development
 

@@ -1,72 +1,83 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ImageBackground, StatusBar, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Pressable, ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { t } from '../../utils/i18n';
 import { generateSequence, generateOptions } from '../../utils/questionGenerator';
 import { useProgress } from '../../contexts/ProgressContext';
 import { useReward } from '../../contexts/RewardContext';
-import Button from '../../components/common/Button';
-import Card from '../../components/common/Card';
-import { COLORS, SIZING, TYPOGRAPHY, DIFFICULTY_LEVELS } from '../../utils/constants';
+import ScreenBackground from '../../components/common/ScreenBackground';
+import DifficultyPicker from '../../components/common/DifficultyPicker';
+import { COLORS, SIZING, TYPOGRAPHY, SHADOWS } from '../../utils/constants';
+
+const TOTAL_ROUNDS = 5;
 
 const LostNumbersScreen = ({ navigation }) => {
   const [difficulty, setDifficulty] = useState(null);
   const [sequence, setSequence] = useState(null);
+  const [options, setOptions] = useState([]);
   const [selectedAnswers, setSelectedAnswers] = useState([]);
   const [currentMissingIndex, setCurrentMissingIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [roundCount, setRoundCount] = useState(0);
-  const [feedback, setFeedback] = useState('');
+  const [feedback, setFeedback] = useState(null);
   const [sessionStart] = useState(Date.now());
-  
+
   const { recordAttempt, completeGame } = useProgress();
   const { addSparks } = useReward();
 
   const selectDifficulty = (level) => {
     setDifficulty(level);
-    generateNewSequence(level);
+    loadNewSequence(level);
   };
 
-  const generateNewSequence = (level) => {
+  const loadNewSequence = (level) => {
     const newSequence = generateSequence(level);
     setSequence(newSequence);
+    setOptions(
+      generateOptions(newSequence.answers[0], 5).sort((a, b) => a - b),
+    );
     setSelectedAnswers([]);
     setCurrentMissingIndex(0);
-    setFeedback('');
+    setFeedback(null);
+  };
+
+  const refreshOptions = (seq, idx) => {
+    setOptions(generateOptions(seq.answers[idx], 5).sort((a, b) => a - b));
   };
 
   const handleNumberSelect = async (number) => {
     const correctAnswer = sequence.answers[currentMissingIndex];
     const isCorrect = number === correctAnswer;
-    
+
     await recordAttempt('sequence', isCorrect, difficulty);
-    
+
     if (isCorrect) {
       const newAnswers = [...selectedAnswers, number];
       setSelectedAnswers(newAnswers);
-      setFeedback(t('feedback.excellent'));
-      
+      setFeedback('correct');
+
       if (currentMissingIndex < sequence.missingIndices.length - 1) {
-        // Move to next missing number
         setTimeout(() => {
-          setCurrentMissingIndex(currentMissingIndex + 1);
-          setFeedback('');
+          const nextIdx = currentMissingIndex + 1;
+          setCurrentMissingIndex(nextIdx);
+          refreshOptions(sequence, nextIdx);
+          setFeedback(null);
         }, 500);
       } else {
-        // Sequence complete
         setScore(score + 1);
         setTimeout(() => {
           const nextRound = roundCount + 1;
-          if (nextRound >= 5) {
+          if (nextRound >= TOTAL_ROUNDS) {
             finishGame();
           } else {
             setRoundCount(nextRound);
-            generateNewSequence(difficulty);
+            loadNewSequence(difficulty);
           }
         }, 1000);
       }
     } else {
-      setFeedback(t('common.incorrect'));
-      setTimeout(() => setFeedback(''), 800);
+      setFeedback('incorrect');
+      setTimeout(() => setFeedback(null), 800);
     }
   };
 
@@ -77,75 +88,41 @@ const LostNumbersScreen = ({ navigation }) => {
     navigation.goBack();
   };
 
-  const getNumberOptions = () => {
-    if (!sequence) return [];
-    const correct = sequence.answers[currentMissingIndex];
-    // 1 correct + 5 distractors, sorted ascending for a stable layout
-    return generateOptions(correct, 5).sort((a, b) => a - b);
-  };
-
   if (!difficulty) {
     return (
-      <ImageBackground
-        source={require('../../../assets/professor-corgi.jpeg')}
-        style={styles.background}
-        resizeMode="cover"
-      >
-        <View style={styles.container}>
-          <Card style={styles.card}>
-            <Text style={styles.emoji}>🔢</Text>
-            <Text style={styles.title}>{t('games.lost_numbers')}</Text>
-            <Text style={styles.subtitle}>{t('games.complete_sequence')}</Text>
-            <Text style={styles.instruction}>{t('difficulty.choose_level')}</Text>
-            
-            {Object.keys(DIFFICULTY_LEVELS).map((key) => (
-              <Button
-                key={key}
-                title={t(`difficulty.${key}`)}
-                onPress={() => selectDifficulty(key)}
-                variant="primary"
-                style={styles.difficultyButton}
-              />
-            ))}
-            
-            <Button
-              title={t('common.back')}
-              onPress={() => navigation.goBack()}
-              variant="outline"
-              style={styles.backButton}
-            />
-          </Card>
-        </View>
-        <StatusBar barStyle="dark-content" />
-      </ImageBackground>
+      <DifficultyPicker
+        tint="lavender"
+        icon="🔢"
+        title={t('games.lost_numbers')}
+        subtitle={t('games.complete_sequence')}
+        onSelect={selectDifficulty}
+        onBack={() => navigation.goBack()}
+      />
     );
   }
 
-  if (!sequence) {
-    return (
-      <View style={styles.loadingContainer}>
-        <Text style={styles.loadingText}>{t('common.loading')}</Text>
-      </View>
-    );
-  }
-
-  const options = getNumberOptions();
+  if (!sequence) return null;
 
   return (
-    <ImageBackground
-      source={require('../../../assets/professor-corgi.jpeg')}
-      style={styles.background}
-      resizeMode="cover"
-    >
-      <View style={styles.container}>
-        <Card style={styles.card}>
-          <View style={styles.header}>
-            <Text style={styles.scoreText}>
-              {t('game_ui.round')}: {roundCount + 1} / 5
-            </Text>
-            <Text style={styles.scoreText}>
-              {t('game_ui.score')}: {score}
-            </Text>
+    <ScreenBackground tint="lavender">
+      <SafeAreaView style={styles.safe}>
+        <ScrollView
+          style={styles.scroll}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.headerCard}>
+            <View style={styles.headerCell}>
+              <Text style={styles.headerValue}>
+                {roundCount + 1} / {TOTAL_ROUNDS}
+              </Text>
+              <Text style={styles.headerLabel}>{t('game_ui.round')}</Text>
+            </View>
+            <View style={styles.divider} />
+            <View style={styles.headerCell}>
+              <Text style={styles.headerValue}>⭐ {score}</Text>
+              <Text style={styles.headerLabel}>{t('game_ui.score')}</Text>
+            </View>
           </View>
 
           <Text style={styles.instruction}>{t('games.complete_sequence')}</Text>
@@ -156,7 +133,7 @@ const LostNumbersScreen = ({ navigation }) => {
               const missingIdx = sequence.missingIndices.indexOf(index);
               const isAnswered = missingIdx < selectedAnswers.length;
               const isCurrent = missingIdx === currentMissingIndex;
-              
+
               return (
                 <View
                   key={index}
@@ -164,15 +141,17 @@ const LostNumbersScreen = ({ navigation }) => {
                     styles.sequenceBox,
                     isMissing && styles.sequenceBoxMissing,
                     isCurrent && styles.sequenceBoxCurrent,
+                    feedback === 'correct' && isCurrent && styles.sequenceBoxCorrect,
                   ]}
                 >
-                  {isMissing ? (
-                    <Text style={styles.sequenceNumber}>
-                      {isAnswered ? selectedAnswers[missingIdx] : '?'}
-                    </Text>
-                  ) : (
-                    <Text style={styles.sequenceNumber}>{num}</Text>
-                  )}
+                  <Text
+                    style={[
+                      styles.sequenceNumber,
+                      isMissing && !isAnswered && styles.sequenceNumberMissing,
+                    ]}
+                  >
+                    {isMissing ? (isAnswered ? selectedAnswers[missingIdx] : '?') : num}
+                  </Text>
                 </View>
               );
             })}
@@ -182,130 +161,115 @@ const LostNumbersScreen = ({ navigation }) => {
 
           <View style={styles.optionsGrid}>
             {options.map((option, index) => (
-              <TouchableOpacity
-                key={index}
-                style={styles.optionButton}
+              <Pressable
+                key={`${option}-${index}`}
+                style={styles.optionWrap}
                 onPress={() => handleNumberSelect(option)}
-                activeOpacity={0.7}
+                disabled={feedback !== null}
               >
-                <Text style={styles.optionText}>{option}</Text>
-              </TouchableOpacity>
+                {({ pressed }) => (
+                  <View
+                    style={[
+                      styles.option,
+                      {
+                        borderBottomWidth: pressed ? 1 : 4,
+                        transform: [{ translateY: pressed ? 3 : 0 }],
+                      },
+                    ]}
+                  >
+                    <Text style={styles.optionText}>{option}</Text>
+                  </View>
+                )}
+              </Pressable>
             ))}
           </View>
 
           {feedback && (
-            <Text style={[
-              styles.feedback,
-              feedback === t('feedback.excellent') && styles.feedbackCorrect,
-              feedback === t('common.incorrect') && styles.feedbackIncorrect,
-            ]}>
-              {feedback}
+            <Text
+              style={[
+                styles.feedback,
+                feedback === 'correct' ? styles.feedbackCorrect : styles.feedbackIncorrect,
+              ]}
+            >
+              {feedback === 'correct' ? `🎉 ${t('feedback.excellent')}` : `💭 ${t('common.incorrect')}`}
             </Text>
           )}
-        </Card>
-      </View>
-      <StatusBar barStyle="dark-content" />
-    </ImageBackground>
+        </ScrollView>
+      </SafeAreaView>
+    </ScreenBackground>
   );
 };
 
 const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-  },
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+  safe: { flex: 1 },
+  scroll: { flex: 1 },
+  scrollContent: {
     padding: SIZING.PADDING.large,
+    paddingBottom: SIZING.PADDING.xlarge,
   },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: COLORS.sky,
-  },
-  loadingText: {
-    fontSize: TYPOGRAPHY.SIZES.title,
-    color: COLORS.text,
-  },
-  card: {
-    width: '100%',
-    maxWidth: 500,
-  },
-  emoji: {
-    fontSize: 60,
-    textAlign: 'center',
-    marginBottom: SIZING.MARGIN.medium,
-  },
-  title: {
-    fontSize: TYPOGRAPHY.SIZES.heading,
-    fontWeight: TYPOGRAPHY.WEIGHTS.bold,
-    color: COLORS.text,
-    textAlign: 'center',
-    marginBottom: SIZING.MARGIN.medium,
-  },
-  subtitle: {
-    fontSize: TYPOGRAPHY.SIZES.subtitle,
-    color: COLORS.text,
-    textAlign: 'center',
-    marginBottom: SIZING.MARGIN.medium,
-  },
-  instruction: {
-    fontSize: TYPOGRAPHY.SIZES.body,
-    color: COLORS.text,
-    textAlign: 'center',
-    marginBottom: SIZING.MARGIN.large,
-  },
-  difficultyButton: {
-    marginBottom: SIZING.MARGIN.medium,
-  },
-  backButton: {
-    marginTop: SIZING.MARGIN.medium,
-  },
-  header: {
+  headerCard: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    backgroundColor: COLORS.overlay,
+    padding: SIZING.PADDING.medium,
+    borderRadius: SIZING.BORDER_RADIUS.large,
     marginBottom: SIZING.MARGIN.large,
+    alignItems: 'center',
+    ...SHADOWS.soft,
   },
-  scoreText: {
-    fontSize: TYPOGRAPHY.SIZES.body,
+  headerCell: { flex: 1, alignItems: 'center' },
+  divider: { width: 1, height: 30, backgroundColor: COLORS.lightBlue },
+  headerValue: {
+    fontSize: TYPOGRAPHY.SIZES.title,
     fontWeight: TYPOGRAPHY.WEIGHTS.bold,
-    color: COLORS.path,
+    color: COLORS.pathDeep,
+  },
+  headerLabel: { fontSize: TYPOGRAPHY.SIZES.small, color: COLORS.textSoft },
+  instruction: {
+    fontSize: TYPOGRAPHY.SIZES.subtitle,
+    fontWeight: TYPOGRAPHY.WEIGHTS.bold,
+    color: COLORS.text,
+    textAlign: 'center',
+    marginBottom: SIZING.MARGIN.medium,
   },
   sequenceContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     flexWrap: 'wrap',
     marginBottom: SIZING.MARGIN.large,
-    gap: SIZING.MARGIN.small,
+    gap: 8,
   },
   sequenceBox: {
-    width: 50,
-    height: 50,
-    backgroundColor: COLORS.lightBlue,
-    borderRadius: SIZING.BORDER_RADIUS.medium,
+    width: 58,
+    height: 58,
+    backgroundColor: COLORS.white,
+    borderRadius: SIZING.BORDER_RADIUS.large,
     justifyContent: 'center',
     alignItems: 'center',
-    elevation: 2,
+    ...SHADOWS.soft,
   },
   sequenceBoxMissing: {
     backgroundColor: COLORS.warmYellow,
     borderWidth: 2,
-    borderColor: COLORS.path,
+    borderColor: COLORS.warmYellowDeep,
   },
   sequenceBoxCurrent: {
     borderWidth: 3,
-    borderColor: COLORS.success,
+    borderColor: COLORS.softPurpleDeep,
+    transform: [{ scale: 1.08 }],
+  },
+  sequenceBoxCorrect: {
+    backgroundColor: COLORS.mint,
+    borderColor: COLORS.mintDeep,
   },
   sequenceNumber: {
     fontSize: TYPOGRAPHY.SIZES.title,
     fontWeight: TYPOGRAPHY.WEIGHTS.bold,
     color: COLORS.text,
   },
+  sequenceNumberMissing: { color: COLORS.pathDeep },
   optionsLabel: {
     fontSize: TYPOGRAPHY.SIZES.body,
-    color: COLORS.text,
+    color: COLORS.textSoft,
     textAlign: 'center',
     marginBottom: SIZING.MARGIN.medium,
   },
@@ -313,19 +277,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
-    gap: SIZING.MARGIN.small,
+    margin: -5,
   },
-  optionButton: {
-    width: '30%',
-    backgroundColor: COLORS.grass,
-    padding: SIZING.PADDING.medium,
-    borderRadius: SIZING.BORDER_RADIUS.medium,
+  optionWrap: {
+    width: '33.33%',
+    padding: 5,
+    ...SHADOWS.soft,
+  },
+  option: {
+    backgroundColor: COLORS.softPurpleDeep,
+    borderRadius: SIZING.BORDER_RADIUS.large,
+    paddingVertical: SIZING.PADDING.medium,
     alignItems: 'center',
-    elevation: 3,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    borderBottomColor: '#8A5FB8',
   },
   optionText: {
     fontSize: TYPOGRAPHY.SIZES.title,
@@ -338,13 +302,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: SIZING.MARGIN.large,
   },
-  feedbackCorrect: {
-    color: COLORS.success,
-  },
-  feedbackIncorrect: {
-    color: COLORS.error,
-  },
+  feedbackCorrect: { color: COLORS.successDeep },
+  feedbackIncorrect: { color: COLORS.errorDeep },
 });
 
 export default LostNumbersScreen;
-

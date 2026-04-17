@@ -1,6 +1,25 @@
 import React from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
-import { COLORS, SIZING } from '../../utils/constants';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { COLORS, SIZING, TYPOGRAPHY, SHADOWS } from '../../utils/constants';
+
+const VARIANT_STYLES = {
+  default: { backgroundColor: COLORS.white },
+  overlay: { backgroundColor: COLORS.overlay },
+  primary: { backgroundColor: COLORS.lightBlue },
+  success: { backgroundColor: COLORS.mint },
+  warm: { backgroundColor: COLORS.warmYellow },
+  peach: { backgroundColor: COLORS.peach },
+  purple: { backgroundColor: COLORS.softPurple },
+};
+
+const BAND_COLORS = {
+  sky: COLORS.skyDeep,
+  grass: COLORS.grassDeep,
+  path: COLORS.pathDeep,
+  purple: COLORS.softPurpleDeep,
+  mint: COLORS.mintDeep,
+  peach: COLORS.peachDeep,
+};
 
 const Card = ({
   children,
@@ -8,54 +27,55 @@ const Card = ({
   style,
   variant = 'default',
   padding = true,
+  band,
+  bandTitle,
+  bandIcon,
 }) => {
   const Container = onPress ? TouchableOpacity : View;
-  
-  const cardStyles = [
-    styles.card,
-    styles[`card_${variant}`],
-    !padding && styles.card_no_padding,
-    style,
-  ];
+  const variantStyle = VARIANT_STYLES[variant] || VARIANT_STYLES.default;
 
   return (
     <Container
-      style={cardStyles}
+      style={[styles.card, variantStyle, style]}
       onPress={onPress}
-      activeOpacity={onPress ? 0.7 : 1}
+      activeOpacity={onPress ? 0.85 : 1}
     >
-      {children}
+      {band && (
+        <View style={[styles.band, { backgroundColor: BAND_COLORS[band] || band }]}>
+          {bandIcon ? <Text style={styles.bandIcon}>{bandIcon}</Text> : null}
+          {bandTitle ? <Text style={styles.bandTitle}>{bandTitle}</Text> : null}
+        </View>
+      )}
+      <View style={padding ? styles.body : null}>{children}</View>
     </Container>
   );
 };
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: COLORS.white,
     borderRadius: SIZING.BORDER_RADIUS.large,
+    overflow: 'hidden',
+    ...SHADOWS.card,
+  },
+  body: {
     padding: SIZING.PADDING.large,
-    elevation: 3,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.84,
   },
-  card_default: {
-    backgroundColor: COLORS.white,
+  band: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: SIZING.PADDING.large,
+    paddingVertical: SIZING.PADDING.medium,
   },
-  card_overlay: {
-    backgroundColor: COLORS.overlay,
+  bandIcon: {
+    fontSize: 26,
+    marginRight: SIZING.MARGIN.small,
   },
-  card_primary: {
-    backgroundColor: COLORS.lightBlue,
-  },
-  card_success: {
-    backgroundColor: COLORS.mint,
-  },
-  card_no_padding: {
-    padding: 0,
+  bandTitle: {
+    color: COLORS.white,
+    fontWeight: TYPOGRAPHY.WEIGHTS.bold,
+    fontSize: TYPOGRAPHY.SIZES.subtitle,
+    letterSpacing: 0.3,
   },
 });
 
 export default Card;
-

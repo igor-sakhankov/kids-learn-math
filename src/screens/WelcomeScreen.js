@@ -1,65 +1,75 @@
 import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, ImageBackground, StatusBar } from 'react-native';
+import { View, Text, StyleSheet, Image } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { t } from '../utils/i18n';
 import { useSettings } from '../contexts/SettingsContext';
 import { useProgress } from '../contexts/ProgressContext';
 import Button from '../components/common/Button';
-import { COLORS, SIZING, TYPOGRAPHY } from '../utils/constants';
+import ScreenBackground from '../components/common/ScreenBackground';
+import { COLORS, SIZING, TYPOGRAPHY, SHADOWS } from '../utils/constants';
 
 const WelcomeScreen = ({ navigation }) => {
   const { isLoading: settingsLoading } = useSettings();
   const { startSession, isLoading: progressLoading } = useProgress();
 
   useEffect(() => {
-    // Start a new session when app opens
     if (!progressLoading && !settingsLoading) {
       startSession();
     }
   }, [progressLoading, settingsLoading]);
 
-  const handleStart = () => {
-    navigation.navigate('MainMenu');
-  };
-
   if (settingsLoading || progressLoading) {
     return (
-      <View style={styles.loadingContainer}>
-        <Text style={styles.loadingText}>{t('common.loading')}</Text>
-      </View>
+      <ScreenBackground tint="sky">
+        <View style={styles.loadingContainer}>
+          <Text style={styles.loadingText}>{t('common.loading')}</Text>
+        </View>
+      </ScreenBackground>
     );
   }
 
   return (
-    <ImageBackground
-      source={require('../../assets/professor-corgi.jpeg')}
-      style={styles.background}
-      resizeMode="cover"
-    >
-      <View style={styles.container}>
-        <View style={styles.content}>
-          <Text style={styles.title}>🤖</Text>
-          <Text style={styles.greeting}>{t('welcome.greeting')}</Text>
-          <Text style={styles.question}>{t('welcome.question')}</Text>
-          
+    <ScreenBackground tint="sky">
+      <SafeAreaView style={styles.safe}>
+        <View style={styles.container}>
+          <View style={styles.mascotRing}>
+            <Image
+              source={require('../../assets/professor-corgi.jpeg')}
+              style={styles.mascot}
+              resizeMode="cover"
+            />
+          </View>
+
+          <View style={styles.card}>
+            <Text style={styles.greeting}>{t('welcome.greeting')}</Text>
+            <Text style={styles.question}>{t('welcome.question')}</Text>
+          </View>
+
           <Button
             title={t('welcome.lets_start')}
-            onPress={handleStart}
+            onPress={() => navigation.navigate('MainMenu')}
             variant="primary"
             size="large"
+            icon="🚀"
             style={styles.startButton}
           />
+
+          <View style={styles.hintRow}>
+            <Text style={styles.hintEmoji}>🍎</Text>
+            <Text style={styles.hintEmoji}>➕</Text>
+            <Text style={styles.hintEmoji}>🌳</Text>
+            <Text style={styles.hintEmoji}>⭐</Text>
+          </View>
         </View>
-        
-        <StatusBar barStyle="dark-content" />
-      </View>
-    </ImageBackground>
+      </SafeAreaView>
+    </ScreenBackground>
   );
 };
 
+const MASCOT_SIZE = 200;
+
 const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-  },
+  safe: { flex: 1 },
   container: {
     flex: 1,
     justifyContent: 'center',
@@ -70,41 +80,59 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: COLORS.sky,
   },
   loadingText: {
     fontSize: TYPOGRAPHY.SIZES.title,
     color: COLORS.text,
   },
-  content: {
-    backgroundColor: COLORS.overlay,
-    padding: SIZING.PADDING.large + 10,
-    borderRadius: SIZING.BORDER_RADIUS.large,
-    alignItems: 'center',
-    minWidth: 300,
-  },
-  title: {
-    fontSize: 80,
+  mascotRing: {
+    width: MASCOT_SIZE + 16,
+    height: MASCOT_SIZE + 16,
+    borderRadius: (MASCOT_SIZE + 16) / 2,
+    backgroundColor: COLORS.white,
+    padding: 8,
     marginBottom: SIZING.MARGIN.large,
+    ...SHADOWS.pop,
+  },
+  mascot: {
+    width: MASCOT_SIZE,
+    height: MASCOT_SIZE,
+    borderRadius: MASCOT_SIZE / 2,
+  },
+  card: {
+    backgroundColor: COLORS.overlay,
+    paddingHorizontal: SIZING.PADDING.xlarge,
+    paddingVertical: SIZING.PADDING.large,
+    borderRadius: SIZING.BORDER_RADIUS.xlarge,
+    alignItems: 'center',
+    minWidth: 280,
+    marginBottom: SIZING.MARGIN.xlarge,
+    ...SHADOWS.card,
   },
   greeting: {
     fontSize: TYPOGRAPHY.SIZES.heading,
     fontWeight: TYPOGRAPHY.WEIGHTS.bold,
     color: COLORS.text,
-    marginBottom: SIZING.MARGIN.medium,
+    marginBottom: SIZING.MARGIN.small,
     textAlign: 'center',
   },
   question: {
     fontSize: TYPOGRAPHY.SIZES.subtitle,
-    color: COLORS.text,
-    marginBottom: SIZING.MARGIN.large + 10,
+    color: COLORS.textSoft,
     textAlign: 'center',
   },
   startButton: {
-    marginTop: SIZING.MARGIN.large,
-    minWidth: 200,
+    minWidth: 240,
+  },
+  hintRow: {
+    flexDirection: 'row',
+    marginTop: SIZING.MARGIN.xlarge,
+    gap: 18,
+  },
+  hintEmoji: {
+    fontSize: 32,
+    opacity: 0.85,
   },
 });
 
 export default WelcomeScreen;
-

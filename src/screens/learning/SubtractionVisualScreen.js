@@ -1,18 +1,29 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ImageBackground, StatusBar, TextInput } from 'react-native';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { t } from '../../utils/i18n';
 import { generateVisualQuestion } from '../../utils/questionGenerator';
 import { useProgress } from '../../contexts/ProgressContext';
 import { useReward } from '../../contexts/RewardContext';
-import Button from '../../components/common/Button';
 import Card from '../../components/common/Card';
-import { COLORS, SIZING, TYPOGRAPHY, DIFFICULTY_LEVELS, GAME_CONFIG } from '../../utils/constants';
+import ScreenBackground from '../../components/common/ScreenBackground';
+import NumberPad from '../../components/common/NumberPad';
+import DifficultyPicker from '../../components/common/DifficultyPicker';
+import { COLORS, SIZING, TYPOGRAPHY, SHADOWS, GAME_CONFIG } from '../../utils/constants';
+
+const OBJECT_EMOJI = {
+  apple: '🍎',
+  cube: '🧊',
+  bear: '🧸',
+  bird: '🐦',
+  flower: '🌸',
+};
 
 const SubtractionVisualScreen = ({ navigation }) => {
   const [difficulty, setDifficulty] = useState(null);
   const [question, setQuestion] = useState(null);
   const [userAnswer, setUserAnswer] = useState('');
-  const [feedback, setFeedback] = useState('');
+  const [feedback, setFeedback] = useState(null);
   const [questionCount, setQuestionCount] = useState(0);
   const [score, setScore] = useState(0);
   const [sessionStart] = useState(Date.now());
@@ -29,34 +40,35 @@ const SubtractionVisualScreen = ({ navigation }) => {
     const newQuestion = generateVisualQuestion(level, '-');
     setQuestion(newQuestion);
     setUserAnswer('');
-    setFeedback('');
+    setFeedback(null);
   };
 
   const checkAnswer = async () => {
     const answer = parseInt(userAnswer, 10);
-
-    if (isNaN(answer)) {
-      setFeedback(t('common.incorrect'));
-      return;
-    }
+    if (isNaN(answer)) return;
 
     const isCorrect = answer === question.answer;
     await recordAttempt('subtraction', isCorrect, difficulty);
 
     if (isCorrect) {
-      setFeedback(t('common.correct'));
+      setFeedback('correct');
       setScore(score + 1);
     } else {
-      setFeedback(t('common.incorrect'));
+      setFeedback('incorrect');
     }
 
     setTimeout(() => {
-      const nextCount = questionCount + 1;
-      if (nextCount >= GAME_CONFIG.TOTAL_QUESTIONS) {
-        finishLesson();
+      if (isCorrect) {
+        const nextCount = questionCount + 1;
+        if (nextCount >= GAME_CONFIG.TOTAL_QUESTIONS) {
+          finishLesson();
+        } else {
+          setQuestionCount(nextCount);
+          generateNewQuestion(difficulty);
+        }
       } else {
-        setQuestionCount(nextCount);
-        generateNewQuestion(difficulty);
+        setUserAnswer('');
+        setFeedback(null);
       }
     }, GAME_CONFIG.FEEDBACK_DELAY);
   };
@@ -68,266 +80,237 @@ const SubtractionVisualScreen = ({ navigation }) => {
     navigation.goBack();
   };
 
-  const renderVisualObjects = (count, removed, type) => {
-    const objects = [];
-    const emoji = type === 'apple' ? '🍎' : 
-                  type === 'cube' ? '🧊' : 
-                  type === 'bear' ? '🧸' : 
-                  type === 'bird' ? '🐦' :
-                  type === 'flower' ? '🌸' : '⭐';
-    
-    for (let i = 0; i < count; i++) {
-      const isRemoved = i < removed;
-      objects.push(
-        <Text 
-          key={i} 
-          style={[
-            styles.visualObject,
-            isRemoved && styles.visualObjectRemoved
-          ]}
-        >
-          {emoji}
-        </Text>
-      );
-    }
-    return objects;
+  const renderObjects = (count, removed, type) => {
+    const emoji = OBJECT_EMOJI[type] || '⭐';
+    return Array.from({ length: count }, (_, i) => (
+      <Text
+        key={i}
+        style={[styles.visualObject, i < removed && styles.visualObjectRemoved]}
+      >
+        {emoji}
+      </Text>
+    ));
   };
 
   if (!difficulty) {
     return (
-      <ImageBackground
-        source={require('../../../assets/professor-corgi.jpeg')}
-        style={styles.background}
-        resizeMode="cover"
-      >
-        <View style={styles.container}>
-          <Card style={styles.card}>
-            <Text style={styles.title}>{t('learning.subtraction')}</Text>
-            <Text style={styles.subtitle}>{t('difficulty.choose_level')}</Text>
-            
-            {Object.keys(DIFFICULTY_LEVELS).map((key) => (
-              <Button
-                key={key}
-                title={t(`difficulty.${key}`)}
-                onPress={() => selectDifficulty(key)}
-                variant="primary"
-                style={styles.difficultyButton}
-              />
-            ))}
-            
-            <Button
-              title={t('common.back')}
-              onPress={() => navigation.goBack()}
-              variant="outline"
-              style={styles.backButton}
-            />
-          </Card>
-        </View>
-        <StatusBar barStyle="dark-content" />
-      </ImageBackground>
+      <DifficultyPicker
+        tint="sunrise"
+        icon="➖"
+        title={t('learning.subtraction')}
+        onSelect={selectDifficulty}
+        onBack={() => navigation.goBack()}
+      />
     );
   }
 
-  if (!question) {
-    return (
-      <View style={styles.loadingContainer}>
-        <Text style={styles.loadingText}>{t('common.loading')}</Text>
-      </View>
-    );
-  }
+  if (!question) return null;
+
+  const progressPct = Math.round(
+    ((questionCount + (feedback === 'correct' ? 1 : 0)) / GAME_CONFIG.TOTAL_QUESTIONS) * 100,
+  );
 
   return (
-    <ImageBackground
-      source={require('../../../assets/professor-corgi.jpeg')}
-      style={styles.background}
-      resizeMode="cover"
-    >
-      <View style={styles.container}>
-        <Card style={styles.card}>
-          <View style={styles.header}>
-            <Text style={styles.questionNumber}>
-              {t('game_ui.question')} {questionCount + 1} / {GAME_CONFIG.TOTAL_QUESTIONS}
-            </Text>
-            <Text style={styles.scoreText}>
-              {t('game_ui.score')}: {score}
-            </Text>
-          </View>
-
-          <Text style={styles.instruction}>{t('learning.remove_objects')}</Text>
-
-          {/* Visual representation */}
-          <View style={styles.visualContainer}>
-            <View style={styles.objectGroup}>
-              {renderVisualObjects(question.first, question.second, question.objectType)}
+    <ScreenBackground tint="sunrise">
+      <SafeAreaView style={styles.safe}>
+        <ScrollView
+          style={styles.scroll}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.headerCard}>
+            <View style={styles.progressBar}>
+              <View style={[styles.progressFill, { width: `${progressPct}%` }]} />
+            </View>
+            <View style={styles.headerRow}>
+              <Text style={styles.questionNumber}>
+                {t('game_ui.question')} {questionCount + 1} / {GAME_CONFIG.TOTAL_QUESTIONS}
+              </Text>
+              <Text style={styles.scoreText}>⭐ {score}</Text>
             </View>
           </View>
 
-          <Text style={styles.equation}>
-            {question.first} - {question.second} = ?
-          </Text>
+          <Card
+            style={[
+              styles.mainCard,
+              feedback === 'correct' && styles.cardCorrect,
+              feedback === 'incorrect' && styles.cardIncorrect,
+            ]}
+          >
+            <Text style={styles.instruction}>{t('learning.remove_objects')}</Text>
 
-          <Text style={styles.hint}>
-            {t('learning.how_many_left')}
-          </Text>
+            <View style={styles.visualContainer}>
+              <View style={styles.objectGroup}>
+                {renderObjects(question.first, question.second, question.objectType)}
+              </View>
+            </View>
 
-          <TextInput
-            style={styles.input}
-            value={userAnswer}
-            onChangeText={setUserAnswer}
-            keyboardType="numeric"
-            placeholder="?"
-            placeholderTextColor={COLORS.lightBlue}
-            autoFocus={true}
-          />
+            <Text style={styles.hint}>{t('learning.how_many_left')}</Text>
 
-          <Button
-            title={t('common.check')}
-            onPress={checkAnswer}
-            variant="primary"
-            style={styles.checkButton}
-          />
+            <View style={styles.equationRow}>
+              <EqBlock value={question.first} />
+              <Text style={styles.plus}>−</Text>
+              <EqBlock value={question.second} />
+              <Text style={styles.plus}>=</Text>
+              <EqBlock value={userAnswer || '?'} highlight />
+            </View>
 
-          {feedback && (
-            <Text style={[
-              styles.feedback,
-              feedback === t('common.correct') && styles.feedbackCorrect,
-              feedback === t('common.incorrect') && styles.feedbackIncorrect,
-            ]}>
-              {feedback}
-            </Text>
-          )}
-        </Card>
-      </View>
-      <StatusBar barStyle="dark-content" />
-    </ImageBackground>
+            {feedback && (
+              <Text
+                style={[
+                  styles.feedback,
+                  feedback === 'correct' ? styles.feedbackCorrect : styles.feedbackIncorrect,
+                ]}
+              >
+                {feedback === 'correct' ? `🎉 ${t('common.correct')}` : `💭 ${t('common.incorrect')}`}
+              </Text>
+            )}
+          </Card>
+
+          <View style={styles.padWrap}>
+            <NumberPad
+              value={userAnswer}
+              onChange={setUserAnswer}
+              onSubmit={checkAnswer}
+              disabled={feedback === 'correct'}
+            />
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    </ScreenBackground>
   );
 };
 
+const EqBlock = ({ value, highlight }) => (
+  <View style={[styles.eqBlock, highlight && styles.eqBlockHighlight]}>
+    <Text style={[styles.eqValue, highlight && styles.eqValueHighlight]}>{value}</Text>
+  </View>
+);
+
 const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-  },
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+  safe: { flex: 1 },
+  scroll: { flex: 1 },
+  scrollContent: {
     padding: SIZING.PADDING.large,
+    paddingBottom: SIZING.PADDING.xlarge,
   },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: COLORS.sky,
-  },
-  loadingText: {
-    fontSize: TYPOGRAPHY.SIZES.title,
-    color: COLORS.text,
-  },
-  card: {
-    width: '100%',
-    maxWidth: 500,
-  },
-  title: {
-    fontSize: TYPOGRAPHY.SIZES.heading,
-    fontWeight: TYPOGRAPHY.WEIGHTS.bold,
-    color: COLORS.text,
-    textAlign: 'center',
+  headerCard: {
+    backgroundColor: COLORS.overlay,
+    padding: SIZING.PADDING.medium,
+    borderRadius: SIZING.BORDER_RADIUS.large,
     marginBottom: SIZING.MARGIN.medium,
+    ...SHADOWS.soft,
   },
-  subtitle: {
-    fontSize: TYPOGRAPHY.SIZES.subtitle,
-    color: COLORS.text,
-    textAlign: 'center',
-    marginBottom: SIZING.MARGIN.large,
+  progressBar: {
+    height: 10,
+    backgroundColor: COLORS.lightBlue,
+    borderRadius: SIZING.BORDER_RADIUS.pill,
+    overflow: 'hidden',
+    marginBottom: SIZING.MARGIN.small,
   },
-  difficultyButton: {
-    marginBottom: SIZING.MARGIN.medium,
+  progressFill: {
+    height: '100%',
+    backgroundColor: COLORS.pathDeep,
+    borderRadius: SIZING.BORDER_RADIUS.pill,
   },
-  backButton: {
-    marginTop: SIZING.MARGIN.medium,
-  },
-  header: {
+  headerRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: SIZING.MARGIN.large,
   },
   questionNumber: {
-    fontSize: TYPOGRAPHY.SIZES.body,
+    fontSize: TYPOGRAPHY.SIZES.small,
     fontWeight: TYPOGRAPHY.WEIGHTS.bold,
     color: COLORS.text,
   },
   scoreText: {
     fontSize: TYPOGRAPHY.SIZES.body,
     fontWeight: TYPOGRAPHY.WEIGHTS.bold,
-    color: COLORS.path,
+    color: COLORS.pathDeep,
   },
+  mainCard: {
+    marginBottom: SIZING.MARGIN.medium,
+  },
+  cardCorrect: { backgroundColor: COLORS.mint },
+  cardIncorrect: { backgroundColor: COLORS.softRed },
   instruction: {
-    fontSize: TYPOGRAPHY.SIZES.subtitle,
-    color: COLORS.text,
+    fontSize: TYPOGRAPHY.SIZES.body,
+    fontWeight: TYPOGRAPHY.WEIGHTS.bold,
+    color: COLORS.textSoft,
     textAlign: 'center',
-    marginBottom: SIZING.MARGIN.large,
+    marginBottom: SIZING.MARGIN.medium,
   },
   visualContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: SIZING.MARGIN.large,
-    minHeight: 100,
+    marginBottom: SIZING.MARGIN.small,
+    minHeight: 80,
   },
   objectGroup: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
-    maxWidth: 200,
+    maxWidth: 220,
   },
   visualObject: {
-    fontSize: 32,
+    fontSize: 30,
     margin: 2,
   },
   visualObjectRemoved: {
-    opacity: 0.3,
+    opacity: 0.25,
     textDecorationLine: 'line-through',
-  },
-  equation: {
-    fontSize: TYPOGRAPHY.SIZES.heading,
-    fontWeight: TYPOGRAPHY.WEIGHTS.bold,
-    color: COLORS.text,
-    textAlign: 'center',
-    marginBottom: SIZING.MARGIN.medium,
   },
   hint: {
     fontSize: TYPOGRAPHY.SIZES.body,
-    color: COLORS.text,
+    color: COLORS.textSoft,
     textAlign: 'center',
-    marginBottom: SIZING.MARGIN.large,
+    marginBottom: SIZING.MARGIN.small,
   },
-  input: {
-    borderWidth: 2,
-    borderColor: COLORS.grass,
+  equationRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginVertical: SIZING.MARGIN.small,
+  },
+  eqBlock: {
+    minWidth: 52,
+    height: 52,
+    alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: COLORS.white,
     borderRadius: SIZING.BORDER_RADIUS.medium,
-    padding: SIZING.PADDING.medium,
-    fontSize: TYPOGRAPHY.SIZES.heading,
-    textAlign: 'center',
-    marginBottom: SIZING.MARGIN.large,
-    minHeight: SIZING.MIN_TOUCH_TARGET + 10,
+    paddingHorizontal: 10,
+    marginHorizontal: 4,
+    ...SHADOWS.soft,
   },
-  checkButton: {
-    marginBottom: SIZING.MARGIN.medium,
+  eqBlockHighlight: {
+    backgroundColor: COLORS.warmYellow,
+    borderWidth: 2,
+    borderColor: COLORS.warmYellowDeep,
+  },
+  eqValue: {
+    fontSize: TYPOGRAPHY.SIZES.title,
+    fontWeight: TYPOGRAPHY.WEIGHTS.bold,
+    color: COLORS.text,
+  },
+  eqValueHighlight: { color: COLORS.pathDeep },
+  plus: {
+    fontSize: TYPOGRAPHY.SIZES.title,
+    fontWeight: TYPOGRAPHY.WEIGHTS.bold,
+    color: COLORS.text,
+    marginHorizontal: 4,
   },
   feedback: {
     fontSize: TYPOGRAPHY.SIZES.title,
     fontWeight: TYPOGRAPHY.WEIGHTS.bold,
     textAlign: 'center',
-    marginTop: SIZING.MARGIN.medium,
+    marginTop: SIZING.MARGIN.small,
   },
-  feedbackCorrect: {
-    color: COLORS.success,
-  },
-  feedbackIncorrect: {
-    color: COLORS.error,
+  feedbackCorrect: { color: COLORS.successDeep },
+  feedbackIncorrect: { color: COLORS.errorDeep },
+  padWrap: {
+    marginTop: 'auto',
   },
 });
 
 export default SubtractionVisualScreen;
-

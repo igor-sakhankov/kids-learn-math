@@ -1,20 +1,45 @@
 // Color palette
 export const COLORS = {
-  sky: '#AEE1F9',
-  grass: '#8FD68D',
-  path: '#F8B133',
-  text: '#2F2F2F',
+  // Core brand
+  sky: '#BEE7FA',
+  skyDeep: '#7FC8ED',
+  grass: '#A2E0A4',
+  grassDeep: '#64BF66',
+  path: '#FFB74D',
+  pathDeep: '#E58E1A',
+
+  // Text
+  text: '#2A3547',
+  textSoft: '#5A6575',
+
+  // Feedback
   success: '#4CAF50',
-  error: '#F44336',
+  successDeep: '#2E7D32',
+  error: '#EF5350',
+  errorDeep: '#C62828',
+
+  // Neutrals
   white: '#FFFFFF',
-  overlay: 'rgba(255,255,255,0.9)',
-  
-  // Extended palette for educational UI
-  lightBlue: '#E3F2FD',
-  softPurple: '#E1BEE7',
-  warmYellow: '#FFF9C4',
-  softRed: '#FFCDD2',
-  mint: '#B2DFDB',
+  overlay: 'rgba(255,255,255,0.94)',
+
+  // Pastel accents (kids-friendly palette)
+  lightBlue: '#E3F4FD',
+  softPurple: '#E7D3F5',
+  softPurpleDeep: '#B48BDA',
+  warmYellow: '#FFF4BA',
+  warmYellowDeep: '#F5C94C',
+  softRed: '#FFD1CC',
+  softRedDeep: '#FF8A80',
+  mint: '#C8F1E3',
+  mintDeep: '#69C4A2',
+  peach: '#FFE0C2',
+  peachDeep: '#FFA86B',
+
+  // Screen background tints (soft pastels)
+  bgSky: '#DEF2FC',
+  bgMint: '#DFF7EC',
+  bgSunrise: '#FFF4E0',
+  bgLavender: '#F1E5FA',
 };
 
 // Difficulty levels configuration
@@ -22,6 +47,13 @@ export const DIFFICULTY_LEVELS = {
   easy: { maxNumber: 10 },
   medium: { maxNumber: 20 },
   hard: { maxNumber: 50 },
+};
+
+// Visual treatment per difficulty — used by DifficultyPicker
+export const DIFFICULTY_META = {
+  easy: { icon: '🌱', color: 'mint', colorDeep: 'mintDeep' },
+  medium: { icon: '🌿', color: 'warmYellow', colorDeep: 'warmYellowDeep' },
+  hard: { icon: '🌳', color: 'peach', colorDeep: 'peachDeep' },
 };
 
 // Game configuration
@@ -71,21 +103,25 @@ export const ACHIEVEMENTS = {
 
 // Sizing and spacing
 export const SIZING = {
-  MIN_TOUCH_TARGET: 44,
+  MIN_TOUCH_TARGET: 48,
   BORDER_RADIUS: {
-    small: 8,
-    medium: 10,
-    large: 15,
+    small: 10,
+    medium: 16,
+    large: 24,
+    xlarge: 32,
+    pill: 999,
   },
   PADDING: {
     small: 10,
-    medium: 20,
-    large: 30,
+    medium: 16,
+    large: 22,
+    xlarge: 32,
   },
   MARGIN: {
     small: 10,
-    medium: 15,
-    large: 20,
+    medium: 16,
+    large: 22,
+    xlarge: 32,
   },
 };
 
@@ -96,13 +132,38 @@ export const TYPOGRAPHY = {
     small: 16,
     body: 18,
     subtitle: 22,
-    title: 24,
-    heading: 32,
-    display: 40,
+    title: 26,
+    heading: 34,
+    display: 48,
   },
   WEIGHTS: {
     normal: 'normal',
     bold: 'bold',
+  },
+};
+
+// Shared elevation/shadow presets
+export const SHADOWS = {
+  soft: {
+    elevation: 3,
+    shadowColor: '#1B2A44',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.12,
+    shadowRadius: 6,
+  },
+  card: {
+    elevation: 6,
+    shadowColor: '#1B2A44',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.16,
+    shadowRadius: 10,
+  },
+  pop: {
+    elevation: 8,
+    shadowColor: '#1B2A44',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.22,
+    shadowRadius: 14,
   },
 };
 
@@ -128,4 +189,3 @@ export const STORAGE_KEYS = {
   ACHIEVEMENTS: '@app:achievements',
   TREE_STATE: '@app:tree_state',
 };
-

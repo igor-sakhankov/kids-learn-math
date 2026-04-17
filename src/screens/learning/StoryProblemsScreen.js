@@ -1,24 +1,28 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ImageBackground, StatusBar, TextInput, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { t } from '../../utils/i18n';
 import { generateStoryProblem } from '../../utils/questionGenerator';
 import { useProgress } from '../../contexts/ProgressContext';
 import { useReward } from '../../contexts/RewardContext';
 import Button from '../../components/common/Button';
 import Card from '../../components/common/Card';
-import { COLORS, SIZING, TYPOGRAPHY, DIFFICULTY_LEVELS, GAME_CONFIG } from '../../utils/constants';
+import ScreenBackground from '../../components/common/ScreenBackground';
+import NumberPad from '../../components/common/NumberPad';
+import DifficultyPicker from '../../components/common/DifficultyPicker';
+import { COLORS, SIZING, TYPOGRAPHY, SHADOWS, GAME_CONFIG } from '../../utils/constants';
 
 const StoryProblemsScreen = ({ navigation }) => {
   const [difficulty, setDifficulty] = useState(null);
   const [question, setQuestion] = useState(null);
   const [userAnswer, setUserAnswer] = useState('');
-  const [feedback, setFeedback] = useState('');
+  const [feedback, setFeedback] = useState(null);
   const [questionCount, setQuestionCount] = useState(0);
   const [score, setScore] = useState(0);
   const [attempts, setAttempts] = useState(0);
   const [showHint, setShowHint] = useState(false);
   const [sessionStart] = useState(Date.now());
-  
+
   const { recordAttempt, completeLesson } = useProgress();
   const { addLeaves } = useReward();
 
@@ -32,29 +36,25 @@ const StoryProblemsScreen = ({ navigation }) => {
     const newQuestion = generateStoryProblem(level, operation, t);
     setQuestion(newQuestion);
     setUserAnswer('');
-    setFeedback('');
+    setFeedback(null);
     setAttempts(0);
     setShowHint(false);
   };
 
   const checkAnswer = async () => {
     const answer = parseInt(userAnswer, 10);
-    
-    if (isNaN(answer)) {
-      setFeedback(t('common.incorrect'));
-      return;
-    }
+    if (isNaN(answer)) return;
 
     const isCorrect = answer === question.answer;
     const newAttempts = attempts + 1;
     setAttempts(newAttempts);
-    
+
     await recordAttempt('story_problem', isCorrect, difficulty);
 
     if (isCorrect) {
-      setFeedback(t('feedback.excellent'));
+      setFeedback('correct');
       setScore(score + 1);
-      
+
       setTimeout(() => {
         const nextCount = questionCount + 1;
         if (nextCount >= GAME_CONFIG.TOTAL_QUESTIONS) {
@@ -65,12 +65,14 @@ const StoryProblemsScreen = ({ navigation }) => {
         }
       }, GAME_CONFIG.FEEDBACK_DELAY + 200);
     } else {
-      setFeedback(t('feedback.almost'));
-      
-      // Show hint after 2 wrong attempts
+      setFeedback('incorrect');
       if (newAttempts >= GAME_CONFIG.HINT_AFTER_ATTEMPTS) {
         setShowHint(true);
       }
+      setTimeout(() => {
+        setFeedback(null);
+        setUserAnswer('');
+      }, GAME_CONFIG.FEEDBACK_DELAY);
     }
   };
 
@@ -93,229 +95,224 @@ const StoryProblemsScreen = ({ navigation }) => {
 
   if (!difficulty) {
     return (
-      <ImageBackground
-        source={require('../../../assets/professor-corgi.jpeg')}
-        style={styles.background}
-        resizeMode="cover"
-      >
-        <View style={styles.container}>
-          <Card style={styles.card}>
-            <Text style={styles.title}>{t('learning.story_problems')}</Text>
-            <Text style={styles.subtitle}>{t('difficulty.choose_level')}</Text>
-            
-            {Object.keys(DIFFICULTY_LEVELS).map((key) => (
-              <Button
-                key={key}
-                title={t(`difficulty.${key}`)}
-                onPress={() => selectDifficulty(key)}
-                variant="primary"
-                style={styles.difficultyButton}
-              />
-            ))}
-            
-            <Button
-              title={t('common.back')}
-              onPress={() => navigation.goBack()}
-              variant="outline"
-              style={styles.backButton}
-            />
-          </Card>
-        </View>
-        <StatusBar barStyle="dark-content" />
-      </ImageBackground>
+      <DifficultyPicker
+        tint="lavender"
+        icon="📖"
+        title={t('learning.story_problems')}
+        onSelect={selectDifficulty}
+        onBack={() => navigation.goBack()}
+      />
     );
   }
 
-  if (!question) {
-    return (
-      <View style={styles.loadingContainer}>
-        <Text style={styles.loadingText}>{t('common.loading')}</Text>
-      </View>
-    );
-  }
+  if (!question) return null;
+
+  const progressPct = Math.round(
+    ((questionCount + (feedback === 'correct' ? 1 : 0)) / GAME_CONFIG.TOTAL_QUESTIONS) * 100,
+  );
 
   return (
-    <ImageBackground
-      source={require('../../../assets/professor-corgi.jpeg')}
-      style={styles.background}
-      resizeMode="cover"
-    >
-      <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
-        <Card style={styles.card}>
-          <View style={styles.header}>
-            <Text style={styles.questionNumber}>
-              {t('game_ui.question')} {questionCount + 1} / {GAME_CONFIG.TOTAL_QUESTIONS}
-            </Text>
-            <Text style={styles.scoreText}>
-              {t('game_ui.score')}: {score}
-            </Text>
+    <ScreenBackground tint="lavender">
+      <SafeAreaView style={styles.safe}>
+        <ScrollView
+          style={styles.scroll}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.headerCard}>
+            <View style={styles.progressBar}>
+              <View style={[styles.progressFill, { width: `${progressPct}%` }]} />
+            </View>
+            <View style={styles.headerRow}>
+              <Text style={styles.questionNumber}>
+                {t('game_ui.question')} {questionCount + 1} / {GAME_CONFIG.TOTAL_QUESTIONS}
+              </Text>
+              <Text style={styles.scoreText}>⭐ {score}</Text>
+            </View>
           </View>
 
-          <View style={styles.robotSection}>
+          <View style={styles.robotBubble}>
             <Text style={styles.robotEmoji}>🤖</Text>
-            <Text style={styles.robotSpeech}>{t('robot.encourage_1')}</Text>
+            <View style={styles.robotTextWrap}>
+              <Text style={styles.robotSpeech}>{t('robot.encourage_1')}</Text>
+            </View>
           </View>
 
-          <View style={styles.storyCard}>
+          <Card
+            variant="warm"
+            style={[
+              styles.storyCard,
+              feedback === 'correct' && styles.cardCorrect,
+              feedback === 'incorrect' && styles.cardIncorrect,
+            ]}
+          >
             <Text style={styles.storyText}>{question.storyText}</Text>
-          </View>
+          </Card>
 
-          <Text style={styles.equationHint}>
-            {question.first} {question.operation} {question.second} = ?
-          </Text>
+          <View style={styles.equationRow}>
+            <EqBlock value={question.first} />
+            <Text style={styles.op}>{question.operation === '+' ? '+' : '−'}</Text>
+            <EqBlock value={question.second} />
+            <Text style={styles.op}>=</Text>
+            <EqBlock value={userAnswer || '?'} highlight />
+          </View>
 
           {showHint && (
             <View style={styles.hintCard}>
-              <Text style={styles.hintLabel}>{t('common.hint')}:</Text>
+              <Text style={styles.hintLabel}>💡 {t('common.hint')}</Text>
               <Text style={styles.hintText}>{t('robot.hint_1')}</Text>
             </View>
           )}
 
-          <TextInput
-            style={styles.input}
-            value={userAnswer}
-            onChangeText={setUserAnswer}
-            keyboardType="numeric"
-            placeholder="?"
-            placeholderTextColor={COLORS.lightBlue}
-            autoFocus={true}
-          />
-
-          <Button
-            title={t('common.check')}
-            onPress={checkAnswer}
-            variant="primary"
-            style={styles.checkButton}
-          />
-
-          <Button
-            title={t('common.next')}
-            onPress={skipQuestion}
-            variant="outline"
-            style={styles.skipButton}
-          />
-
           {feedback && (
-            <Text style={[
-              styles.feedback,
-              feedback === t('feedback.excellent') && styles.feedbackCorrect,
-              feedback === t('feedback.almost') && styles.feedbackIncorrect,
-            ]}>
-              {feedback}
+            <Text
+              style={[
+                styles.feedback,
+                feedback === 'correct' ? styles.feedbackCorrect : styles.feedbackIncorrect,
+              ]}
+            >
+              {feedback === 'correct' ? `🎉 ${t('feedback.excellent')}` : `💭 ${t('feedback.almost')}`}
             </Text>
           )}
-        </Card>
-      </ScrollView>
-      <StatusBar barStyle="dark-content" />
-    </ImageBackground>
+
+          <View style={styles.padWrap}>
+            <NumberPad
+              value={userAnswer}
+              onChange={setUserAnswer}
+              onSubmit={checkAnswer}
+              disabled={feedback === 'correct'}
+            />
+            <Button
+              title={t('common.next')}
+              onPress={skipQuestion}
+              variant="outline"
+              size="small"
+              style={styles.skipButton}
+            />
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    </ScreenBackground>
   );
 };
 
+const EqBlock = ({ value, highlight }) => (
+  <View style={[styles.eqBlock, highlight && styles.eqBlockHighlight]}>
+    <Text style={[styles.eqValue, highlight && styles.eqValueHighlight]}>{value}</Text>
+  </View>
+);
+
 const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-  },
-  scrollView: {
-    flex: 1,
-  },
+  safe: { flex: 1 },
+  scroll: { flex: 1 },
   scrollContent: {
     padding: SIZING.PADDING.large,
+    paddingBottom: SIZING.PADDING.xlarge,
   },
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: SIZING.PADDING.large,
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: COLORS.sky,
-  },
-  loadingText: {
-    fontSize: TYPOGRAPHY.SIZES.title,
-    color: COLORS.text,
-  },
-  card: {
-    width: '100%',
-    maxWidth: 500,
-  },
-  title: {
-    fontSize: TYPOGRAPHY.SIZES.heading,
-    fontWeight: TYPOGRAPHY.WEIGHTS.bold,
-    color: COLORS.text,
-    textAlign: 'center',
+  headerCard: {
+    backgroundColor: COLORS.overlay,
+    padding: SIZING.PADDING.medium,
+    borderRadius: SIZING.BORDER_RADIUS.large,
     marginBottom: SIZING.MARGIN.medium,
+    ...SHADOWS.soft,
   },
-  subtitle: {
-    fontSize: TYPOGRAPHY.SIZES.subtitle,
-    color: COLORS.text,
-    textAlign: 'center',
-    marginBottom: SIZING.MARGIN.large,
+  progressBar: {
+    height: 10,
+    backgroundColor: COLORS.lightBlue,
+    borderRadius: SIZING.BORDER_RADIUS.pill,
+    overflow: 'hidden',
+    marginBottom: SIZING.MARGIN.small,
   },
-  difficultyButton: {
-    marginBottom: SIZING.MARGIN.medium,
+  progressFill: {
+    height: '100%',
+    backgroundColor: COLORS.softPurpleDeep,
+    borderRadius: SIZING.BORDER_RADIUS.pill,
   },
-  backButton: {
-    marginTop: SIZING.MARGIN.medium,
-  },
-  header: {
+  headerRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: SIZING.MARGIN.large,
   },
   questionNumber: {
-    fontSize: TYPOGRAPHY.SIZES.body,
+    fontSize: TYPOGRAPHY.SIZES.small,
     fontWeight: TYPOGRAPHY.WEIGHTS.bold,
     color: COLORS.text,
   },
   scoreText: {
     fontSize: TYPOGRAPHY.SIZES.body,
     fontWeight: TYPOGRAPHY.WEIGHTS.bold,
-    color: COLORS.path,
+    color: COLORS.pathDeep,
   },
-  robotSection: {
+  robotBubble: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: SIZING.MARGIN.large,
-    backgroundColor: COLORS.lightBlue,
-    padding: SIZING.PADDING.medium,
-    borderRadius: SIZING.BORDER_RADIUS.medium,
+    marginBottom: SIZING.MARGIN.medium,
   },
   robotEmoji: {
-    fontSize: 40,
-    marginRight: SIZING.MARGIN.medium,
+    fontSize: 48,
+    marginRight: SIZING.MARGIN.small,
+  },
+  robotTextWrap: {
+    flex: 1,
+    backgroundColor: COLORS.white,
+    borderRadius: SIZING.BORDER_RADIUS.large,
+    padding: SIZING.PADDING.medium,
+    ...SHADOWS.soft,
   },
   robotSpeech: {
-    flex: 1,
     fontSize: TYPOGRAPHY.SIZES.body,
     color: COLORS.text,
   },
   storyCard: {
-    backgroundColor: COLORS.warmYellow,
-    padding: SIZING.PADDING.large,
-    borderRadius: SIZING.BORDER_RADIUS.medium,
-    marginBottom: SIZING.MARGIN.large,
+    marginBottom: SIZING.MARGIN.medium,
   },
+  cardCorrect: { backgroundColor: COLORS.mint },
+  cardIncorrect: { backgroundColor: COLORS.softRed },
   storyText: {
     fontSize: TYPOGRAPHY.SIZES.subtitle,
     color: COLORS.text,
-    lineHeight: 28,
+    lineHeight: 30,
     textAlign: 'center',
   },
-  equationHint: {
+  equationRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginVertical: SIZING.MARGIN.small,
+  },
+  eqBlock: {
+    minWidth: 52,
+    height: 52,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: COLORS.white,
+    borderRadius: SIZING.BORDER_RADIUS.medium,
+    paddingHorizontal: 10,
+    marginHorizontal: 4,
+    ...SHADOWS.soft,
+  },
+  eqBlockHighlight: {
+    backgroundColor: COLORS.warmYellow,
+    borderWidth: 2,
+    borderColor: COLORS.warmYellowDeep,
+  },
+  eqValue: {
     fontSize: TYPOGRAPHY.SIZES.title,
     fontWeight: TYPOGRAPHY.WEIGHTS.bold,
     color: COLORS.text,
-    textAlign: 'center',
-    marginBottom: SIZING.MARGIN.large,
+  },
+  eqValueHighlight: { color: COLORS.pathDeep },
+  op: {
+    fontSize: TYPOGRAPHY.SIZES.title,
+    fontWeight: TYPOGRAPHY.WEIGHTS.bold,
+    color: COLORS.text,
+    marginHorizontal: 4,
   },
   hintCard: {
     backgroundColor: COLORS.mint,
     padding: SIZING.PADDING.medium,
-    borderRadius: SIZING.BORDER_RADIUS.medium,
-    marginBottom: SIZING.MARGIN.large,
+    borderRadius: SIZING.BORDER_RADIUS.large,
+    marginVertical: SIZING.MARGIN.small,
+    ...SHADOWS.soft,
   },
   hintLabel: {
     fontSize: TYPOGRAPHY.SIZES.body,
@@ -327,36 +324,22 @@ const styles = StyleSheet.create({
     fontSize: TYPOGRAPHY.SIZES.body,
     color: COLORS.text,
   },
-  input: {
-    borderWidth: 2,
-    borderColor: COLORS.grass,
-    backgroundColor: COLORS.white,
-    borderRadius: SIZING.BORDER_RADIUS.medium,
-    padding: SIZING.PADDING.medium,
-    fontSize: TYPOGRAPHY.SIZES.heading,
-    textAlign: 'center',
-    marginBottom: SIZING.MARGIN.medium,
-    minHeight: SIZING.MIN_TOUCH_TARGET + 10,
-  },
-  checkButton: {
-    marginBottom: SIZING.MARGIN.medium,
-  },
-  skipButton: {
-    marginBottom: SIZING.MARGIN.medium,
-  },
   feedback: {
-    fontSize: TYPOGRAPHY.SIZES.title,
+    fontSize: TYPOGRAPHY.SIZES.subtitle,
     fontWeight: TYPOGRAPHY.WEIGHTS.bold,
     textAlign: 'center',
+    marginVertical: SIZING.MARGIN.small,
+  },
+  feedbackCorrect: { color: COLORS.successDeep },
+  feedbackIncorrect: { color: COLORS.errorDeep },
+  padWrap: {
     marginTop: SIZING.MARGIN.medium,
   },
-  feedbackCorrect: {
-    color: COLORS.success,
-  },
-  feedbackIncorrect: {
-    color: COLORS.error,
+  skipButton: {
+    marginTop: SIZING.MARGIN.medium,
+    alignSelf: 'center',
+    minWidth: 160,
   },
 });
 
 export default StoryProblemsScreen;
-

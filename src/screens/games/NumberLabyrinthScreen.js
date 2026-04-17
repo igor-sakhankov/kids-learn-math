@@ -1,248 +1,245 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ImageBackground, StatusBar } from 'react-native';
+import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { t } from '../../utils/i18n';
 import { generateQuestion, generateOptions } from '../../utils/questionGenerator';
 import { useProgress } from '../../contexts/ProgressContext';
 import { useReward } from '../../contexts/RewardContext';
-import Button from '../../components/common/Button';
-import Card from '../../components/common/Card';
-import { COLORS, SIZING, TYPOGRAPHY, DIFFICULTY_LEVELS } from '../../utils/constants';
+import ScreenBackground from '../../components/common/ScreenBackground';
+import DifficultyPicker from '../../components/common/DifficultyPicker';
+import { COLORS, SIZING, TYPOGRAPHY, SHADOWS } from '../../utils/constants';
+
+const OPTION_COLORS = [
+  { face: COLORS.skyDeep, lip: '#4FA6CE' },
+  { face: COLORS.softPurpleDeep, lip: '#8A5FB8' },
+  { face: COLORS.mintDeep, lip: '#3FA07F' },
+  { face: COLORS.peachDeep, lip: '#E08848' },
+];
+
+const TOTAL_QUESTIONS = 10;
 
 const NumberLabyrinthScreen = ({ navigation }) => {
   const [difficulty, setDifficulty] = useState(null);
   const [question, setQuestion] = useState(null);
+  const [options, setOptions] = useState([]);
   const [score, setScore] = useState(0);
   const [moves, setMoves] = useState(0);
+  const [wrongPick, setWrongPick] = useState(null);
   const [sessionStart] = useState(Date.now());
-  
+
   const { recordAttempt, completeGame } = useProgress();
   const { addSparks } = useReward();
 
   const selectDifficulty = (level) => {
     setDifficulty(level);
-    generateNewQuestion(level);
+    loadNewQuestion(level);
   };
 
-  const generateNewQuestion = (level) => {
+  const loadNewQuestion = (level) => {
     const newQuestion = generateQuestion(level);
     setQuestion(newQuestion);
+    setOptions(generateOptions(newQuestion.answer, 3));
+    setWrongPick(null);
   };
 
   const handleAnswer = async (selectedAnswer) => {
+    if (!question) return;
     const isCorrect = selectedAnswer === question.answer;
     await recordAttempt('labyrinth', isCorrect, difficulty);
     setMoves(moves + 1);
 
     if (isCorrect) {
-      setScore(score + 1);
-      
-      if (score + 1 >= 10) {
-        finishGame();
+      const nextScore = score + 1;
+      setScore(nextScore);
+      if (nextScore >= TOTAL_QUESTIONS) {
+        finishGame(nextScore);
       } else {
-        setTimeout(() => {
-          generateNewQuestion(difficulty);
-        }, 500);
+        setTimeout(() => loadNewQuestion(difficulty), 400);
       }
+    } else {
+      setWrongPick(selectedAnswer);
+      setTimeout(() => setWrongPick(null), 600);
     }
   };
 
-  const finishGame = async () => {
+  const finishGame = async (finalScore) => {
     const duration = Math.floor((Date.now() - sessionStart) / 60000);
-    await completeGame('number_labyrinth', score, duration);
-    await addSparks(Math.min(3, Math.floor(score / 3)));
+    await completeGame('number_labyrinth', finalScore, duration);
+    await addSparks(Math.min(3, Math.floor(finalScore / 3)));
     navigation.goBack();
   };
 
-  // 1 correct + 3 distractors, shuffled
-  const getOptions = () => (question ? generateOptions(question.answer, 3) : []);
-
   if (!difficulty) {
     return (
-      <ImageBackground
-        source={require('../../../assets/professor-corgi.jpeg')}
-        style={styles.background}
-        resizeMode="cover"
-      >
-        <View style={styles.container}>
-          <Card style={styles.card}>
-            <Text style={styles.emoji}>🧩</Text>
-            <Text style={styles.title}>{t('games.number_labyrinth')}</Text>
-            <Text style={styles.subtitle}>{t('games.help_robot')}</Text>
-            <Text style={styles.instruction}>{t('difficulty.choose_level')}</Text>
-            
-            {Object.keys(DIFFICULTY_LEVELS).map((key) => (
-              <Button
-                key={key}
-                title={t(`difficulty.${key}`)}
-                onPress={() => selectDifficulty(key)}
-                variant="primary"
-                style={styles.difficultyButton}
-              />
-            ))}
-            
-            <Button
-              title={t('common.back')}
-              onPress={() => navigation.goBack()}
-              variant="outline"
-              style={styles.backButton}
-            />
-          </Card>
-        </View>
-        <StatusBar barStyle="dark-content" />
-      </ImageBackground>
+      <DifficultyPicker
+        tint="sky"
+        icon="🧩"
+        title={t('games.number_labyrinth')}
+        subtitle={t('games.help_robot')}
+        onSelect={selectDifficulty}
+        onBack={() => navigation.goBack()}
+      />
     );
   }
 
-  if (!question) {
-    return (
-      <View style={styles.loadingContainer}>
-        <Text style={styles.loadingText}>{t('common.loading')}</Text>
-      </View>
-    );
-  }
+  if (!question) return null;
 
-  const options = getOptions();
+  const progressPct = Math.round((score / TOTAL_QUESTIONS) * 100);
 
   return (
-    <ImageBackground
-      source={require('../../../assets/professor-corgi.jpeg')}
-      style={styles.background}
-      resizeMode="cover"
-    >
-      <View style={styles.container}>
-        <Card style={styles.card}>
-          <View style={styles.header}>
-            <Text style={styles.scoreText}>
-              {t('game_ui.score')}: {score} / 10
-            </Text>
-            <Text style={styles.movesText}>
-              {t('game_ui.moves')}: {moves}
-            </Text>
+    <ScreenBackground tint="sky">
+      <SafeAreaView style={styles.safe}>
+        <View style={styles.container}>
+          <View style={styles.headerCard}>
+            <View style={styles.progressBar}>
+              <View style={[styles.progressFill, { width: `${progressPct}%` }]} />
+            </View>
+            <View style={styles.headerRow}>
+              <Text style={styles.headerText}>
+                ⭐ {score} / {TOTAL_QUESTIONS}
+              </Text>
+              <Text style={styles.headerLabel}>
+                {t('game_ui.moves')}: {moves}
+              </Text>
+            </View>
           </View>
 
-          <Text style={styles.robotEmoji}>🤖</Text>
-          
-          <View style={styles.questionCard}>
-            <Text style={styles.questionText}>{question.text} = ?</Text>
+          <View style={styles.doorRow}>
+            <Text style={styles.robotEmoji}>🤖</Text>
+            <View style={styles.questionBubble}>
+              <Text style={styles.questionText}>{question.text} = ?</Text>
+            </View>
           </View>
 
           <Text style={styles.instruction}>{t('game_ui.open_door')}</Text>
 
           <View style={styles.optionsGrid}>
-            {options.map((option, index) => (
-              <Button
-                key={index}
-                title={option.toString()}
-                onPress={() => handleAnswer(option)}
-                variant="secondary"
-                style={styles.optionButton}
-              />
-            ))}
+            {options.map((option, index) => {
+              const palette = OPTION_COLORS[index % OPTION_COLORS.length];
+              const isWrong = wrongPick === option;
+              return (
+                <Pressable
+                  key={`${option}-${index}`}
+                  style={styles.optionWrap}
+                  onPress={() => handleAnswer(option)}
+                  disabled={wrongPick !== null}
+                >
+                  {({ pressed }) => (
+                    <View
+                      style={[
+                        styles.option,
+                        {
+                          backgroundColor: isWrong ? COLORS.softRedDeep : palette.face,
+                          borderBottomColor: isWrong ? COLORS.errorDeep : palette.lip,
+                          borderBottomWidth: pressed ? 2 : 5,
+                          transform: [{ translateY: pressed ? 3 : 0 }],
+                        },
+                      ]}
+                    >
+                      <Text style={styles.doorEmoji}>🚪</Text>
+                      <Text style={styles.optionText}>{option}</Text>
+                    </View>
+                  )}
+                </Pressable>
+              );
+            })}
           </View>
-        </Card>
-      </View>
-      <StatusBar barStyle="dark-content" />
-    </ImageBackground>
+        </View>
+      </SafeAreaView>
+    </ScreenBackground>
   );
 };
 
 const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-  },
+  safe: { flex: 1 },
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     padding: SIZING.PADDING.large,
   },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: COLORS.sky,
-  },
-  loadingText: {
-    fontSize: TYPOGRAPHY.SIZES.title,
-    color: COLORS.text,
-  },
-  card: {
-    width: '100%',
-    maxWidth: 500,
-  },
-  emoji: {
-    fontSize: 60,
-    textAlign: 'center',
-    marginBottom: SIZING.MARGIN.medium,
-  },
-  title: {
-    fontSize: TYPOGRAPHY.SIZES.heading,
-    fontWeight: TYPOGRAPHY.WEIGHTS.bold,
-    color: COLORS.text,
-    textAlign: 'center',
-    marginBottom: SIZING.MARGIN.medium,
-  },
-  subtitle: {
-    fontSize: TYPOGRAPHY.SIZES.subtitle,
-    color: COLORS.text,
-    textAlign: 'center',
-    marginBottom: SIZING.MARGIN.medium,
-  },
-  instruction: {
-    fontSize: TYPOGRAPHY.SIZES.body,
-    color: COLORS.text,
-    textAlign: 'center',
-    marginBottom: SIZING.MARGIN.large,
-  },
-  difficultyButton: {
-    marginBottom: SIZING.MARGIN.medium,
-  },
-  backButton: {
-    marginTop: SIZING.MARGIN.medium,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: SIZING.MARGIN.large,
-  },
-  scoreText: {
-    fontSize: TYPOGRAPHY.SIZES.body,
-    fontWeight: TYPOGRAPHY.WEIGHTS.bold,
-    color: COLORS.path,
-  },
-  movesText: {
-    fontSize: TYPOGRAPHY.SIZES.body,
-    fontWeight: TYPOGRAPHY.WEIGHTS.bold,
-    color: COLORS.text,
-  },
-  robotEmoji: {
-    fontSize: 60,
-    textAlign: 'center',
-    marginBottom: SIZING.MARGIN.large,
-  },
-  questionCard: {
-    backgroundColor: COLORS.lightBlue,
-    padding: SIZING.PADDING.large,
+  headerCard: {
+    backgroundColor: COLORS.overlay,
+    padding: SIZING.PADDING.medium,
     borderRadius: SIZING.BORDER_RADIUS.large,
     marginBottom: SIZING.MARGIN.large,
+    ...SHADOWS.soft,
+  },
+  progressBar: {
+    height: 10,
+    backgroundColor: COLORS.lightBlue,
+    borderRadius: SIZING.BORDER_RADIUS.pill,
+    overflow: 'hidden',
+    marginBottom: SIZING.MARGIN.small,
+  },
+  progressFill: {
+    height: '100%',
+    backgroundColor: COLORS.skyDeep,
+    borderRadius: SIZING.BORDER_RADIUS.pill,
+  },
+  headerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  headerText: {
+    fontSize: TYPOGRAPHY.SIZES.body,
+    fontWeight: TYPOGRAPHY.WEIGHTS.bold,
+    color: COLORS.pathDeep,
+  },
+  headerLabel: {
+    fontSize: TYPOGRAPHY.SIZES.small,
+    color: COLORS.textSoft,
+  },
+  doorRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: SIZING.MARGIN.large,
+  },
+  robotEmoji: {
+    fontSize: 64,
+    marginRight: SIZING.MARGIN.medium,
+  },
+  questionBubble: {
+    flex: 1,
+    backgroundColor: COLORS.white,
+    paddingVertical: SIZING.PADDING.large,
+    paddingHorizontal: SIZING.PADDING.medium,
+    borderRadius: SIZING.BORDER_RADIUS.xlarge,
+    alignItems: 'center',
+    ...SHADOWS.card,
   },
   questionText: {
     fontSize: TYPOGRAPHY.SIZES.heading,
     fontWeight: TYPOGRAPHY.WEIGHTS.bold,
     color: COLORS.text,
+  },
+  instruction: {
+    fontSize: TYPOGRAPHY.SIZES.body,
+    color: COLORS.textSoft,
     textAlign: 'center',
+    marginBottom: SIZING.MARGIN.medium,
   },
   optionsGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    gap: SIZING.MARGIN.medium,
+    margin: -6,
   },
-  optionButton: {
-    width: '47%',
-    marginBottom: SIZING.MARGIN.medium,
+  optionWrap: {
+    width: '50%',
+    padding: 6,
+    ...SHADOWS.soft,
+  },
+  option: {
+    minHeight: 110,
+    borderRadius: SIZING.BORDER_RADIUS.xlarge,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  doorEmoji: { fontSize: 28, marginBottom: 4 },
+  optionText: {
+    fontSize: TYPOGRAPHY.SIZES.heading,
+    fontWeight: TYPOGRAPHY.WEIGHTS.bold,
+    color: COLORS.white,
   },
 });
 
 export default NumberLabyrinthScreen;
-

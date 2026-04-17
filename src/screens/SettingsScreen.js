@@ -1,193 +1,167 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, ImageBackground, StatusBar, Switch, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Switch, TouchableOpacity } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { t } from '../utils/i18n';
 import { useSettings } from '../contexts/SettingsContext';
 import Card from '../components/common/Card';
 import Button from '../components/common/Button';
-import { COLORS, SIZING, TYPOGRAPHY, LANGUAGES } from '../utils/constants';
+import ScreenBackground from '../components/common/ScreenBackground';
+import { COLORS, SIZING, TYPOGRAPHY, SHADOWS, LANGUAGES } from '../utils/constants';
+
+const LANGUAGE_OPTIONS = [
+  { code: LANGUAGES.EN, name: 'English', flag: '🇬🇧' },
+  { code: LANGUAGES.RU, name: 'Русский', flag: '🇷🇺' },
+  { code: LANGUAGES.ES, name: 'Español', flag: '🇪🇸' },
+];
 
 const SettingsScreen = ({ navigation }) => {
   const { language, changeLanguage, settings, toggleSetting } = useSettings();
 
-  const languageOptions = [
-    { code: LANGUAGES.EN, name: 'English', flag: '🇬🇧' },
-    { code: LANGUAGES.RU, name: 'Русский', flag: '🇷🇺' },
-    { code: LANGUAGES.ES, name: 'Español', flag: '🇪🇸' },
-  ];
-
   return (
-    <ImageBackground
-      source={require('../../assets/professor-corgi.jpeg')}
-      style={styles.background}
-      resizeMode="cover"
-    >
-      <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
-        <View style={styles.header}>
-          <Text style={styles.title}>{t('settings.title')}</Text>
-        </View>
-
-        {/* Language Settings */}
-        <Card style={styles.card}>
-          <Text style={styles.sectionTitle}>{t('settings.language')}</Text>
-          
-          {languageOptions.map((lang) => (
-            <TouchableOpacity
-              key={lang.code}
-              style={[
-                styles.languageOption,
-                language === lang.code && styles.languageOptionActive,
-              ]}
-              onPress={() => changeLanguage(lang.code)}
-            >
-              <Text style={styles.languageFlag}>{lang.flag}</Text>
-              <Text style={styles.languageName}>{lang.name}</Text>
-              {language === lang.code && (
-                <Text style={styles.checkmark}>✓</Text>
-              )}
-            </TouchableOpacity>
-          ))}
-        </Card>
-
-        {/* Audio Settings */}
-        <Card style={styles.card}>
-          <Text style={styles.sectionTitle}>{t('settings.sound')}</Text>
-          
-          <View style={styles.settingRow}>
-            <View style={styles.settingInfo}>
-              <Text style={styles.settingLabel}>{t('settings.music')}</Text>
-            </View>
-            <Switch
-              value={settings.music}
-              onValueChange={() => toggleSetting('music')}
-              trackColor={{ false: COLORS.lightBlue, true: COLORS.grass }}
-              thumbColor={COLORS.white}
-            />
+    <ScreenBackground tint="lavender">
+      <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
+        <ScrollView
+          style={styles.scroll}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.titlePill}>
+            <Text style={styles.title}>{t('settings.title')}</Text>
           </View>
 
-          <View style={styles.settingRow}>
-            <View style={styles.settingInfo}>
-              <Text style={styles.settingLabel}>{t('settings.sound_effects')}</Text>
+          <Card style={styles.card} padding={false} band="purple" bandTitle={t('settings.language')} bandIcon="🌍">
+            <View style={styles.cardBody}>
+              {LANGUAGE_OPTIONS.map((lang) => {
+                const active = language === lang.code;
+                return (
+                  <TouchableOpacity
+                    key={lang.code}
+                    style={[styles.languageOption, active && styles.languageOptionActive]}
+                    onPress={() => changeLanguage(lang.code)}
+                    activeOpacity={0.8}
+                  >
+                    <Text style={styles.languageFlag}>{lang.flag}</Text>
+                    <Text style={styles.languageName}>{lang.name}</Text>
+                    {active && <Text style={styles.checkmark}>✓</Text>}
+                  </TouchableOpacity>
+                );
+              })}
             </View>
-            <Switch
-              value={settings.soundEffects}
-              onValueChange={() => toggleSetting('soundEffects')}
-              trackColor={{ false: COLORS.lightBlue, true: COLORS.grass }}
-              thumbColor={COLORS.white}
-            />
-          </View>
+          </Card>
 
-          <View style={styles.settingRow}>
-            <View style={styles.settingInfo}>
-              <Text style={styles.settingLabel}>{t('settings.voice')}</Text>
+          <Card style={styles.card} padding={false} band="path" bandTitle={t('settings.sound')} bandIcon="🔊">
+            <View style={styles.cardBody}>
+              <SettingRow
+                label={t('settings.music')}
+                emoji="🎵"
+                value={settings.music}
+                onToggle={() => toggleSetting('music')}
+              />
+              <SettingRow
+                label={t('settings.sound_effects')}
+                emoji="✨"
+                value={settings.soundEffects}
+                onToggle={() => toggleSetting('soundEffects')}
+              />
+              <SettingRow
+                label={t('settings.voice')}
+                emoji="🗣️"
+                value={settings.voice}
+                onToggle={() => toggleSetting('voice')}
+                last
+              />
             </View>
-            <Switch
-              value={settings.voice}
-              onValueChange={() => toggleSetting('voice')}
-              trackColor={{ false: COLORS.lightBlue, true: COLORS.grass }}
-              thumbColor={COLORS.white}
-            />
-          </View>
-        </Card>
+          </Card>
 
-        {/* Accessibility Settings */}
-        <Card style={styles.card}>
-          <Text style={styles.sectionTitle}>{t('settings.accessibility')}</Text>
-          
-          <View style={styles.settingRow}>
-            <View style={styles.settingInfo}>
-              <Text style={styles.settingLabel}>{t('settings.high_contrast')}</Text>
+          <Card style={styles.card} padding={false} band="mint" bandTitle={t('settings.accessibility')} bandIcon="♿">
+            <View style={styles.cardBody}>
+              <SettingRow
+                label={t('settings.high_contrast')}
+                emoji="🌓"
+                value={settings.highContrast}
+                onToggle={() => toggleSetting('highContrast')}
+              />
+              <SettingRow
+                label={t('settings.large_text')}
+                emoji="🔍"
+                value={settings.largeText}
+                onToggle={() => toggleSetting('largeText')}
+              />
+              <SettingRow
+                label={t('settings.reduced_motion')}
+                emoji="🐢"
+                value={settings.reducedMotion}
+                onToggle={() => toggleSetting('reducedMotion')}
+                last
+              />
             </View>
-            <Switch
-              value={settings.highContrast}
-              onValueChange={() => toggleSetting('highContrast')}
-              trackColor={{ false: COLORS.lightBlue, true: COLORS.grass }}
-              thumbColor={COLORS.white}
-            />
-          </View>
+          </Card>
 
-          <View style={styles.settingRow}>
-            <View style={styles.settingInfo}>
-              <Text style={styles.settingLabel}>{t('settings.large_text')}</Text>
-            </View>
-            <Switch
-              value={settings.largeText}
-              onValueChange={() => toggleSetting('largeText')}
-              trackColor={{ false: COLORS.lightBlue, true: COLORS.grass }}
-              thumbColor={COLORS.white}
-            />
-          </View>
-
-          <View style={styles.settingRow}>
-            <View style={styles.settingInfo}>
-              <Text style={styles.settingLabel}>{t('settings.reduced_motion')}</Text>
-            </View>
-            <Switch
-              value={settings.reducedMotion}
-              onValueChange={() => toggleSetting('reducedMotion')}
-              trackColor={{ false: COLORS.lightBlue, true: COLORS.grass }}
-              thumbColor={COLORS.white}
-            />
-          </View>
-        </Card>
-
-        <Button
-          title={t('common.back')}
-          onPress={() => navigation.goBack()}
-          variant="secondary"
-          style={styles.backButton}
-        />
-        
-        <StatusBar barStyle="dark-content" />
-      </ScrollView>
-    </ImageBackground>
+          <Button
+            title={t('common.back')}
+            onPress={() => navigation.goBack()}
+            variant="secondary"
+            style={styles.backButton}
+          />
+        </ScrollView>
+      </SafeAreaView>
+    </ScreenBackground>
   );
 };
 
+const SettingRow = ({ label, emoji, value, onToggle, last }) => (
+  <View style={[styles.settingRow, !last && styles.settingRowBorder]}>
+    <Text style={styles.settingEmoji}>{emoji}</Text>
+    <Text style={styles.settingLabel}>{label}</Text>
+    <Switch
+      value={value}
+      onValueChange={onToggle}
+      trackColor={{ false: COLORS.lightBlue, true: COLORS.grassDeep }}
+      thumbColor={COLORS.white}
+    />
+  </View>
+);
+
 const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-  },
-  scrollView: {
-    flex: 1,
-  },
+  safe: { flex: 1 },
+  scroll: { flex: 1 },
   scrollContent: {
     padding: SIZING.PADDING.large,
+    paddingBottom: SIZING.PADDING.xlarge,
   },
-  header: {
-    alignItems: 'center',
-    marginBottom: SIZING.MARGIN.large,
-  },
-  title: {
-    fontSize: TYPOGRAPHY.SIZES.heading,
-    fontWeight: TYPOGRAPHY.WEIGHTS.bold,
-    color: COLORS.text,
+  titlePill: {
+    alignSelf: 'center',
     backgroundColor: COLORS.overlay,
     paddingHorizontal: SIZING.PADDING.large,
     paddingVertical: SIZING.PADDING.medium,
-    borderRadius: SIZING.BORDER_RADIUS.large,
+    borderRadius: SIZING.BORDER_RADIUS.pill,
+    marginBottom: SIZING.MARGIN.large,
+    ...SHADOWS.soft,
+  },
+  title: {
+    fontSize: TYPOGRAPHY.SIZES.title,
+    fontWeight: TYPOGRAPHY.WEIGHTS.bold,
+    color: COLORS.text,
   },
   card: {
     marginBottom: SIZING.MARGIN.large,
   },
-  sectionTitle: {
-    fontSize: TYPOGRAPHY.SIZES.title,
-    fontWeight: TYPOGRAPHY.WEIGHTS.bold,
-    color: COLORS.text,
-    marginBottom: SIZING.MARGIN.large,
+  cardBody: {
+    padding: SIZING.PADDING.medium,
   },
   languageOption: {
     flexDirection: 'row',
     alignItems: 'center',
     padding: SIZING.PADDING.medium,
     backgroundColor: COLORS.lightBlue,
-    borderRadius: SIZING.BORDER_RADIUS.medium,
+    borderRadius: SIZING.BORDER_RADIUS.large,
     marginBottom: SIZING.MARGIN.small,
     minHeight: SIZING.MIN_TOUCH_TARGET,
   },
   languageOptionActive: {
     backgroundColor: COLORS.mint,
     borderWidth: 2,
-    borderColor: COLORS.grass,
+    borderColor: COLORS.mintDeep,
   },
   languageFlag: {
     fontSize: 30,
@@ -201,29 +175,33 @@ const styles = StyleSheet.create({
   },
   checkmark: {
     fontSize: TYPOGRAPHY.SIZES.title,
-    color: COLORS.success,
+    color: COLORS.successDeep,
     fontWeight: TYPOGRAPHY.WEIGHTS.bold,
   },
   settingRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: SIZING.PADDING.medium,
-    borderBottomWidth: 1,
-    borderBottomColor: COLORS.lightBlue,
     minHeight: SIZING.MIN_TOUCH_TARGET,
   },
-  settingInfo: {
-    flex: 1,
+  settingRowBorder: {
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.lightBlue,
+  },
+  settingEmoji: {
+    fontSize: 24,
+    marginRight: SIZING.MARGIN.medium,
   },
   settingLabel: {
+    flex: 1,
     fontSize: TYPOGRAPHY.SIZES.body,
     color: COLORS.text,
   },
   backButton: {
-    marginBottom: SIZING.MARGIN.large,
+    marginTop: SIZING.MARGIN.medium,
+    alignSelf: 'center',
+    minWidth: 200,
   },
 });
 
 export default SettingsScreen;
-

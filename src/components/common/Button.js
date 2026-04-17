@@ -1,6 +1,16 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, ActivityIndicator } from 'react-native';
-import { COLORS, SIZING, TYPOGRAPHY } from '../../utils/constants';
+import { Pressable, Text, StyleSheet, ActivityIndicator, View } from 'react-native';
+import { COLORS, SIZING, TYPOGRAPHY, SHADOWS } from '../../utils/constants';
+
+const VARIANT_COLORS = {
+  primary:   { face: COLORS.path,           lip: COLORS.pathDeep,        text: COLORS.white },
+  secondary: { face: COLORS.grass,          lip: COLORS.grassDeep,       text: COLORS.white },
+  success:   { face: COLORS.success,        lip: COLORS.successDeep,     text: COLORS.white },
+  error:     { face: COLORS.error,          lip: COLORS.errorDeep,       text: COLORS.white },
+  purple:    { face: COLORS.softPurpleDeep, lip: '#8A5FB8',              text: COLORS.white },
+  sky:       { face: COLORS.skyDeep,        lip: '#4FA6CE',              text: COLORS.white },
+  outline:   { face: COLORS.white,          lip: COLORS.path,            text: COLORS.path, outline: true },
+};
 
 const Button = ({
   title,
@@ -11,101 +21,104 @@ const Button = ({
   loading = false,
   style,
   textStyle,
+  icon,
 }) => {
-  const buttonStyles = [
-    styles.button,
-    styles[`button_${variant}`],
-    styles[`button_${size}`],
-    disabled && styles.button_disabled,
-    style,
-  ];
-
-  const textStyles = [
-    styles.text,
-    styles[`text_${size}`],
-    disabled && styles.text_disabled,
-    textStyle,
-  ];
+  const v = VARIANT_COLORS[variant] || VARIANT_COLORS.primary;
 
   return (
-    <TouchableOpacity
-      style={buttonStyles}
-      onPress={onPress}
+    <Pressable
+      onPress={disabled || loading ? undefined : onPress}
       disabled={disabled || loading}
-      activeOpacity={0.7}
+      style={[styles.wrapper, disabled && styles.disabled, style]}
     >
-      {loading ? (
-        <ActivityIndicator color={COLORS.white} />
-      ) : (
-        <Text style={textStyles}>{title}</Text>
+      {({ pressed }) => (
+        <View
+          style={[
+            styles.face,
+            styles[`face_${size}`],
+            {
+              backgroundColor: v.face,
+              borderBottomColor: v.lip,
+              borderBottomWidth: pressed ? 1 : 5,
+              transform: [{ translateY: pressed ? 4 : 0 }],
+            },
+            v.outline && styles.outlineFace,
+            v.outline && { borderColor: v.lip },
+          ]}
+        >
+          {loading ? (
+            <ActivityIndicator color={v.text} />
+          ) : (
+            <View style={styles.content}>
+              {icon ? (
+                <Text style={[styles.icon, styles[`icon_${size}`]]}>{icon}</Text>
+              ) : null}
+              <Text
+                style={[
+                  styles.text,
+                  styles[`text_${size}`],
+                  { color: v.text },
+                  textStyle,
+                ]}
+              >
+                {title}
+              </Text>
+            </View>
+          )}
+        </View>
       )}
-    </TouchableOpacity>
+    </Pressable>
   );
 };
 
 const styles = StyleSheet.create({
-  button: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: SIZING.BORDER_RADIUS.medium,
-    paddingVertical: SIZING.PADDING.medium,
-    paddingHorizontal: SIZING.PADDING.large,
-    minHeight: SIZING.MIN_TOUCH_TARGET,
-    elevation: 3,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+  wrapper: {
+    ...SHADOWS.soft,
+    borderRadius: SIZING.BORDER_RADIUS.pill,
   },
-  button_primary: {
-    backgroundColor: COLORS.path,
-  },
-  button_secondary: {
-    backgroundColor: COLORS.grass,
-  },
-  button_success: {
-    backgroundColor: COLORS.success,
-  },
-  button_error: {
-    backgroundColor: COLORS.error,
-  },
-  button_outline: {
-    backgroundColor: 'transparent',
-    borderWidth: 2,
-    borderColor: COLORS.path,
-  },
-  button_small: {
-    paddingVertical: SIZING.PADDING.small,
-    paddingHorizontal: SIZING.PADDING.medium,
-  },
-  button_medium: {
-    paddingVertical: SIZING.PADDING.medium,
-    paddingHorizontal: SIZING.PADDING.large,
-  },
-  button_large: {
-    paddingVertical: SIZING.PADDING.large,
-    paddingHorizontal: SIZING.PADDING.large + 10,
-  },
-  button_disabled: {
+  disabled: {
     opacity: 0.5,
   },
+  face: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: SIZING.BORDER_RADIUS.pill,
+    minHeight: SIZING.MIN_TOUCH_TARGET,
+    paddingHorizontal: SIZING.PADDING.large,
+  },
+  outlineFace: {
+    borderWidth: 2,
+  },
+  content: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  face_small: {
+    paddingVertical: SIZING.PADDING.small,
+    paddingHorizontal: SIZING.PADDING.medium,
+    minHeight: 40,
+  },
+  face_medium: {
+    paddingVertical: SIZING.PADDING.medium,
+    paddingHorizontal: SIZING.PADDING.large,
+  },
+  face_large: {
+    paddingVertical: SIZING.PADDING.large,
+    paddingHorizontal: SIZING.PADDING.xlarge,
+    minHeight: 60,
+  },
   text: {
-    color: COLORS.white,
     fontWeight: TYPOGRAPHY.WEIGHTS.bold,
+    letterSpacing: 0.3,
   },
-  text_small: {
-    fontSize: TYPOGRAPHY.SIZES.body,
-  },
-  text_medium: {
-    fontSize: TYPOGRAPHY.SIZES.subtitle,
-  },
-  text_large: {
-    fontSize: TYPOGRAPHY.SIZES.title,
-  },
-  text_disabled: {
-    color: COLORS.white,
-  },
+  text_small: { fontSize: TYPOGRAPHY.SIZES.body },
+  text_medium: { fontSize: TYPOGRAPHY.SIZES.subtitle },
+  text_large: { fontSize: TYPOGRAPHY.SIZES.title },
+  icon: { marginRight: 10 },
+  icon_small: { fontSize: 18 },
+  icon_medium: { fontSize: 22 },
+  icon_large: { fontSize: 28 },
 });
 
 export default Button;
-

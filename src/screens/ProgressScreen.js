@@ -31,10 +31,6 @@ const ProgressScreen = ({ navigation }) => {
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
         >
-          <View style={styles.titlePill}>
-            <Text style={styles.title}>{t('progress.title')}</Text>
-          </View>
-
           {/* Tree Visualization */}
           <Card style={styles.treeCard} padding={false}>
             <View style={styles.treeHero}>
@@ -134,20 +130,6 @@ const styles = StyleSheet.create({
     padding: SIZING.PADDING.large,
     paddingTop: SIZING.PADDING.xlarge + SIZING.SECONDARY_TARGET,
     paddingBottom: SIZING.PADDING.xlarge,
-  },
-  titlePill: {
-    alignSelf: 'center',
-    backgroundColor: COLORS.overlay,
-    paddingHorizontal: SIZING.PADDING.large,
-    paddingVertical: SIZING.PADDING.medium,
-    borderRadius: SIZING.BORDER_RADIUS.pill,
-    marginBottom: SIZING.MARGIN.large,
-    ...SHADOWS.soft,
-  },
-  title: {
-    fontSize: TYPOGRAPHY.SIZES.title,
-    fontWeight: TYPOGRAPHY.WEIGHTS.bold,
-    color: COLORS.text,
   },
   treeCard: {
     marginBottom: SIZING.MARGIN.large,

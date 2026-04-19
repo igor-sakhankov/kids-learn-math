@@ -115,7 +115,7 @@ const StoryProblemsScreen = ({ navigation }) => {
 
   return (
     <ScreenBackground tint="lavender">
-      <SafeAreaView style={styles.safe}>
+      <SafeAreaView style={styles.safe} edges={['top', 'left', 'right', 'bottom']}>
         <BackButton confirm onPress={() => navigation.goBack()} />
 
         <View style={styles.headerWrap}>
@@ -324,7 +324,7 @@ const styles = StyleSheet.create({
   feedbackIncorrect: { color: COLORS.errorDeep },
   padWrap: {
     paddingHorizontal: SIZING.PADDING.large,
-    paddingTop: SIZING.PADDING.small,
+    paddingTop: SIZING.PADDING.medium,
     paddingBottom: SIZING.PADDING.medium,
   },
   skipButton: {

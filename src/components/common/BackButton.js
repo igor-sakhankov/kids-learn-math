@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     minHeight: SIZING.SECONDARY_TARGET,
     minWidth: SIZING.SECONDARY_TARGET,
     paddingHorizontal: SIZING.PADDING.medium,
-    borderBottomColor: COLORS.skyDeep,
+    borderBottomColor: COLORS.pressShadow,
     borderBottomWidth: 3,
   },
   arrow: {

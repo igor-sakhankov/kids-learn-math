@@ -113,7 +113,7 @@ const AdditionVisualScreen = ({ navigation }) => {
 
   return (
     <ScreenBackground tint="mint">
-      <SafeAreaView style={styles.safe}>
+      <SafeAreaView style={styles.safe} edges={['top', 'left', 'right', 'bottom']}>
         <BackButton confirm onPress={() => navigation.goBack()} />
 
         <View style={styles.headerWrap}>
@@ -235,7 +235,7 @@ const styles = StyleSheet.create({
   scoreText: {
     fontSize: TYPOGRAPHY.SIZES.subtitle,
     fontWeight: TYPOGRAPHY.WEIGHTS.bold,
-    color: COLORS.pathDeep,
+    color: COLORS.grassDeep,
   },
   mainCard: {
     marginBottom: SIZING.MARGIN.medium,
@@ -273,7 +273,7 @@ const styles = StyleSheet.create({
   operatorText: {
     fontSize: TYPOGRAPHY.SIZES.heading,
     fontWeight: TYPOGRAPHY.WEIGHTS.bold,
-    color: COLORS.pathDeep,
+    color: COLORS.grassDeep,
     marginHorizontal: SIZING.MARGIN.medium,
   },
   equationRow: {
@@ -322,7 +322,7 @@ const styles = StyleSheet.create({
   feedbackIncorrect: { color: COLORS.errorDeep },
   padWrap: {
     paddingHorizontal: SIZING.PADDING.large,
-    paddingTop: SIZING.PADDING.small,
+    paddingTop: SIZING.PADDING.medium,
     paddingBottom: SIZING.PADDING.medium,
   },
 });

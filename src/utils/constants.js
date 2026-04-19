@@ -21,6 +21,9 @@ export const COLORS = {
   // Neutrals
   white: '#FFFFFF',
   overlay: 'rgba(255,255,255,0.94)',
+  // Neutral press-shadow used on controls that sit on varied tinted backgrounds
+  // (e.g. BackButton, PillAction) — tints-agnostic so it reads on any screen.
+  pressShadow: 'rgba(0,0,0,0.18)',
 
   // Pastel accents (kids-friendly palette)
   lightBlue: '#E3F4FD',
@@ -35,11 +38,25 @@ export const COLORS = {
   peach: '#FFE0C2',
   peachDeep: '#FFA86B',
 
+  // "Lip" colors — one step darker than *Deep, used as the bottom-border
+  // shadow on chunky plastic buttons (Button, TileButton, NumberPad, game
+  // option tiles). Keep these in sync with the *Deep family above.
+  skyLip: '#4FA6CE',
+  grassLip: '#3E9A40',
+  pathLip: '#C8770F',
+  softPurpleLip: '#8A5FB8',
+  warmYellowLip: '#C99A1F',
+  mintLip: '#3FA07F',
+  peachLip: '#E08848',
+
   // Screen background tints (soft pastels)
   bgSky: '#DEF2FC',
   bgMint: '#DFF7EC',
   bgSunrise: '#FFF4E0',
   bgLavender: '#F1E5FA',
+  bgTeal: '#D4F1EC',
+  bgRose: '#FDE0E4',
+  bgLemon: '#FFF8CC',
 };
 
 // Difficulty levels configuration
@@ -131,6 +148,19 @@ export const SIZING = {
   },
 };
 
+// Icon/emoji size ladder. Use these instead of raw pt values so mascot,
+// hero, and inline emoji sizes stay on the same rhythm across screens.
+//   hero       — signature character/moment (Welcome mascot, Progress tree)
+//   feature    — primary in-content mascot / hero emoji on a screen
+//   supporting — chip/stat emoji, object-count visuals
+//   inline     — section headers, list row icons
+export const ICON_SIZES = {
+  hero: 120,
+  feature: 64,
+  supporting: 40,
+  inline: 24,
+};
+
 // Typography
 // `tiny` is reserved for parent/meta text only (never a kid-facing label).
 // Kid-facing body text must use `body` (20pt) or above.
@@ -196,4 +226,5 @@ export const STORAGE_KEYS = {
   SETTINGS: '@app:settings',
   ACHIEVEMENTS: '@app:achievements',
   TREE_STATE: '@app:tree_state',
+  HAS_SEEN_WELCOME: '@app:has_seen_welcome',
 };

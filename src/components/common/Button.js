@@ -3,13 +3,13 @@ import { Pressable, Text, StyleSheet, ActivityIndicator, View } from 'react-nati
 import { COLORS, SIZING, TYPOGRAPHY, SHADOWS } from '../../utils/constants';
 
 const VARIANT_COLORS = {
-  primary:   { face: COLORS.path,           lip: COLORS.pathDeep,        text: COLORS.white },
-  secondary: { face: COLORS.grass,          lip: COLORS.grassDeep,       text: COLORS.white },
-  success:   { face: COLORS.success,        lip: COLORS.successDeep,     text: COLORS.white },
-  error:     { face: COLORS.error,          lip: COLORS.errorDeep,       text: COLORS.white },
-  purple:    { face: COLORS.softPurpleDeep, lip: '#8A5FB8',              text: COLORS.white },
-  sky:       { face: COLORS.skyDeep,        lip: '#4FA6CE',              text: COLORS.white },
-  outline:   { face: COLORS.white,          lip: COLORS.path,            text: COLORS.path, outline: true },
+  primary:   { face: COLORS.path,           lip: COLORS.pathDeep,       text: COLORS.white },
+  secondary: { face: COLORS.grass,          lip: COLORS.grassDeep,      text: COLORS.white },
+  success:   { face: COLORS.success,        lip: COLORS.successDeep,    text: COLORS.white },
+  error:     { face: COLORS.error,          lip: COLORS.errorDeep,      text: COLORS.white },
+  purple:    { face: COLORS.softPurpleDeep, lip: COLORS.softPurpleLip,  text: COLORS.white },
+  sky:       { face: COLORS.skyDeep,        lip: COLORS.skyLip,         text: COLORS.white },
+  outline:   { face: COLORS.white,          lip: COLORS.path,           text: COLORS.path, outline: true },
 };
 
 const Button = ({

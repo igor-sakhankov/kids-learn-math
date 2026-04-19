@@ -1,7 +1,8 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, Pressable } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { t } from '../utils/i18n';
+import { useProgress } from '../contexts/ProgressContext';
 import ScreenBackground from '../components/common/ScreenBackground';
 import TileButton from '../components/common/TileButton';
 import { COLORS, SIZING, TYPOGRAPHY, SHADOWS } from '../utils/constants';
@@ -19,25 +20,20 @@ const GAME_TILES = [
 ];
 
 const MainMenuScreen = ({ navigation }) => {
+  const { startSession, isLoading } = useProgress();
+
+  // Session kickoff runs here rather than WelcomeScreen so that returning
+  // kids (who skip Welcome via the first-launch flag) still get a session
+  // recorded. Fires once on first mount — stack nav keeps MainMenu mounted
+  // across lesson trips so this doesn't double-count.
+  useEffect(() => {
+    if (!isLoading) startSession();
+  }, [isLoading]);
+
   return (
     <ScreenBackground tint="sky">
-      <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
-        <ScrollView
-          style={styles.scroll}
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}
-        >
-          <View style={styles.headerRow}>
-            <Image
-              source={require('../../assets/professor-corgi.jpeg')}
-              style={styles.avatar}
-            />
-            <View style={styles.headerText}>
-              <Text style={styles.hello}>{t('menu.title')}</Text>
-              <Text style={styles.helloSub}>{t('welcome.question')}</Text>
-            </View>
-          </View>
-
+      <SafeAreaView style={styles.safe} edges={['top', 'left', 'right', 'bottom']}>
+        <View style={styles.content}>
           <SectionHeader icon="📚" title={t('menu.learn_math')} />
           <View style={styles.grid}>
             {LEARN_TILES.map((item) => (
@@ -46,6 +42,7 @@ const MainMenuScreen = ({ navigation }) => {
                   title={t(item.titleKey)}
                   icon={item.icon}
                   color={item.color}
+                  size="small"
                   onPress={() => navigation.navigate(item.screen)}
                 />
               </View>
@@ -60,6 +57,7 @@ const MainMenuScreen = ({ navigation }) => {
                   title={t(item.titleKey)}
                   icon={item.icon}
                   color={item.color}
+                  size="small"
                   onPress={() => navigation.navigate(item.screen)}
                 />
               </View>
@@ -80,7 +78,7 @@ const MainMenuScreen = ({ navigation }) => {
               onPress={() => navigation.navigate('Settings')}
             />
           </View>
-        </ScrollView>
+        </View>
       </SafeAreaView>
     </ScreenBackground>
   );
@@ -115,48 +113,24 @@ const PillAction = ({ icon, label, color, onPress }) => (
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
-  scroll: { flex: 1 },
-  scrollContent: {
-    padding: SIZING.PADDING.large,
-    paddingBottom: SIZING.PADDING.xlarge,
-  },
-  headerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: COLORS.overlay,
-    padding: SIZING.PADDING.medium,
-    borderRadius: SIZING.BORDER_RADIUS.xlarge,
-    marginBottom: SIZING.MARGIN.large,
-    ...SHADOWS.soft,
-  },
-  avatar: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    marginRight: SIZING.MARGIN.medium,
-  },
-  headerText: { flex: 1 },
-  hello: {
-    fontSize: TYPOGRAPHY.SIZES.title,
-    fontWeight: TYPOGRAPHY.WEIGHTS.bold,
-    color: COLORS.text,
-  },
-  helloSub: {
-    fontSize: TYPOGRAPHY.SIZES.body,
-    color: COLORS.textSoft,
+  content: {
+    flex: 1,
+    paddingHorizontal: SIZING.PADDING.large,
+    paddingTop: SIZING.PADDING.small,
+    paddingBottom: SIZING.PADDING.medium,
   },
   sectionHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: SIZING.MARGIN.medium,
-    marginBottom: SIZING.MARGIN.medium,
+    marginTop: SIZING.MARGIN.small,
+    marginBottom: SIZING.MARGIN.small,
   },
   sectionIcon: {
-    fontSize: 28,
+    fontSize: 24,
     marginRight: SIZING.MARGIN.small,
   },
   sectionTitle: {
-    fontSize: TYPOGRAPHY.SIZES.title,
+    fontSize: TYPOGRAPHY.SIZES.subtitle,
     fontWeight: TYPOGRAPHY.WEIGHTS.bold,
     color: COLORS.text,
   },
@@ -164,15 +138,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     marginHorizontal: -6,
-    marginBottom: SIZING.MARGIN.medium,
   },
   gridCell: {
-    width: '50%',
+    width: '33.3333%',
     padding: SIZING.GAP / 2,
   },
   bottomRow: {
     flexDirection: 'row',
-    marginTop: SIZING.MARGIN.large,
+    marginTop: 'auto',
     gap: SIZING.MARGIN.medium,
   },
   pillWrap: {

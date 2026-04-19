@@ -117,7 +117,7 @@ const FindPairScreen = ({ navigation }) => {
   if (!difficulty) {
     return (
       <DifficultyPicker
-        tint="sunrise"
+        tint="rose"
         icon="🎴"
         title={t('games.find_pair')}
         subtitle={t('games.match_cards')}
@@ -128,7 +128,7 @@ const FindPairScreen = ({ navigation }) => {
   }
 
   return (
-    <ScreenBackground tint="sunrise">
+    <ScreenBackground tint="rose">
       <SafeAreaView style={styles.safe}>
         <BackButton confirm onPress={() => navigation.goBack()} />
         <View style={styles.container}>
@@ -217,7 +217,7 @@ const styles = StyleSheet.create({
   headerValue: {
     fontSize: TYPOGRAPHY.SIZES.title,
     fontWeight: TYPOGRAPHY.WEIGHTS.bold,
-    color: COLORS.pathDeep,
+    color: COLORS.peachDeep,
   },
   headerLabel: {
     fontSize: TYPOGRAPHY.SIZES.body,
@@ -237,17 +237,17 @@ const styles = StyleSheet.create({
   },
   cardItem: {
     flex: 1,
-    backgroundColor: COLORS.path,
+    backgroundColor: COLORS.peach,
     borderRadius: SIZING.BORDER_RADIUS.large,
     justifyContent: 'center',
     alignItems: 'center',
     borderBottomWidth: 4,
-    borderBottomColor: COLORS.pathDeep,
+    borderBottomColor: COLORS.peachDeep,
     ...SHADOWS.soft,
   },
   cardFlipped: {
     backgroundColor: COLORS.white,
-    borderBottomColor: COLORS.skyDeep,
+    borderBottomColor: COLORS.peachDeep,
   },
   cardMatched: {
     backgroundColor: COLORS.mint,

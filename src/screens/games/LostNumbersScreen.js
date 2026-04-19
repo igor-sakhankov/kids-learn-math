@@ -15,10 +15,10 @@ import { COLORS, SIZING, TYPOGRAPHY, SHADOWS } from '../../utils/constants';
 // Four per-option color variants keep choices distinguishable without
 // relying on reading the number alone.
 const OPTION_PALETTES = [
-  { face: COLORS.skyDeep, lip: '#4FA6CE' },
-  { face: COLORS.mintDeep, lip: '#3FA07F' },
-  { face: COLORS.softPurpleDeep, lip: '#8A5FB8' },
-  { face: COLORS.peachDeep, lip: '#E08848' },
+  { face: COLORS.warmYellowDeep, lip: COLORS.warmYellowLip, text: COLORS.text },
+  { face: COLORS.mintDeep, lip: COLORS.mintLip, text: COLORS.white },
+  { face: COLORS.softPurpleDeep, lip: COLORS.softPurpleLip, text: COLORS.white },
+  { face: COLORS.peachDeep, lip: COLORS.peachLip, text: COLORS.white },
 ];
 
 const TOTAL_ROUNDS = 5;
@@ -106,7 +106,7 @@ const LostNumbersScreen = ({ navigation }) => {
   if (!difficulty) {
     return (
       <DifficultyPicker
-        tint="lavender"
+        tint="lemon"
         icon="🔢"
         title={t('games.lost_numbers')}
         subtitle={t('games.complete_sequence')}
@@ -119,7 +119,7 @@ const LostNumbersScreen = ({ navigation }) => {
   if (!sequence) return null;
 
   return (
-    <ScreenBackground tint="lavender">
+    <ScreenBackground tint="lemon">
       <SafeAreaView style={styles.safe}>
         <BackButton confirm onPress={() => navigation.goBack()} />
         <ScrollView
@@ -197,7 +197,7 @@ const LostNumbersScreen = ({ navigation }) => {
                         },
                       ]}
                     >
-                      <Text style={styles.optionText}>{option}</Text>
+                      <Text style={[styles.optionText, { color: palette.text }]}>{option}</Text>
                     </View>
                   )}
                 </Pressable>
@@ -278,7 +278,7 @@ const styles = StyleSheet.create({
   },
   sequenceBoxCurrent: {
     borderWidth: 3,
-    borderColor: COLORS.softPurpleDeep,
+    borderColor: COLORS.pathDeep,
     transform: [{ scale: 1.08 }],
   },
   sequenceBoxCorrect: {

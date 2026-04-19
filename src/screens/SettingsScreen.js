@@ -6,7 +6,7 @@ import { useSettings } from '../contexts/SettingsContext';
 import Card from '../components/common/Card';
 import ScreenBackground from '../components/common/ScreenBackground';
 import BackButton from '../components/common/BackButton';
-import { COLORS, SIZING, TYPOGRAPHY, SHADOWS, LANGUAGES } from '../utils/constants';
+import { COLORS, SIZING, TYPOGRAPHY, LANGUAGES } from '../utils/constants';
 
 const LANGUAGE_OPTIONS = [
   { code: LANGUAGES.EN, name: 'English', flag: '🇬🇧' },
@@ -26,10 +26,6 @@ const SettingsScreen = ({ navigation }) => {
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
         >
-          <View style={styles.titlePill}>
-            <Text style={styles.title}>{t('settings.title')}</Text>
-          </View>
-
           <Card style={styles.card} padding={false} band="purple" bandTitle={t('settings.language')} bandIcon="🌍">
             <View style={styles.cardBody}>
               {LANGUAGE_OPTIONS.map((lang) => {
@@ -128,20 +124,6 @@ const styles = StyleSheet.create({
     padding: SIZING.PADDING.large,
     paddingTop: SIZING.PADDING.xlarge + SIZING.SECONDARY_TARGET,
     paddingBottom: SIZING.PADDING.xlarge,
-  },
-  titlePill: {
-    alignSelf: 'center',
-    backgroundColor: COLORS.overlay,
-    paddingHorizontal: SIZING.PADDING.large,
-    paddingVertical: SIZING.PADDING.medium,
-    borderRadius: SIZING.BORDER_RADIUS.pill,
-    marginBottom: SIZING.MARGIN.large,
-    ...SHADOWS.soft,
-  },
-  title: {
-    fontSize: TYPOGRAPHY.SIZES.title,
-    fontWeight: TYPOGRAPHY.WEIGHTS.bold,
-    color: COLORS.text,
   },
   card: {
     marginBottom: SIZING.MARGIN.large,

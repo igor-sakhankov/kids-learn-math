@@ -13,10 +13,10 @@ import useAttemptCounter from '../../hooks/useAttemptCounter';
 import { COLORS, SIZING, TYPOGRAPHY, SHADOWS } from '../../utils/constants';
 
 const OPTION_COLORS = [
-  { face: COLORS.skyDeep, lip: '#4FA6CE' },
-  { face: COLORS.softPurpleDeep, lip: '#8A5FB8' },
-  { face: COLORS.mintDeep, lip: '#3FA07F' },
-  { face: COLORS.peachDeep, lip: '#E08848' },
+  { face: COLORS.skyDeep, lip: COLORS.skyLip },
+  { face: COLORS.softPurpleDeep, lip: COLORS.softPurpleLip },
+  { face: COLORS.mintDeep, lip: COLORS.mintLip },
+  { face: COLORS.peachDeep, lip: COLORS.peachLip },
 ];
 
 const TOTAL_QUESTIONS = 10;
@@ -78,7 +78,7 @@ const NumberLabyrinthScreen = ({ navigation }) => {
   if (!difficulty) {
     return (
       <DifficultyPicker
-        tint="sky"
+        tint="teal"
         icon="🧩"
         title={t('games.number_labyrinth')}
         subtitle={t('games.help_robot')}
@@ -93,7 +93,7 @@ const NumberLabyrinthScreen = ({ navigation }) => {
   const progressPct = Math.round((score / TOTAL_QUESTIONS) * 100);
 
   return (
-    <ScreenBackground tint="sky">
+    <ScreenBackground tint="teal">
       <SafeAreaView style={styles.safe}>
         <BackButton confirm onPress={() => navigation.goBack()} />
         <View style={styles.container}>

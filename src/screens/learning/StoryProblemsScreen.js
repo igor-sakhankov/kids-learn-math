@@ -117,11 +117,8 @@ const StoryProblemsScreen = ({ navigation }) => {
     <ScreenBackground tint="lavender">
       <SafeAreaView style={styles.safe}>
         <BackButton confirm onPress={() => navigation.goBack()} />
-        <ScrollView
-          style={styles.scroll}
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}
-        >
+
+        <View style={styles.headerWrap}>
           <View style={styles.headerCard}>
             <View style={styles.progressBar}>
               <View style={[styles.progressFill, { width: `${progressPct}%` }]} />
@@ -132,6 +129,20 @@ const StoryProblemsScreen = ({ navigation }) => {
               </Text>
               <Text style={styles.scoreText}>⭐ {score}</Text>
             </View>
+          </View>
+        </View>
+
+        <ScrollView
+          style={styles.scroll}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.equationRow}>
+            <EqBlock value={question.first} />
+            <Text style={styles.op}>{question.operation === '+' ? '+' : '−'}</Text>
+            <EqBlock value={question.second} />
+            <Text style={styles.op}>=</Text>
+            <EqBlock value={userAnswer || '?'} highlight />
           </View>
 
           <View style={styles.robotBubble}>
@@ -152,14 +163,6 @@ const StoryProblemsScreen = ({ navigation }) => {
             <Text style={styles.storyText}>{question.storyText}</Text>
           </Card>
 
-          <View style={styles.equationRow}>
-            <EqBlock value={question.first} />
-            <Text style={styles.op}>{question.operation === '+' ? '+' : '−'}</Text>
-            <EqBlock value={question.second} />
-            <Text style={styles.op}>=</Text>
-            <EqBlock value={userAnswer || '?'} highlight />
-          </View>
-
           {showHint && <HintBubble />}
 
           {feedback && (
@@ -172,24 +175,24 @@ const StoryProblemsScreen = ({ navigation }) => {
               {feedback === 'correct' ? `🎉 ${t('feedback.excellent')}` : `💭 ${t('feedback.almost')}`}
             </Text>
           )}
-
-          <View style={styles.padWrap}>
-            <NumberPad
-              value={userAnswer}
-              onChange={setUserAnswer}
-              onSubmit={checkAnswer}
-              disabled={feedback === 'correct'}
-            />
-            <Button
-              title={t('common.new_problem')}
-              onPress={skipQuestion}
-              variant="outline"
-              size="medium"
-              icon="🔄"
-              style={styles.skipButton}
-            />
-          </View>
         </ScrollView>
+
+        <View style={styles.padWrap}>
+          <NumberPad
+            value={userAnswer}
+            onChange={setUserAnswer}
+            onSubmit={checkAnswer}
+            disabled={feedback === 'correct'}
+          />
+          <Button
+            title={t('common.new_problem')}
+            onPress={skipQuestion}
+            variant="outline"
+            size="medium"
+            icon="🔄"
+            style={styles.skipButton}
+          />
+        </View>
       </SafeAreaView>
     </ScreenBackground>
   );
@@ -203,17 +206,21 @@ const EqBlock = ({ value, highlight }) => (
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
+  headerWrap: {
+    paddingHorizontal: SIZING.PADDING.large,
+    paddingTop: SIZING.PADDING.xlarge + SIZING.SECONDARY_TARGET,
+  },
   scroll: { flex: 1 },
   scrollContent: {
-    padding: SIZING.PADDING.large,
-    paddingTop: SIZING.PADDING.xlarge + SIZING.SECONDARY_TARGET,
-    paddingBottom: SIZING.PADDING.xlarge,
+    paddingHorizontal: SIZING.PADDING.large,
+    paddingTop: SIZING.PADDING.small,
+    paddingBottom: SIZING.PADDING.small,
   },
   headerCard: {
     backgroundColor: COLORS.overlay,
     padding: SIZING.PADDING.medium,
     borderRadius: SIZING.BORDER_RADIUS.large,
-    marginBottom: SIZING.MARGIN.medium,
+    marginBottom: SIZING.MARGIN.small,
     ...SHADOWS.soft,
   },
   progressBar: {
@@ -316,10 +323,12 @@ const styles = StyleSheet.create({
   feedbackCorrect: { color: COLORS.successDeep },
   feedbackIncorrect: { color: COLORS.errorDeep },
   padWrap: {
-    marginTop: SIZING.MARGIN.medium,
+    paddingHorizontal: SIZING.PADDING.large,
+    paddingTop: SIZING.PADDING.small,
+    paddingBottom: SIZING.PADDING.medium,
   },
   skipButton: {
-    marginTop: SIZING.MARGIN.medium,
+    marginTop: SIZING.MARGIN.small,
     alignSelf: 'center',
     minWidth: 160,
   },

@@ -115,11 +115,8 @@ const AdditionVisualScreen = ({ navigation }) => {
     <ScreenBackground tint="mint">
       <SafeAreaView style={styles.safe} edges={['top', 'left', 'right', 'bottom']}>
         <BackButton confirm onPress={() => navigation.goBack()} />
-        <ScrollView
-          style={styles.scroll}
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}
-        >
+
+        <View style={styles.headerWrap}>
           <View style={styles.headerCard}>
             <View style={styles.progressBar}>
               <View style={[styles.progressFill, { width: `${progressPct}%` }]} />
@@ -131,7 +128,13 @@ const AdditionVisualScreen = ({ navigation }) => {
               <Text style={styles.scoreText}>⭐ {score}</Text>
             </View>
           </View>
+        </View>
 
+        <ScrollView
+          style={styles.scroll}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+        >
           <Card
             style={[
               styles.mainCard,
@@ -141,18 +144,18 @@ const AdditionVisualScreen = ({ navigation }) => {
           >
             <Text style={styles.instruction}>{t('learning.combine_objects')}</Text>
 
-            <View style={styles.visualContainer}>
-              <View style={styles.objectGroup}>{renderObjects(question.first, question.objectType)}</View>
-              <Text style={styles.operatorText}>+</Text>
-              <View style={styles.objectGroup}>{renderObjects(question.second, question.objectType)}</View>
-            </View>
-
             <View style={styles.equationRow}>
               <EqBlock value={question.first} />
               <Text style={styles.plus}>+</Text>
               <EqBlock value={question.second} />
               <Text style={styles.plus}>=</Text>
               <EqBlock value={userAnswer || '?'} highlight />
+            </View>
+
+            <View style={styles.visualContainer}>
+              <View style={styles.objectGroup}>{renderObjects(question.first, question.objectType)}</View>
+              <Text style={styles.operatorText}>+</Text>
+              <View style={styles.objectGroup}>{renderObjects(question.second, question.objectType)}</View>
             </View>
 
             {feedback && (
@@ -191,17 +194,21 @@ const EqBlock = ({ value, highlight }) => (
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
+  headerWrap: {
+    paddingHorizontal: SIZING.PADDING.large,
+    paddingTop: SIZING.PADDING.xlarge + SIZING.SECONDARY_TARGET,
+  },
   scroll: { flex: 1 },
   scrollContent: {
-    padding: SIZING.PADDING.large,
-    paddingTop: SIZING.PADDING.xlarge + SIZING.SECONDARY_TARGET,
-    paddingBottom: SIZING.PADDING.xlarge,
+    paddingHorizontal: SIZING.PADDING.large,
+    paddingTop: SIZING.PADDING.small,
+    paddingBottom: SIZING.PADDING.small,
   },
   headerCard: {
     backgroundColor: COLORS.overlay,
     padding: SIZING.PADDING.medium,
     borderRadius: SIZING.BORDER_RADIUS.large,
-    marginBottom: SIZING.MARGIN.medium,
+    marginBottom: SIZING.MARGIN.small,
     ...SHADOWS.soft,
   },
   progressBar: {
@@ -260,8 +267,8 @@ const styles = StyleSheet.create({
     maxWidth: 180,
   },
   visualObject: {
-    fontSize: 48,
-    margin: 4,
+    fontSize: 36,
+    margin: 2,
   },
   operatorText: {
     fontSize: TYPOGRAPHY.SIZES.heading,

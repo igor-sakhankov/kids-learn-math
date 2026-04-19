@@ -117,11 +117,8 @@ const StoryProblemsScreen = ({ navigation }) => {
     <ScreenBackground tint="lavender">
       <SafeAreaView style={styles.safe} edges={['top', 'left', 'right', 'bottom']}>
         <BackButton confirm onPress={() => navigation.goBack()} />
-        <ScrollView
-          style={styles.scroll}
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}
-        >
+
+        <View style={styles.headerWrap}>
           <View style={styles.headerCard}>
             <View style={styles.progressBar}>
               <View style={[styles.progressFill, { width: `${progressPct}%` }]} />
@@ -132,6 +129,20 @@ const StoryProblemsScreen = ({ navigation }) => {
               </Text>
               <Text style={styles.scoreText}>⭐ {score}</Text>
             </View>
+          </View>
+        </View>
+
+        <ScrollView
+          style={styles.scroll}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.equationRow}>
+            <EqBlock value={question.first} />
+            <Text style={styles.op}>{question.operation === '+' ? '+' : '−'}</Text>
+            <EqBlock value={question.second} />
+            <Text style={styles.op}>=</Text>
+            <EqBlock value={userAnswer || '?'} highlight />
           </View>
 
           <View style={styles.robotBubble}>
@@ -151,14 +162,6 @@ const StoryProblemsScreen = ({ navigation }) => {
           >
             <Text style={styles.storyText}>{question.storyText}</Text>
           </Card>
-
-          <View style={styles.equationRow}>
-            <EqBlock value={question.first} />
-            <Text style={styles.op}>{question.operation === '+' ? '+' : '−'}</Text>
-            <EqBlock value={question.second} />
-            <Text style={styles.op}>=</Text>
-            <EqBlock value={userAnswer || '?'} highlight />
-          </View>
 
           {showHint && <HintBubble />}
 
@@ -203,17 +206,21 @@ const EqBlock = ({ value, highlight }) => (
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
+  headerWrap: {
+    paddingHorizontal: SIZING.PADDING.large,
+    paddingTop: SIZING.PADDING.xlarge + SIZING.SECONDARY_TARGET,
+  },
   scroll: { flex: 1 },
   scrollContent: {
-    padding: SIZING.PADDING.large,
-    paddingTop: SIZING.PADDING.xlarge + SIZING.SECONDARY_TARGET,
-    paddingBottom: SIZING.PADDING.xlarge,
+    paddingHorizontal: SIZING.PADDING.large,
+    paddingTop: SIZING.PADDING.small,
+    paddingBottom: SIZING.PADDING.small,
   },
   headerCard: {
     backgroundColor: COLORS.overlay,
     padding: SIZING.PADDING.medium,
     borderRadius: SIZING.BORDER_RADIUS.large,
-    marginBottom: SIZING.MARGIN.medium,
+    marginBottom: SIZING.MARGIN.small,
     ...SHADOWS.soft,
   },
   progressBar: {
@@ -321,7 +328,7 @@ const styles = StyleSheet.create({
     paddingBottom: SIZING.PADDING.medium,
   },
   skipButton: {
-    marginTop: SIZING.MARGIN.medium,
+    marginTop: SIZING.MARGIN.small,
     alignSelf: 'center',
     minWidth: 160,
   },

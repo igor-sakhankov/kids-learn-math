@@ -3,14 +3,14 @@ import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { COLORS, SIZING, TYPOGRAPHY, SHADOWS } from '../../utils/constants';
 
 const PALETTES = {
-  sky:      { face: COLORS.skyDeep,        lip: '#4FA6CE',      text: COLORS.white },
-  grass:    { face: COLORS.grassDeep,      lip: '#3E9A40',      text: COLORS.white },
-  path:     { face: COLORS.path,           lip: COLORS.pathDeep, text: COLORS.white },
-  purple:   { face: COLORS.softPurpleDeep, lip: '#8A5FB8',      text: COLORS.white },
-  mint:     { face: COLORS.mintDeep,       lip: '#3FA07F',      text: COLORS.white },
-  yellow:   { face: COLORS.warmYellowDeep, lip: '#C99A1F',      text: COLORS.text  },
-  peach:    { face: COLORS.peachDeep,      lip: '#E08848',      text: COLORS.white },
-  red:      { face: COLORS.softRedDeep,    lip: COLORS.errorDeep, text: COLORS.white },
+  sky:      { face: COLORS.skyDeep,        lip: COLORS.skyLip,         text: COLORS.white },
+  grass:    { face: COLORS.grassDeep,      lip: COLORS.grassLip,       text: COLORS.white },
+  path:     { face: COLORS.path,           lip: COLORS.pathDeep,       text: COLORS.white },
+  purple:   { face: COLORS.softPurpleDeep, lip: COLORS.softPurpleLip,  text: COLORS.white },
+  mint:     { face: COLORS.mintDeep,       lip: COLORS.mintLip,        text: COLORS.white },
+  yellow:   { face: COLORS.warmYellowDeep, lip: COLORS.warmYellowLip,  text: COLORS.text  },
+  peach:    { face: COLORS.peachDeep,      lip: COLORS.peachLip,       text: COLORS.white },
+  red:      { face: COLORS.softRedDeep,    lip: COLORS.errorDeep,      text: COLORS.white },
 };
 
 const TileButton = ({

@@ -115,7 +115,7 @@ const StoryProblemsScreen = ({ navigation }) => {
 
   return (
     <ScreenBackground tint="lavender">
-      <SafeAreaView style={styles.safe}>
+      <SafeAreaView style={styles.safe} edges={['top', 'left', 'right', 'bottom']}>
         <BackButton confirm onPress={() => navigation.goBack()} />
         <ScrollView
           style={styles.scroll}
@@ -172,24 +172,24 @@ const StoryProblemsScreen = ({ navigation }) => {
               {feedback === 'correct' ? `🎉 ${t('feedback.excellent')}` : `💭 ${t('feedback.almost')}`}
             </Text>
           )}
-
-          <View style={styles.padWrap}>
-            <NumberPad
-              value={userAnswer}
-              onChange={setUserAnswer}
-              onSubmit={checkAnswer}
-              disabled={feedback === 'correct'}
-            />
-            <Button
-              title={t('common.new_problem')}
-              onPress={skipQuestion}
-              variant="outline"
-              size="medium"
-              icon="🔄"
-              style={styles.skipButton}
-            />
-          </View>
         </ScrollView>
+
+        <View style={styles.padWrap}>
+          <NumberPad
+            value={userAnswer}
+            onChange={setUserAnswer}
+            onSubmit={checkAnswer}
+            disabled={feedback === 'correct'}
+          />
+          <Button
+            title={t('common.new_problem')}
+            onPress={skipQuestion}
+            variant="outline"
+            size="medium"
+            icon="🔄"
+            style={styles.skipButton}
+          />
+        </View>
       </SafeAreaView>
     </ScreenBackground>
   );
@@ -316,7 +316,9 @@ const styles = StyleSheet.create({
   feedbackCorrect: { color: COLORS.successDeep },
   feedbackIncorrect: { color: COLORS.errorDeep },
   padWrap: {
-    marginTop: SIZING.MARGIN.medium,
+    paddingHorizontal: SIZING.PADDING.large,
+    paddingTop: SIZING.PADDING.medium,
+    paddingBottom: SIZING.PADDING.medium,
   },
   skipButton: {
     marginTop: SIZING.MARGIN.medium,

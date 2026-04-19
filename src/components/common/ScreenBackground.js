@@ -19,6 +19,18 @@ const TINTS = {
     bg: COLORS.bgLavender,
     bubbles: ['#FFFFFF', COLORS.softPurple, COLORS.warmYellow, COLORS.mint],
   },
+  teal: {
+    bg: COLORS.bgTeal,
+    bubbles: ['#FFFFFF', COLORS.mint, COLORS.sky, COLORS.warmYellow],
+  },
+  rose: {
+    bg: COLORS.bgRose,
+    bubbles: ['#FFFFFF', COLORS.softRed, COLORS.peach, COLORS.softPurple],
+  },
+  lemon: {
+    bg: COLORS.bgLemon,
+    bubbles: ['#FFFFFF', COLORS.warmYellow, COLORS.peach, COLORS.mint],
+  },
 };
 
 const BUBBLES = [

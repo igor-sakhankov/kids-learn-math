@@ -118,7 +118,7 @@ const SubtractionVisualScreen = ({ navigation }) => {
 
   return (
     <ScreenBackground tint="sunrise">
-      <SafeAreaView style={styles.safe}>
+      <SafeAreaView style={styles.safe} edges={['top', 'left', 'right', 'bottom']}>
         <BackButton confirm onPress={() => navigation.goBack()} />
         <ScrollView
           style={styles.scroll}
@@ -175,16 +175,16 @@ const SubtractionVisualScreen = ({ navigation }) => {
           </Card>
 
           {showHint && <HintBubble />}
-
-          <View style={styles.padWrap}>
-            <NumberPad
-              value={userAnswer}
-              onChange={setUserAnswer}
-              onSubmit={checkAnswer}
-              disabled={feedback === 'correct'}
-            />
-          </View>
         </ScrollView>
+
+        <View style={styles.padWrap}>
+          <NumberPad
+            value={userAnswer}
+            onChange={setUserAnswer}
+            onSubmit={checkAnswer}
+            disabled={feedback === 'correct'}
+          />
+        </View>
       </SafeAreaView>
     </ScreenBackground>
   );
@@ -319,7 +319,9 @@ const styles = StyleSheet.create({
   feedbackCorrect: { color: COLORS.successDeep },
   feedbackIncorrect: { color: COLORS.errorDeep },
   padWrap: {
-    marginTop: 'auto',
+    paddingHorizontal: SIZING.PADDING.large,
+    paddingTop: SIZING.PADDING.medium,
+    paddingBottom: SIZING.PADDING.medium,
   },
 });
 

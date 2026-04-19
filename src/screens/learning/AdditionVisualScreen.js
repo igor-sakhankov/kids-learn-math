@@ -113,7 +113,7 @@ const AdditionVisualScreen = ({ navigation }) => {
 
   return (
     <ScreenBackground tint="mint">
-      <SafeAreaView style={styles.safe}>
+      <SafeAreaView style={styles.safe} edges={['top', 'left', 'right', 'bottom']}>
         <BackButton confirm onPress={() => navigation.goBack()} />
         <ScrollView
           style={styles.scroll}
@@ -168,16 +168,16 @@ const AdditionVisualScreen = ({ navigation }) => {
           </Card>
 
           {showHint && <HintBubble />}
-
-          <View style={styles.padWrap}>
-            <NumberPad
-              value={userAnswer}
-              onChange={setUserAnswer}
-              onSubmit={checkAnswer}
-              disabled={feedback === 'correct'}
-            />
-          </View>
         </ScrollView>
+
+        <View style={styles.padWrap}>
+          <NumberPad
+            value={userAnswer}
+            onChange={setUserAnswer}
+            onSubmit={checkAnswer}
+            disabled={feedback === 'correct'}
+          />
+        </View>
       </SafeAreaView>
     </ScreenBackground>
   );
@@ -228,7 +228,7 @@ const styles = StyleSheet.create({
   scoreText: {
     fontSize: TYPOGRAPHY.SIZES.subtitle,
     fontWeight: TYPOGRAPHY.WEIGHTS.bold,
-    color: COLORS.pathDeep,
+    color: COLORS.grassDeep,
   },
   mainCard: {
     marginBottom: SIZING.MARGIN.medium,
@@ -266,7 +266,7 @@ const styles = StyleSheet.create({
   operatorText: {
     fontSize: TYPOGRAPHY.SIZES.heading,
     fontWeight: TYPOGRAPHY.WEIGHTS.bold,
-    color: COLORS.pathDeep,
+    color: COLORS.grassDeep,
     marginHorizontal: SIZING.MARGIN.medium,
   },
   equationRow: {
@@ -314,7 +314,9 @@ const styles = StyleSheet.create({
   feedbackCorrect: { color: COLORS.successDeep },
   feedbackIncorrect: { color: COLORS.errorDeep },
   padWrap: {
-    marginTop: 'auto',
+    paddingHorizontal: SIZING.PADDING.large,
+    paddingTop: SIZING.PADDING.medium,
+    paddingBottom: SIZING.PADDING.medium,
   },
 });
 

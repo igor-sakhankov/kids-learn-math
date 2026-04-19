@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { t } from '../utils/i18n';
@@ -6,26 +6,40 @@ import { useSettings } from '../contexts/SettingsContext';
 import { useProgress } from '../contexts/ProgressContext';
 import Button from '../components/common/Button';
 import ScreenBackground from '../components/common/ScreenBackground';
-import { COLORS, SIZING, TYPOGRAPHY, SHADOWS } from '../utils/constants';
+import { loadData, saveData } from '../utils/storage';
+import { COLORS, SIZING, TYPOGRAPHY, SHADOWS, ICON_SIZES, STORAGE_KEYS } from '../utils/constants';
 
 const WelcomeScreen = ({ navigation }) => {
   const { isLoading: settingsLoading } = useSettings();
-  const { startSession, isLoading: progressLoading } = useProgress();
+  const { isLoading: progressLoading } = useProgress();
+  // While we check AsyncStorage, render nothing so returning kids don't see
+  // the welcome flash before the auto-skip fires.
+  const [checkingFirstLaunch, setCheckingFirstLaunch] = useState(true);
 
   useEffect(() => {
-    if (!progressLoading && !settingsLoading) {
-      startSession();
-    }
+    if (progressLoading || settingsLoading) return;
+    let cancelled = false;
+    (async () => {
+      const seen = await loadData(STORAGE_KEYS.HAS_SEEN_WELCOME);
+      if (cancelled) return;
+      if (seen) {
+        navigation.replace('MainMenu');
+      } else {
+        setCheckingFirstLaunch(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, [progressLoading, settingsLoading]);
 
-  if (settingsLoading || progressLoading) {
-    return (
-      <ScreenBackground tint="sky">
-        <View style={styles.loadingContainer}>
-          <Text style={styles.loadingText}>{t('common.loading')}</Text>
-        </View>
-      </ScreenBackground>
-    );
+  const handleStart = async () => {
+    await saveData(STORAGE_KEYS.HAS_SEEN_WELCOME, true);
+    navigation.replace('MainMenu');
+  };
+
+  if (settingsLoading || progressLoading || checkingFirstLaunch) {
+    return <ScreenBackground tint="sky" />;
   }
 
   return (
@@ -48,7 +62,7 @@ const WelcomeScreen = ({ navigation }) => {
 
           <Button
             title={t('welcome.lets_start')}
-            onPress={() => navigation.navigate('MainMenu')}
+            onPress={handleStart}
             variant="primary"
             size="large"
             icon="🚀"
@@ -67,7 +81,7 @@ const WelcomeScreen = ({ navigation }) => {
   );
 };
 
-const MASCOT_SIZE = 200;
+const MASCOT_SIZE = ICON_SIZES.hero;
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
@@ -76,15 +90,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: SIZING.PADDING.large,
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  loadingText: {
-    fontSize: TYPOGRAPHY.SIZES.title,
-    color: COLORS.text,
   },
   mascotRing: {
     width: MASCOT_SIZE + 16,

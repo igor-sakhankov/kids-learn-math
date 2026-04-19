@@ -5,8 +5,8 @@ import { t } from '../utils/i18n';
 import { useProgress } from '../contexts/ProgressContext';
 import { useReward } from '../contexts/RewardContext';
 import Card from '../components/common/Card';
-import Button from '../components/common/Button';
 import ScreenBackground from '../components/common/ScreenBackground';
+import BackButton from '../components/common/BackButton';
 import { COLORS, SIZING, TYPOGRAPHY, SHADOWS } from '../utils/constants';
 
 // Number of correct answers a skill needs to fill its bar.
@@ -25,6 +25,7 @@ const ProgressScreen = ({ navigation }) => {
   return (
     <ScreenBackground tint="mint">
       <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
+        <BackButton onPress={() => navigation.goBack()} />
         <ScrollView
           style={styles.scroll}
           contentContainerStyle={styles.scrollContent}
@@ -97,12 +98,6 @@ const ProgressScreen = ({ navigation }) => {
             />
           </Card>
 
-          <Button
-            title={t('common.back')}
-            onPress={() => navigation.goBack()}
-            variant="secondary"
-            style={styles.backButton}
-          />
         </ScrollView>
       </SafeAreaView>
     </ScreenBackground>
@@ -137,6 +132,7 @@ const styles = StyleSheet.create({
   scroll: { flex: 1 },
   scrollContent: {
     padding: SIZING.PADDING.large,
+    paddingTop: SIZING.PADDING.xlarge + SIZING.SECONDARY_TARGET,
     paddingBottom: SIZING.PADDING.xlarge,
   },
   titlePill: {
@@ -190,7 +186,7 @@ const styles = StyleSheet.create({
     borderRadius: SIZING.BORDER_RADIUS.pill,
   },
   progressText: {
-    fontSize: TYPOGRAPHY.SIZES.small,
+    fontSize: TYPOGRAPHY.SIZES.body,
     color: COLORS.textSoft,
     textAlign: 'center',
   },
@@ -215,7 +211,7 @@ const styles = StyleSheet.create({
     color: COLORS.text,
   },
   statLabel: {
-    fontSize: TYPOGRAPHY.SIZES.small,
+    fontSize: TYPOGRAPHY.SIZES.body,
     color: COLORS.textSoft,
     textAlign: 'center',
   },
@@ -246,12 +242,13 @@ const styles = StyleSheet.create({
   },
   skillName: {
     fontSize: TYPOGRAPHY.SIZES.body,
+    fontWeight: TYPOGRAPHY.WEIGHTS.bold,
     color: COLORS.text,
     flex: 1,
     paddingRight: 8,
   },
   skillPct: {
-    fontSize: TYPOGRAPHY.SIZES.small,
+    fontSize: TYPOGRAPHY.SIZES.body,
     fontWeight: TYPOGRAPHY.WEIGHTS.bold,
   },
   skillBar: {
@@ -263,9 +260,6 @@ const styles = StyleSheet.create({
   skillFill: {
     height: '100%',
     borderRadius: SIZING.BORDER_RADIUS.pill,
-  },
-  backButton: {
-    marginTop: SIZING.MARGIN.medium,
   },
 });
 

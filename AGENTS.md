@@ -64,7 +64,31 @@ All three auto-hydrate from AsyncStorage on mount and persist on every update. K
 - **Text must go through `t()`** from `src/utils/i18n.js`. Any new user-facing string → add keys to **all three** locale files (`en.json`, `ru.json`, `es.json`).
 - **Question generation is centralized** in `src/utils/questionGenerator.js`. Add new question shapes there rather than inline in screens.
 - **Every navigable screen must be registered** in `src/navigation/AppNavigator.js`.
-- **Min touch target 44pt** (`SIZING.MIN_TOUCH_TARGET`) — respect this for kid usability.
+
+## Kid-UX rules (ages 5-9)
+
+These are enforced in review. Full rationale in [`requirements/ux-audit-ages-5-9.md`](requirements/ux-audit-ages-5-9.md).
+
+| # | Rule | Enforcement |
+|---|------|---|
+| U1 | Primary action touch target ≥ 64pt (72 preferred) | use `SIZING.PRIMARY_TARGET` / `SIZING.MIN_TOUCH_TARGET` |
+| U2 | Secondary / back target ≥ 56pt | use `SIZING.SECONDARY_TARGET` |
+| U3 | Spacing between tap targets ≥ 16pt | use `SIZING.GAP` |
+| U4 | Body text ≥ 20pt | use `TYPOGRAPHY.SIZES.body` (never `small` or `tiny` for kid-facing copy) |
+| U5 | Primary prompt / question text ≥ 24pt | use `subtitle` |
+| U6 | Heading ≥ 32pt | use `title` (30) or `heading` (36) |
+| U7 | One primary action per screen — biggest, boldest, thumb-reachable | |
+| U8 | Back button top-left on every non-root screen | mount shared `<BackButton/>`; use `confirm` on lesson/game screens |
+| U9 | Affordance without reading — icon + color + shape | every interactive surface has an icon, not text alone |
+| U10 | Error tolerance — hint after `GAME_CONFIG.HINT_AFTER_ATTEMPTS` wrong tries, never block progress | use `useAttemptCounter` + `<HintBubble/>` |
+| U11 | Tap visual feedback < 100ms | every `Pressable` renders a press state (scale / translate / color) |
+| U12 | Reading load — ≤ 1 short sentence a child must read per screen | |
+| U13 | Modal discipline — big labeled dismiss, no `×`-only closers | use `<LeaveConfirmModal/>` as the template |
+| U14 | Drag interactions need tap-to-select fallback | |
+| U15 | Color always paired with icon or shape (colorblind-safe) | |
+| U16 | No timers, countdowns, or fail states | product-level rule |
+
+PRs that violate these should be bounced in review. `tiny` (14pt) is reserved for parent/meta text — never kid-facing labels.
 
 ## Adding a feature — typical flow
 

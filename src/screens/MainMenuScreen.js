@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
     color: COLORS.text,
   },
   helloSub: {
-    fontSize: TYPOGRAPHY.SIZES.small,
+    fontSize: TYPOGRAPHY.SIZES.body,
     color: COLORS.textSoft,
   },
   sectionHeader: {
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
   },
   gridCell: {
     width: '50%',
-    padding: 6,
+    padding: SIZING.GAP / 2,
   },
   bottomRow: {
     flexDirection: 'row',
@@ -189,11 +189,11 @@ const styles = StyleSheet.create({
     borderRadius: SIZING.BORDER_RADIUS.pill,
     borderBottomWidth: 4,
     borderBottomColor: 'rgba(0,0,0,0.2)',
-    minHeight: SIZING.MIN_TOUCH_TARGET,
+    minHeight: SIZING.SECONDARY_TARGET,
   },
   pillIcon: {
-    fontSize: 22,
-    marginRight: 8,
+    fontSize: 28,
+    marginRight: 10,
   },
   pillLabel: {
     color: COLORS.white,

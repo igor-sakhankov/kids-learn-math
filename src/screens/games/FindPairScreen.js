@@ -7,6 +7,7 @@ import { useProgress } from '../../contexts/ProgressContext';
 import { useReward } from '../../contexts/RewardContext';
 import ScreenBackground from '../../components/common/ScreenBackground';
 import DifficultyPicker from '../../components/common/DifficultyPicker';
+import BackButton from '../../components/common/BackButton';
 import { COLORS, SIZING, TYPOGRAPHY, SHADOWS } from '../../utils/constants';
 
 const FindPairScreen = ({ navigation }) => {
@@ -24,7 +25,8 @@ const FindPairScreen = ({ navigation }) => {
 
   const selectDifficulty = (level) => {
     setDifficulty(level);
-    const pairCount = level === 'easy' ? 4 : level === 'medium' ? 6 : 8;
+    // Cap hard at 6 pairs (3x4 grid) so each card stays ≥ 72pt on a 5" phone.
+    const pairCount = level === 'easy' ? 4 : 6;
     initializeGame(level, pairCount);
   };
 
@@ -101,7 +103,7 @@ const FindPairScreen = ({ navigation }) => {
         );
         setCards(updatedCards);
         setSelectedCards([]);
-      }, 1000);
+      }, 1500);
     }
   };
 
@@ -128,6 +130,7 @@ const FindPairScreen = ({ navigation }) => {
   return (
     <ScreenBackground tint="sunrise">
       <SafeAreaView style={styles.safe}>
+        <BackButton confirm onPress={() => navigation.goBack()} />
         <View style={styles.container}>
           <View style={styles.headerCard}>
             <View style={styles.headerCell}>
@@ -161,14 +164,17 @@ const FindPairScreen = ({ navigation }) => {
                     ]}
                   >
                     {card.isFlipped || card.isMatched ? (
-                      <Text
-                        style={[
-                          styles.cardContent,
-                          card.type === 'equation' && styles.cardEquation,
-                        ]}
-                      >
-                        {card.content}
-                      </Text>
+                      <>
+                        <Text
+                          style={[
+                            styles.cardContent,
+                            card.type === 'equation' && styles.cardEquation,
+                          ]}
+                        >
+                          {card.content}
+                        </Text>
+                        {card.isMatched && <Text style={styles.cardMatchBadge}>✓</Text>}
+                      </>
                     ) : (
                       <Text style={styles.cardBack}>✨</Text>
                     )}
@@ -188,6 +194,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: SIZING.PADDING.large,
+    paddingTop: SIZING.PADDING.xlarge + SIZING.SECONDARY_TARGET,
   },
   headerCard: {
     flexDirection: 'row',
@@ -213,19 +220,20 @@ const styles = StyleSheet.create({
     color: COLORS.pathDeep,
   },
   headerLabel: {
-    fontSize: TYPOGRAPHY.SIZES.small,
+    fontSize: TYPOGRAPHY.SIZES.body,
     color: COLORS.textSoft,
   },
   cardsGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
-    margin: -4,
+    margin: -SIZING.GAP / 2,
   },
   cardWrap: {
-    width: '25%',
+    // 3 columns keep each card ~110dp wide on a 5" phone (above 72pt target).
+    width: '33.33%',
     aspectRatio: 1,
-    padding: 4,
+    padding: SIZING.GAP / 2,
   },
   cardItem: {
     flex: 1,
@@ -250,17 +258,25 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
   },
   cardBack: {
-    fontSize: 28,
+    fontSize: 36,
   },
   cardContent: {
-    fontSize: TYPOGRAPHY.SIZES.subtitle,
+    fontSize: TYPOGRAPHY.SIZES.title,
     fontWeight: TYPOGRAPHY.WEIGHTS.bold,
     color: COLORS.text,
     textAlign: 'center',
     paddingHorizontal: 4,
   },
   cardEquation: {
-    fontSize: TYPOGRAPHY.SIZES.body,
+    fontSize: TYPOGRAPHY.SIZES.subtitle,
+  },
+  cardMatchBadge: {
+    position: 'absolute',
+    top: 6,
+    right: 8,
+    fontSize: 22,
+    fontWeight: TYPOGRAPHY.WEIGHTS.bold,
+    color: COLORS.successDeep,
   },
 });
 

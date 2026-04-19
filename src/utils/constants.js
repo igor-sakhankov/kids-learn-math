@@ -102,8 +102,14 @@ export const ACHIEVEMENTS = {
 };
 
 // Sizing and spacing
+// Touch-target floors tuned for kids 5-9: primary actions 72pt, secondary 56pt,
+// general minimum 64pt. GAP is the floor for inter-target spacing so stray
+// fingers can't hit two controls at once.
 export const SIZING = {
-  MIN_TOUCH_TARGET: 48,
+  MIN_TOUCH_TARGET: 64,
+  PRIMARY_TARGET: 72,
+  SECONDARY_TARGET: 56,
+  GAP: 16,
   BORDER_RADIUS: {
     small: 10,
     medium: 16,
@@ -126,14 +132,16 @@ export const SIZING = {
 };
 
 // Typography
+// `tiny` is reserved for parent/meta text only (never a kid-facing label).
+// Kid-facing body text must use `body` (20pt) or above.
 export const TYPOGRAPHY = {
   SIZES: {
     tiny: 14,
     small: 16,
-    body: 18,
-    subtitle: 22,
-    title: 26,
-    heading: 34,
+    body: 20,
+    subtitle: 24,
+    title: 30,
+    heading: 36,
     display: 48,
   },
   WEIGHTS: {

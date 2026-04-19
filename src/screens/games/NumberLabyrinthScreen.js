@@ -7,6 +7,9 @@ import { useProgress } from '../../contexts/ProgressContext';
 import { useReward } from '../../contexts/RewardContext';
 import ScreenBackground from '../../components/common/ScreenBackground';
 import DifficultyPicker from '../../components/common/DifficultyPicker';
+import BackButton from '../../components/common/BackButton';
+import HintBubble from '../../components/common/HintBubble';
+import useAttemptCounter from '../../hooks/useAttemptCounter';
 import { COLORS, SIZING, TYPOGRAPHY, SHADOWS } from '../../utils/constants';
 
 const OPTION_COLORS = [
@@ -29,6 +32,7 @@ const NumberLabyrinthScreen = ({ navigation }) => {
 
   const { recordAttempt, completeGame } = useProgress();
   const { addSparks } = useReward();
+  const { showHint, registerAttempt, reset: resetAttempts } = useAttemptCounter();
 
   const selectDifficulty = (level) => {
     setDifficulty(level);
@@ -40,12 +44,14 @@ const NumberLabyrinthScreen = ({ navigation }) => {
     setQuestion(newQuestion);
     setOptions(generateOptions(newQuestion.answer, 3));
     setWrongPick(null);
+    resetAttempts();
   };
 
   const handleAnswer = async (selectedAnswer) => {
     if (!question) return;
     const isCorrect = selectedAnswer === question.answer;
     await recordAttempt('labyrinth', isCorrect, difficulty);
+    registerAttempt(isCorrect);
     setMoves(moves + 1);
 
     if (isCorrect) {
@@ -58,7 +64,7 @@ const NumberLabyrinthScreen = ({ navigation }) => {
       }
     } else {
       setWrongPick(selectedAnswer);
-      setTimeout(() => setWrongPick(null), 600);
+      setTimeout(() => setWrongPick(null), 900);
     }
   };
 
@@ -89,6 +95,7 @@ const NumberLabyrinthScreen = ({ navigation }) => {
   return (
     <ScreenBackground tint="sky">
       <SafeAreaView style={styles.safe}>
+        <BackButton confirm onPress={() => navigation.goBack()} />
         <View style={styles.container}>
           <View style={styles.headerCard}>
             <View style={styles.progressBar}>
@@ -136,7 +143,7 @@ const NumberLabyrinthScreen = ({ navigation }) => {
                         },
                       ]}
                     >
-                      <Text style={styles.doorEmoji}>🚪</Text>
+                      <Text style={styles.doorEmoji}>{isWrong ? '🤔' : '🚪'}</Text>
                       <Text style={styles.optionText}>{option}</Text>
                     </View>
                   )}
@@ -144,6 +151,8 @@ const NumberLabyrinthScreen = ({ navigation }) => {
               );
             })}
           </View>
+
+          {showHint && <HintBubble />}
         </View>
       </SafeAreaView>
     </ScreenBackground>
@@ -155,6 +164,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: SIZING.PADDING.large,
+    paddingTop: SIZING.PADDING.xlarge + SIZING.SECONDARY_TARGET,
   },
   headerCard: {
     backgroundColor: COLORS.overlay,
@@ -180,12 +190,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   headerText: {
-    fontSize: TYPOGRAPHY.SIZES.body,
+    fontSize: TYPOGRAPHY.SIZES.subtitle,
     fontWeight: TYPOGRAPHY.WEIGHTS.bold,
     color: COLORS.pathDeep,
   },
   headerLabel: {
-    fontSize: TYPOGRAPHY.SIZES.small,
+    fontSize: TYPOGRAPHY.SIZES.body,
     color: COLORS.textSoft,
   },
   doorRow: {
@@ -213,28 +223,29 @@ const styles = StyleSheet.create({
     color: COLORS.text,
   },
   instruction: {
-    fontSize: TYPOGRAPHY.SIZES.body,
-    color: COLORS.textSoft,
+    fontSize: TYPOGRAPHY.SIZES.subtitle,
+    fontWeight: TYPOGRAPHY.WEIGHTS.bold,
+    color: COLORS.text,
     textAlign: 'center',
     marginBottom: SIZING.MARGIN.medium,
   },
   optionsGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    margin: -6,
+    margin: -SIZING.GAP / 2,
   },
   optionWrap: {
     width: '50%',
-    padding: 6,
+    padding: SIZING.GAP / 2,
     ...SHADOWS.soft,
   },
   option: {
-    minHeight: 110,
+    minHeight: 120,
     borderRadius: SIZING.BORDER_RADIUS.xlarge,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  doorEmoji: { fontSize: 28, marginBottom: 4 },
+  doorEmoji: { fontSize: 36, marginBottom: 6 },
   optionText: {
     fontSize: TYPOGRAPHY.SIZES.heading,
     fontWeight: TYPOGRAPHY.WEIGHTS.bold,

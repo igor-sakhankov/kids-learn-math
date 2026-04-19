@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { t } from '../../utils/i18n';
 import ScreenBackground from './ScreenBackground';
-import Button from './Button';
+import BackButton from './BackButton';
 import TileButton from './TileButton';
 import { DIFFICULTY_LEVELS, COLORS, SIZING, TYPOGRAPHY, SHADOWS } from '../../utils/constants';
 
@@ -24,6 +24,7 @@ const DifficultyPicker = ({
   return (
     <ScreenBackground tint={tint}>
       <SafeAreaView style={styles.safe}>
+        <BackButton onPress={onBack} />
         <View style={styles.container}>
           <View style={styles.heroCard}>
             {icon ? <Text style={styles.heroIcon}>{icon}</Text> : null}
@@ -49,13 +50,6 @@ const DifficultyPicker = ({
               );
             })}
           </View>
-
-          <Button
-            title={t('common.back')}
-            onPress={onBack}
-            variant="outline"
-            style={styles.backButton}
-          />
         </View>
       </SafeAreaView>
     </ScreenBackground>
@@ -102,16 +96,12 @@ const styles = StyleSheet.create({
   },
   grid: {
     flexDirection: 'row',
-    marginHorizontal: -6,
+    marginHorizontal: -SIZING.GAP / 2,
     marginBottom: SIZING.MARGIN.large,
   },
   gridCell: {
     flex: 1,
-    padding: 6,
-  },
-  backButton: {
-    alignSelf: 'center',
-    minWidth: 160,
+    padding: SIZING.GAP / 2,
   },
 });
 

@@ -107,6 +107,7 @@ const LostNumbersScreen = ({ navigation }) => {
     return (
       <DifficultyPicker
         tint="lemon"
+        color="yellow"
         icon="🔢"
         title={t('games.lost_numbers')}
         subtitle={t('games.complete_sequence')}

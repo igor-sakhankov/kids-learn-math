@@ -118,6 +118,7 @@ const FindPairScreen = ({ navigation }) => {
     return (
       <DifficultyPicker
         tint="rose"
+        color="peach"
         icon="🎴"
         title={t('games.find_pair')}
         subtitle={t('games.match_cards')}

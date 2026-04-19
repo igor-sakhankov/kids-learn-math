@@ -45,11 +45,21 @@ const TileButton = ({
           ]}
         >
           {icon ? <Text style={styles[`icon_${size}`]}>{icon}</Text> : null}
-          <Text style={[styles[`title_${size}`], { color: p.text }]} numberOfLines={2}>
+          <Text
+            style={[styles[`title_${size}`], { color: p.text }]}
+            numberOfLines={2}
+            adjustsFontSizeToFit
+            minimumFontScale={0.7}
+          >
             {title}
           </Text>
           {subtitle ? (
-            <Text style={[styles.subtitle, { color: p.text }]} numberOfLines={1}>
+            <Text
+              style={[styles.subtitle, { color: p.text }]}
+              numberOfLines={1}
+              adjustsFontSizeToFit
+              minimumFontScale={0.75}
+            >
               {subtitle}
             </Text>
           ) : null}
@@ -72,15 +82,15 @@ const styles = StyleSheet.create({
   },
   face_small: {
     paddingVertical: SIZING.PADDING.medium,
-    minHeight: 90,
+    height: 120,
   },
   face_medium: {
     paddingVertical: SIZING.PADDING.large,
-    minHeight: 130,
+    height: 150,
   },
   face_large: {
     paddingVertical: SIZING.PADDING.xlarge,
-    minHeight: 170,
+    height: 190,
   },
   icon_small: { fontSize: 36, marginBottom: 6 },
   icon_medium: { fontSize: 48, marginBottom: 10 },
@@ -101,9 +111,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   subtitle: {
-    marginTop: 4,
-    fontSize: TYPOGRAPHY.SIZES.small,
-    opacity: 0.9,
+    marginTop: 6,
+    fontSize: TYPOGRAPHY.SIZES.body,
+    fontWeight: TYPOGRAPHY.WEIGHTS.bold,
+    opacity: 0.95,
     textAlign: 'center',
   },
 });

@@ -105,7 +105,14 @@ const PillAction = ({ icon, label, color, onPress }) => (
         ]}
       >
         <Text style={styles.pillIcon}>{icon}</Text>
-        <Text style={styles.pillLabel}>{label}</Text>
+        <Text
+          style={styles.pillLabel}
+          numberOfLines={2}
+          adjustsFontSizeToFit
+          minimumFontScale={0.85}
+        >
+          {label}
+        </Text>
       </View>
     )}
   </Pressable>
@@ -157,18 +164,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: SIZING.PADDING.medium,
+    paddingVertical: SIZING.PADDING.small,
     paddingHorizontal: SIZING.PADDING.medium,
     borderRadius: SIZING.BORDER_RADIUS.pill,
     borderBottomWidth: 4,
     borderBottomColor: 'rgba(0,0,0,0.2)',
-    minHeight: SIZING.SECONDARY_TARGET,
+    height: 76,
   },
   pillIcon: {
     fontSize: 28,
     marginRight: 10,
   },
   pillLabel: {
+    flexShrink: 1,
     color: COLORS.white,
     fontWeight: TYPOGRAPHY.WEIGHTS.bold,
     fontSize: TYPOGRAPHY.SIZES.body,

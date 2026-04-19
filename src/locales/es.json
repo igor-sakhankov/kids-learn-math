@@ -32,12 +32,12 @@
     "settings": "Configuración"
   },
   "difficulty": {
-    "easy": "Fácil-fácil",
-    "easy_desc": "Números 0-10",
+    "easy": "Fácil‑fácil",
+    "easy_desc": "0‑10",
     "medium": "Puedo con las Mates",
-    "medium_desc": "Números 0-20",
+    "medium_desc": "0‑20",
     "hard": "Profesional de Mates",
-    "hard_desc": "Números 0-50",
+    "hard_desc": "0‑50",
     "choose_level": "Elige tu Nivel"
   },
   "learning": {

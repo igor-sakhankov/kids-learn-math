@@ -79,6 +79,7 @@ const NumberLabyrinthScreen = ({ navigation }) => {
     return (
       <DifficultyPicker
         tint="teal"
+        color="sky"
         icon="🧩"
         title={t('games.number_labyrinth')}
         subtitle={t('games.help_robot')}

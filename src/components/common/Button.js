@@ -29,6 +29,7 @@ const Button = ({
     <Pressable
       onPress={disabled || loading ? undefined : onPress}
       disabled={disabled || loading}
+      hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
       style={[styles.wrapper, disabled && styles.disabled, style]}
     >
       {({ pressed }) => (
@@ -97,16 +98,17 @@ const styles = StyleSheet.create({
   face_small: {
     paddingVertical: SIZING.PADDING.small,
     paddingHorizontal: SIZING.PADDING.medium,
-    minHeight: 40,
+    minHeight: SIZING.SECONDARY_TARGET,
   },
   face_medium: {
     paddingVertical: SIZING.PADDING.medium,
     paddingHorizontal: SIZING.PADDING.large,
+    minHeight: SIZING.MIN_TOUCH_TARGET,
   },
   face_large: {
     paddingVertical: SIZING.PADDING.large,
     paddingHorizontal: SIZING.PADDING.xlarge,
-    minHeight: 60,
+    minHeight: SIZING.PRIMARY_TARGET,
   },
   text: {
     fontWeight: TYPOGRAPHY.WEIGHTS.bold,

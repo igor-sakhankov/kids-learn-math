@@ -7,10 +7,17 @@
     "try_again": "Try Again",
     "check": "Check",
     "hint": "Hint",
+    "new_problem": "New Problem",
     "great_job": "Great job!",
     "correct": "Correct!",
     "incorrect": "Try again!",
     "loading": "Loading..."
+  },
+  "leave": {
+    "title": "Leave the lesson?",
+    "message": "You can always come back and keep going!",
+    "stay": "Keep Playing",
+    "leave": "Leave"
   },
   "welcome": {
     "greeting": "Hello! I'm Robot Logik!",

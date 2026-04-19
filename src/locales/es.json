@@ -7,10 +7,17 @@
     "try_again": "Inténtalo de nuevo",
     "check": "Verificar",
     "hint": "Pista",
+    "new_problem": "Nuevo problema",
     "great_job": "¡Buen trabajo!",
     "correct": "¡Correcto!",
     "incorrect": "¡Inténtalo otra vez!",
     "loading": "Cargando..."
+  },
+  "leave": {
+    "title": "¿Salir de la lección?",
+    "message": "¡Siempre puedes volver y continuar!",
+    "stay": "Seguir jugando",
+    "leave": "Salir"
   },
   "welcome": {
     "greeting": "¡Hola! ¡Soy Robot Lógico!",

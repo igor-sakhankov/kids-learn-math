@@ -32,6 +32,7 @@ const WelcomeScreen = ({ navigation }) => {
     <ScreenBackground tint="sky">
       <SafeAreaView style={styles.safe}>
         <View style={styles.container}>
+          {/* TODO(M2.3): replace with Robot Logik character art. */}
           <View style={styles.mascotRing}>
             <Image
               source={require('../../assets/professor-corgi.jpeg')}
@@ -118,7 +119,7 @@ const styles = StyleSheet.create({
   },
   question: {
     fontSize: TYPOGRAPHY.SIZES.subtitle,
-    color: COLORS.textSoft,
+    color: COLORS.text,
     textAlign: 'center',
   },
   startButton: {

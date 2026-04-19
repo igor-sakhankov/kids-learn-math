@@ -7,7 +7,19 @@ import { useProgress } from '../../contexts/ProgressContext';
 import { useReward } from '../../contexts/RewardContext';
 import ScreenBackground from '../../components/common/ScreenBackground';
 import DifficultyPicker from '../../components/common/DifficultyPicker';
+import BackButton from '../../components/common/BackButton';
+import HintBubble from '../../components/common/HintBubble';
+import useAttemptCounter from '../../hooks/useAttemptCounter';
 import { COLORS, SIZING, TYPOGRAPHY, SHADOWS } from '../../utils/constants';
+
+// Four per-option color variants keep choices distinguishable without
+// relying on reading the number alone.
+const OPTION_PALETTES = [
+  { face: COLORS.skyDeep, lip: '#4FA6CE' },
+  { face: COLORS.mintDeep, lip: '#3FA07F' },
+  { face: COLORS.softPurpleDeep, lip: '#8A5FB8' },
+  { face: COLORS.peachDeep, lip: '#E08848' },
+];
 
 const TOTAL_ROUNDS = 5;
 
@@ -24,6 +36,7 @@ const LostNumbersScreen = ({ navigation }) => {
 
   const { recordAttempt, completeGame } = useProgress();
   const { addSparks } = useReward();
+  const { showHint, registerAttempt, reset: resetAttempts } = useAttemptCounter();
 
   const selectDifficulty = (level) => {
     setDifficulty(level);
@@ -34,15 +47,16 @@ const LostNumbersScreen = ({ navigation }) => {
     const newSequence = generateSequence(level);
     setSequence(newSequence);
     setOptions(
-      generateOptions(newSequence.answers[0], 5).sort((a, b) => a - b),
+      generateOptions(newSequence.answers[0], 4).sort((a, b) => a - b),
     );
     setSelectedAnswers([]);
     setCurrentMissingIndex(0);
     setFeedback(null);
+    resetAttempts();
   };
 
   const refreshOptions = (seq, idx) => {
-    setOptions(generateOptions(seq.answers[idx], 5).sort((a, b) => a - b));
+    setOptions(generateOptions(seq.answers[idx], 4).sort((a, b) => a - b));
   };
 
   const handleNumberSelect = async (number) => {
@@ -50,6 +64,7 @@ const LostNumbersScreen = ({ navigation }) => {
     const isCorrect = number === correctAnswer;
 
     await recordAttempt('sequence', isCorrect, difficulty);
+    registerAttempt(isCorrect);
 
     if (isCorrect) {
       const newAnswers = [...selectedAnswers, number];
@@ -106,6 +121,7 @@ const LostNumbersScreen = ({ navigation }) => {
   return (
     <ScreenBackground tint="lavender">
       <SafeAreaView style={styles.safe}>
+        <BackButton confirm onPress={() => navigation.goBack()} />
         <ScrollView
           style={styles.scroll}
           contentContainerStyle={styles.scrollContent}
@@ -160,29 +176,36 @@ const LostNumbersScreen = ({ navigation }) => {
           <Text style={styles.optionsLabel}>{t('game_ui.choose_missing_number')}</Text>
 
           <View style={styles.optionsGrid}>
-            {options.map((option, index) => (
-              <Pressable
-                key={`${option}-${index}`}
-                style={styles.optionWrap}
-                onPress={() => handleNumberSelect(option)}
-                disabled={feedback !== null}
-              >
-                {({ pressed }) => (
-                  <View
-                    style={[
-                      styles.option,
-                      {
-                        borderBottomWidth: pressed ? 1 : 4,
-                        transform: [{ translateY: pressed ? 3 : 0 }],
-                      },
-                    ]}
-                  >
-                    <Text style={styles.optionText}>{option}</Text>
-                  </View>
-                )}
-              </Pressable>
-            ))}
+            {options.map((option, index) => {
+              const palette = OPTION_PALETTES[index % OPTION_PALETTES.length];
+              return (
+                <Pressable
+                  key={`${option}-${index}`}
+                  style={styles.optionWrap}
+                  onPress={() => handleNumberSelect(option)}
+                  disabled={feedback !== null}
+                >
+                  {({ pressed }) => (
+                    <View
+                      style={[
+                        styles.option,
+                        {
+                          backgroundColor: palette.face,
+                          borderBottomColor: palette.lip,
+                          borderBottomWidth: pressed ? 1 : 5,
+                          transform: [{ translateY: pressed ? 3 : 0 }],
+                        },
+                      ]}
+                    >
+                      <Text style={styles.optionText}>{option}</Text>
+                    </View>
+                  )}
+                </Pressable>
+              );
+            })}
           </View>
+
+          {showHint && <HintBubble />}
 
           {feedback && (
             <Text
@@ -205,6 +228,7 @@ const styles = StyleSheet.create({
   scroll: { flex: 1 },
   scrollContent: {
     padding: SIZING.PADDING.large,
+    paddingTop: SIZING.PADDING.xlarge + SIZING.SECONDARY_TARGET,
     paddingBottom: SIZING.PADDING.xlarge,
   },
   headerCard: {
@@ -223,7 +247,7 @@ const styles = StyleSheet.create({
     fontWeight: TYPOGRAPHY.WEIGHTS.bold,
     color: COLORS.pathDeep,
   },
-  headerLabel: { fontSize: TYPOGRAPHY.SIZES.small, color: COLORS.textSoft },
+  headerLabel: { fontSize: TYPOGRAPHY.SIZES.body, color: COLORS.textSoft },
   instruction: {
     fontSize: TYPOGRAPHY.SIZES.subtitle,
     fontWeight: TYPOGRAPHY.WEIGHTS.bold,
@@ -236,11 +260,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flexWrap: 'wrap',
     marginBottom: SIZING.MARGIN.large,
-    gap: 8,
+    gap: SIZING.GAP,
   },
   sequenceBox: {
-    width: 58,
-    height: 58,
+    width: 64,
+    height: 64,
     backgroundColor: COLORS.white,
     borderRadius: SIZING.BORDER_RADIUS.large,
     justifyContent: 'center',
@@ -268,8 +292,9 @@ const styles = StyleSheet.create({
   },
   sequenceNumberMissing: { color: COLORS.pathDeep },
   optionsLabel: {
-    fontSize: TYPOGRAPHY.SIZES.body,
-    color: COLORS.textSoft,
+    fontSize: TYPOGRAPHY.SIZES.subtitle,
+    fontWeight: TYPOGRAPHY.WEIGHTS.bold,
+    color: COLORS.text,
     textAlign: 'center',
     marginBottom: SIZING.MARGIN.medium,
   },
@@ -277,22 +302,22 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
-    margin: -5,
+    margin: -SIZING.GAP / 2,
   },
   optionWrap: {
-    width: '33.33%',
-    padding: 5,
+    width: '50%',
+    padding: SIZING.GAP / 2,
     ...SHADOWS.soft,
   },
   option: {
-    backgroundColor: COLORS.softPurpleDeep,
     borderRadius: SIZING.BORDER_RADIUS.large,
-    paddingVertical: SIZING.PADDING.medium,
+    paddingVertical: SIZING.PADDING.large,
     alignItems: 'center',
-    borderBottomColor: '#8A5FB8',
+    minHeight: SIZING.PRIMARY_TARGET,
+    justifyContent: 'center',
   },
   optionText: {
-    fontSize: TYPOGRAPHY.SIZES.title,
+    fontSize: TYPOGRAPHY.SIZES.heading,
     fontWeight: TYPOGRAPHY.WEIGHTS.bold,
     color: COLORS.white,
   },

@@ -9,6 +9,9 @@ import Card from '../../components/common/Card';
 import ScreenBackground from '../../components/common/ScreenBackground';
 import NumberPad from '../../components/common/NumberPad';
 import DifficultyPicker from '../../components/common/DifficultyPicker';
+import BackButton from '../../components/common/BackButton';
+import HintBubble from '../../components/common/HintBubble';
+import useAttemptCounter from '../../hooks/useAttemptCounter';
 import { COLORS, SIZING, TYPOGRAPHY, SHADOWS, GAME_CONFIG } from '../../utils/constants';
 
 const OBJECT_EMOJI = {
@@ -30,6 +33,7 @@ const AdditionVisualScreen = ({ navigation }) => {
 
   const { recordAttempt, completeLesson } = useProgress();
   const { addLeaves } = useReward();
+  const { showHint, registerAttempt, reset: resetAttempts } = useAttemptCounter();
 
   const selectDifficulty = (level) => {
     setDifficulty(level);
@@ -41,6 +45,7 @@ const AdditionVisualScreen = ({ navigation }) => {
     setQuestion(newQuestion);
     setUserAnswer('');
     setFeedback(null);
+    resetAttempts();
   };
 
   const checkAnswer = async () => {
@@ -49,6 +54,7 @@ const AdditionVisualScreen = ({ navigation }) => {
 
     const isCorrect = answer === question.answer;
     await recordAttempt('addition', isCorrect, difficulty);
+    registerAttempt(isCorrect);
 
     if (isCorrect) {
       setFeedback('correct');
@@ -108,6 +114,7 @@ const AdditionVisualScreen = ({ navigation }) => {
   return (
     <ScreenBackground tint="mint">
       <SafeAreaView style={styles.safe}>
+        <BackButton confirm onPress={() => navigation.goBack()} />
         <ScrollView
           style={styles.scroll}
           contentContainerStyle={styles.scrollContent}
@@ -160,6 +167,8 @@ const AdditionVisualScreen = ({ navigation }) => {
             )}
           </Card>
 
+          {showHint && <HintBubble />}
+
           <View style={styles.padWrap}>
             <NumberPad
               value={userAnswer}
@@ -185,6 +194,7 @@ const styles = StyleSheet.create({
   scroll: { flex: 1 },
   scrollContent: {
     padding: SIZING.PADDING.large,
+    paddingTop: SIZING.PADDING.xlarge + SIZING.SECONDARY_TARGET,
     paddingBottom: SIZING.PADDING.xlarge,
   },
   headerCard: {
@@ -211,12 +221,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   questionNumber: {
-    fontSize: TYPOGRAPHY.SIZES.small,
+    fontSize: TYPOGRAPHY.SIZES.body,
     fontWeight: TYPOGRAPHY.WEIGHTS.bold,
     color: COLORS.text,
   },
   scoreText: {
-    fontSize: TYPOGRAPHY.SIZES.body,
+    fontSize: TYPOGRAPHY.SIZES.subtitle,
     fontWeight: TYPOGRAPHY.WEIGHTS.bold,
     color: COLORS.pathDeep,
   },
@@ -230,9 +240,9 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.softRed,
   },
   instruction: {
-    fontSize: TYPOGRAPHY.SIZES.body,
+    fontSize: TYPOGRAPHY.SIZES.subtitle,
     fontWeight: TYPOGRAPHY.WEIGHTS.bold,
-    color: COLORS.textSoft,
+    color: COLORS.text,
     textAlign: 'center',
     marginBottom: SIZING.MARGIN.medium,
   },
@@ -247,11 +257,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
-    maxWidth: 140,
+    maxWidth: 180,
   },
   visualObject: {
-    fontSize: 30,
-    margin: 2,
+    fontSize: 48,
+    margin: 4,
   },
   operatorText: {
     fontSize: TYPOGRAPHY.SIZES.heading,

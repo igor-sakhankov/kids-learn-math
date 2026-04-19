@@ -1,11 +1,11 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Switch, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Switch, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { t } from '../utils/i18n';
 import { useSettings } from '../contexts/SettingsContext';
 import Card from '../components/common/Card';
-import Button from '../components/common/Button';
 import ScreenBackground from '../components/common/ScreenBackground';
+import BackButton from '../components/common/BackButton';
 import { COLORS, SIZING, TYPOGRAPHY, SHADOWS, LANGUAGES } from '../utils/constants';
 
 const LANGUAGE_OPTIONS = [
@@ -20,6 +20,7 @@ const SettingsScreen = ({ navigation }) => {
   return (
     <ScreenBackground tint="lavender">
       <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
+        <BackButton onPress={() => navigation.goBack()} />
         <ScrollView
           style={styles.scroll}
           contentContainerStyle={styles.scrollContent}
@@ -34,16 +35,16 @@ const SettingsScreen = ({ navigation }) => {
               {LANGUAGE_OPTIONS.map((lang) => {
                 const active = language === lang.code;
                 return (
-                  <TouchableOpacity
+                  <Pressable
                     key={lang.code}
                     style={[styles.languageOption, active && styles.languageOptionActive]}
                     onPress={() => changeLanguage(lang.code)}
-                    activeOpacity={0.8}
+                    hitSlop={{ top: 6, bottom: 6, left: 6, right: 6 }}
                   >
                     <Text style={styles.languageFlag}>{lang.flag}</Text>
                     <Text style={styles.languageName}>{lang.name}</Text>
                     {active && <Text style={styles.checkmark}>✓</Text>}
-                  </TouchableOpacity>
+                  </Pressable>
                 );
               })}
             </View>
@@ -97,12 +98,6 @@ const SettingsScreen = ({ navigation }) => {
             </View>
           </Card>
 
-          <Button
-            title={t('common.back')}
-            onPress={() => navigation.goBack()}
-            variant="secondary"
-            style={styles.backButton}
-          />
         </ScrollView>
       </SafeAreaView>
     </ScreenBackground>
@@ -110,7 +105,11 @@ const SettingsScreen = ({ navigation }) => {
 };
 
 const SettingRow = ({ label, emoji, value, onToggle, last }) => (
-  <View style={[styles.settingRow, !last && styles.settingRowBorder]}>
+  <Pressable
+    onPress={onToggle}
+    style={[styles.settingRow, !last && styles.settingRowBorder]}
+    hitSlop={{ top: 6, bottom: 6, left: 6, right: 6 }}
+  >
     <Text style={styles.settingEmoji}>{emoji}</Text>
     <Text style={styles.settingLabel}>{label}</Text>
     <Switch
@@ -119,7 +118,7 @@ const SettingRow = ({ label, emoji, value, onToggle, last }) => (
       trackColor={{ false: COLORS.lightBlue, true: COLORS.grassDeep }}
       thumbColor={COLORS.white}
     />
-  </View>
+  </Pressable>
 );
 
 const styles = StyleSheet.create({
@@ -127,6 +126,7 @@ const styles = StyleSheet.create({
   scroll: { flex: 1 },
   scrollContent: {
     padding: SIZING.PADDING.large,
+    paddingTop: SIZING.PADDING.xlarge + SIZING.SECONDARY_TARGET,
     paddingBottom: SIZING.PADDING.xlarge,
   },
   titlePill: {
@@ -157,6 +157,7 @@ const styles = StyleSheet.create({
     borderRadius: SIZING.BORDER_RADIUS.large,
     marginBottom: SIZING.MARGIN.small,
     minHeight: SIZING.MIN_TOUCH_TARGET,
+    gap: SIZING.GAP,
   },
   languageOptionActive: {
     backgroundColor: COLORS.mint,
@@ -164,8 +165,7 @@ const styles = StyleSheet.create({
     borderColor: COLORS.mintDeep,
   },
   languageFlag: {
-    fontSize: 30,
-    marginRight: SIZING.MARGIN.medium,
+    fontSize: 36,
   },
   languageName: {
     flex: 1,
@@ -183,24 +183,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: SIZING.PADDING.medium,
     minHeight: SIZING.MIN_TOUCH_TARGET,
+    gap: SIZING.GAP / 2,
   },
   settingRowBorder: {
     borderBottomWidth: 1,
     borderBottomColor: COLORS.lightBlue,
   },
   settingEmoji: {
-    fontSize: 24,
-    marginRight: SIZING.MARGIN.medium,
+    fontSize: 28,
   },
   settingLabel: {
     flex: 1,
     fontSize: TYPOGRAPHY.SIZES.body,
     color: COLORS.text,
-  },
-  backButton: {
-    marginTop: SIZING.MARGIN.medium,
-    alignSelf: 'center',
-    minWidth: 200,
   },
 });
 

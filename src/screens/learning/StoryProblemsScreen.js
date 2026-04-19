@@ -10,6 +10,8 @@ import Card from '../../components/common/Card';
 import ScreenBackground from '../../components/common/ScreenBackground';
 import NumberPad from '../../components/common/NumberPad';
 import DifficultyPicker from '../../components/common/DifficultyPicker';
+import BackButton from '../../components/common/BackButton';
+import HintBubble from '../../components/common/HintBubble';
 import { COLORS, SIZING, TYPOGRAPHY, SHADOWS, GAME_CONFIG } from '../../utils/constants';
 
 const StoryProblemsScreen = ({ navigation }) => {
@@ -114,6 +116,7 @@ const StoryProblemsScreen = ({ navigation }) => {
   return (
     <ScreenBackground tint="lavender">
       <SafeAreaView style={styles.safe}>
+        <BackButton confirm onPress={() => navigation.goBack()} />
         <ScrollView
           style={styles.scroll}
           contentContainerStyle={styles.scrollContent}
@@ -157,12 +160,7 @@ const StoryProblemsScreen = ({ navigation }) => {
             <EqBlock value={userAnswer || '?'} highlight />
           </View>
 
-          {showHint && (
-            <View style={styles.hintCard}>
-              <Text style={styles.hintLabel}>💡 {t('common.hint')}</Text>
-              <Text style={styles.hintText}>{t('robot.hint_1')}</Text>
-            </View>
-          )}
+          {showHint && <HintBubble />}
 
           {feedback && (
             <Text
@@ -183,10 +181,11 @@ const StoryProblemsScreen = ({ navigation }) => {
               disabled={feedback === 'correct'}
             />
             <Button
-              title={t('common.next')}
+              title={t('common.new_problem')}
               onPress={skipQuestion}
               variant="outline"
-              size="small"
+              size="medium"
+              icon="🔄"
               style={styles.skipButton}
             />
           </View>
@@ -207,6 +206,7 @@ const styles = StyleSheet.create({
   scroll: { flex: 1 },
   scrollContent: {
     padding: SIZING.PADDING.large,
+    paddingTop: SIZING.PADDING.xlarge + SIZING.SECONDARY_TARGET,
     paddingBottom: SIZING.PADDING.xlarge,
   },
   headerCard: {
@@ -233,12 +233,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   questionNumber: {
-    fontSize: TYPOGRAPHY.SIZES.small,
+    fontSize: TYPOGRAPHY.SIZES.body,
     fontWeight: TYPOGRAPHY.WEIGHTS.bold,
     color: COLORS.text,
   },
   scoreText: {
-    fontSize: TYPOGRAPHY.SIZES.body,
+    fontSize: TYPOGRAPHY.SIZES.subtitle,
     fontWeight: TYPOGRAPHY.WEIGHTS.bold,
     color: COLORS.pathDeep,
   },
@@ -306,23 +306,6 @@ const styles = StyleSheet.create({
     fontWeight: TYPOGRAPHY.WEIGHTS.bold,
     color: COLORS.text,
     marginHorizontal: 4,
-  },
-  hintCard: {
-    backgroundColor: COLORS.mint,
-    padding: SIZING.PADDING.medium,
-    borderRadius: SIZING.BORDER_RADIUS.large,
-    marginVertical: SIZING.MARGIN.small,
-    ...SHADOWS.soft,
-  },
-  hintLabel: {
-    fontSize: TYPOGRAPHY.SIZES.body,
-    fontWeight: TYPOGRAPHY.WEIGHTS.bold,
-    color: COLORS.text,
-    marginBottom: SIZING.MARGIN.small,
-  },
-  hintText: {
-    fontSize: TYPOGRAPHY.SIZES.body,
-    color: COLORS.text,
   },
   feedback: {
     fontSize: TYPOGRAPHY.SIZES.subtitle,

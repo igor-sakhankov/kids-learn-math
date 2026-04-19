@@ -106,11 +106,11 @@ const NumberPad = ({ value, onChange, onSubmit, disabled = false, maxLength = 3 
 
 const styles = StyleSheet.create({
   pad: {
-    gap: 10,
+    gap: SIZING.GAP,
   },
   row: {
     flexDirection: 'row',
-    gap: 10,
+    gap: SIZING.GAP,
   },
   keyWrap: {
     flex: 1,
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
     borderRadius: SIZING.BORDER_RADIUS.large,
   },
   key: {
-    minHeight: 60,
+    minHeight: SIZING.PRIMARY_TARGET,
     borderRadius: SIZING.BORDER_RADIUS.large,
     alignItems: 'center',
     justifyContent: 'center',

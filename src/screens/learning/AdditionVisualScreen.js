@@ -99,6 +99,7 @@ const AdditionVisualScreen = ({ navigation }) => {
     return (
       <DifficultyPicker
         tint="mint"
+        color="grass"
         icon="➕"
         title={t('learning.addition')}
         onSelect={selectDifficulty}

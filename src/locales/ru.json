@@ -32,12 +32,12 @@
     "settings": "Настройки"
   },
   "difficulty": {
-    "easy": "Легко-легко",
-    "easy_desc": "Числа 0-10",
+    "easy": "Легко‑легко",
+    "easy_desc": "0‑10",
     "medium": "Я умею считать",
-    "medium_desc": "Числа 0-20",
-    "hard": "Математик-профи",
-    "hard_desc": "Числа 0-50",
+    "medium_desc": "0‑20",
+    "hard": "Математик‑профи",
+    "hard_desc": "0‑50",
     "choose_level": "Выбери свой уровень"
   },
   "learning": {

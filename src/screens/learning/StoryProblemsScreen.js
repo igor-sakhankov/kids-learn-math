@@ -99,6 +99,7 @@ const StoryProblemsScreen = ({ navigation }) => {
     return (
       <DifficultyPicker
         tint="lavender"
+        color="purple"
         icon="📖"
         title={t('learning.story_problems')}
         onSelect={selectDifficulty}

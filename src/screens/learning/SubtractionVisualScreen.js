@@ -102,6 +102,7 @@ const SubtractionVisualScreen = ({ navigation }) => {
     return (
       <DifficultyPicker
         tint="sunrise"
+        color="path"
         icon="➖"
         title={t('learning.subtraction')}
         onSelect={selectDifficulty}

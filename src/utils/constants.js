@@ -94,30 +94,6 @@ export const REWARDS = {
   FLOWER_AT_LEAVES: 10,
 };
 
-// Achievement types
-export const ACHIEVEMENTS = {
-  FIRST_STEP: {
-    id: 'first_step',
-    requirement: 'complete_first_lesson',
-    threshold: 1,
-  },
-  PATTERN_SEEKER: {
-    id: 'pattern_seeker',
-    requirement: 'solve_sequences',
-    threshold: 5,
-  },
-  MATHEMATICIAN: {
-    id: 'mathematician',
-    requirement: 'correct_streak',
-    threshold: 3,
-  },
-  PERSISTENT: {
-    id: 'persistent',
-    requirement: 'retry_after_mistake',
-    threshold: 1,
-  },
-};
-
 // Sizing and spacing
 // Touch-target floors tuned for kids 5-9: primary actions 72pt, secondary 56pt,
 // general minimum 64pt. GAP is the floor for inter-target spacing so stray

@@ -99,6 +99,7 @@
   },
   "achievements": {
     "title": "Logros",
+    "locked": "¡Sigue jugando para desbloquearlo!",
     "first_step": "Primer Paso Lógico",
     "first_step_desc": "Completa tu primera lección",
     "pattern_seeker": "Buscador de Patrones",

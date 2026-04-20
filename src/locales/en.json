@@ -99,6 +99,7 @@
   },
   "achievements": {
     "title": "Achievements",
+    "locked": "Keep playing to unlock!",
     "first_step": "First Logical Step",
     "first_step_desc": "Complete your first lesson",
     "pattern_seeker": "Pattern Seeker",

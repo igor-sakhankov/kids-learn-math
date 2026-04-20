@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import { loadProgress, saveProgress } from '../utils/storage';
+import { findNewlyEarned } from '../utils/achievements';
 
 const ProgressContext = createContext();
 
@@ -44,14 +45,29 @@ export const ProgressProvider = ({ children }) => {
     loadInitialProgress();
   }, []);
 
-  // Save progress whenever it changes
+  // Save progress whenever it changes. Any new achievements earned as a
+  // side-effect of the update are merged in before persisting so every
+  // caller (completeLesson, completeGame, recordAttempt) stays unaware of
+  // the evaluation rules.
   const updateProgress = async (newProgress) => {
     try {
-      const updatedProgress = { ...progress, ...newProgress };
-      setProgressState(updatedProgress);
-      await saveProgress(updatedProgress);
+      const merged = { ...progress, ...newProgress };
+      const newlyEarned = findNewlyEarned(merged);
+      const finalProgress = newlyEarned.length
+        ? {
+            ...merged,
+            completedAchievements: [
+              ...(merged.completedAchievements || []),
+              ...newlyEarned,
+            ],
+          }
+        : merged;
+      setProgressState(finalProgress);
+      await saveProgress(finalProgress);
+      return finalProgress;
     } catch (error) {
       console.error('Error updating progress:', error);
+      return progress;
     }
   };
 

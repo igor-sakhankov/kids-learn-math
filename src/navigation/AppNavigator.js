@@ -4,6 +4,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 // Import screens (will be created)
 import WelcomeScreen from '../screens/WelcomeScreen';
+import PlacementScreen from '../screens/PlacementScreen';
+import ReadyScreen from '../screens/ReadyScreen';
 import MainMenuScreen from '../screens/MainMenuScreen';
 import ProgressScreen from '../screens/ProgressScreen';
 import SettingsScreen from '../screens/SettingsScreen';
@@ -31,6 +33,8 @@ const AppNavigator = () => {
         }}
       >
         <Stack.Screen name="Welcome" component={WelcomeScreen} />
+        <Stack.Screen name="Placement" component={PlacementScreen} />
+        <Stack.Screen name="Ready" component={ReadyScreen} />
         <Stack.Screen name="MainMenu" component={MainMenuScreen} />
         <Stack.Screen name="Progress" component={ProgressScreen} />
         <Stack.Screen name="Settings" component={SettingsScreen} />

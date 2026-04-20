@@ -13,6 +13,8 @@ const defaultSettings = {
   highContrast: false,
   largeText: false,
   reducedMotion: false,
+  // Chosen during onboarding placement. One of 'easy' | 'medium' | 'hard'.
+  defaultDifficulty: null,
 };
 
 export const SettingsProvider = ({ children }) => {

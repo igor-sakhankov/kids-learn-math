@@ -19,6 +19,14 @@
     "stay": "Keep Playing",
     "leave": "Leave"
   },
+  "lesson_complete": {
+    "title": "Lesson complete!",
+    "again": "Again",
+    "leaf_earned": "+1 Leaf earned",
+    "perfect": "Perfect work, math star!",
+    "great": "Great effort — keep going!",
+    "keep_growing": "Let's try again and grow!"
+  },
   "welcome": {
     "greeting": "Hello! I'm Robot Logik!",
     "question": "Do you want to help me build the Number City?",

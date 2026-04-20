@@ -11,6 +11,7 @@ import NumberPad from '../../components/common/NumberPad';
 import DifficultyPicker from '../../components/common/DifficultyPicker';
 import BackButton from '../../components/common/BackButton';
 import HintBubble from '../../components/common/HintBubble';
+import LessonCompleteModal from '../../components/common/LessonCompleteModal';
 import useAttemptCounter from '../../hooks/useAttemptCounter';
 import { COLORS, SIZING, TYPOGRAPHY, SHADOWS, GAME_CONFIG } from '../../utils/constants';
 
@@ -30,6 +31,7 @@ const AdditionVisualScreen = ({ navigation }) => {
   const [questionCount, setQuestionCount] = useState(0);
   const [score, setScore] = useState(0);
   const [sessionStart] = useState(Date.now());
+  const [showComplete, setShowComplete] = useState(false);
 
   const { recordAttempt, completeLesson } = useProgress();
   const { addLeaves } = useReward();
@@ -81,9 +83,17 @@ const AdditionVisualScreen = ({ navigation }) => {
 
   const finishLesson = async () => {
     const duration = Math.floor((Date.now() - sessionStart) / 60000);
-    await completeLesson('addition_visual', score, duration);
+    // score + 1 because setScore from the final correct answer hasn't flushed yet
+    await completeLesson('addition_visual', score + 1, duration);
     await addLeaves(1);
-    navigation.goBack();
+    setShowComplete(true);
+  };
+
+  const playAgain = () => {
+    setShowComplete(false);
+    setScore(0);
+    setQuestionCount(0);
+    generateNewQuestion(difficulty);
   };
 
   const renderObjects = (count, type) => {
@@ -182,6 +192,18 @@ const AdditionVisualScreen = ({ navigation }) => {
             disabled={feedback === 'correct'}
           />
         </View>
+
+        <LessonCompleteModal
+          visible={showComplete}
+          score={score}
+          total={GAME_CONFIG.TOTAL_QUESTIONS}
+          color="grass"
+          onAgain={playAgain}
+          onContinue={() => {
+            setShowComplete(false);
+            navigation.goBack();
+          }}
+        />
       </SafeAreaView>
     </ScreenBackground>
   );

@@ -1,7 +1,10 @@
 import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
-import { COLORS, SIZING, TYPOGRAPHY, SHADOWS } from '../../utils/constants';
+import { COLORS, SIZING, TYPOGRAPHY } from '../../utils/constants';
 
+// "lip" is the darker block that sits offset behind the face, giving a 3D
+// stacked-block read. "face" sits on top and translates down/right on press
+// to reveal less of the lip — matches the chunky-plastic look of the design.
 const PALETTES = {
   sky:      { face: COLORS.skyDeep,        lip: COLORS.skyLip,         text: COLORS.white },
   grass:    { face: COLORS.grassDeep,      lip: COLORS.grassLip,       text: COLORS.white },
@@ -12,6 +15,8 @@ const PALETTES = {
   peach:    { face: COLORS.peachDeep,      lip: COLORS.peachLip,       text: COLORS.white },
   red:      { face: COLORS.softRedDeep,    lip: COLORS.errorDeep,      text: COLORS.white },
 };
+
+const OFFSET = 8; // block offset — large enough to read as a shadow block
 
 const TileButton = ({
   title,
@@ -32,37 +37,41 @@ const TileButton = ({
       style={[styles.wrapper, style, disabled && { opacity: 0.5 }]}
     >
       {({ pressed }) => (
-        <View
-          style={[
-            styles.face,
-            styles[`face_${size}`],
-            {
-              backgroundColor: p.face,
-              borderBottomColor: p.lip,
-              borderBottomWidth: pressed ? 2 : 6,
-              transform: [{ translateY: pressed ? 4 : 0 }],
-            },
-          ]}
-        >
-          {icon ? <Text style={styles[`icon_${size}`]}>{icon}</Text> : null}
-          <Text
-            style={[styles[`title_${size}`], { color: p.text }]}
-            numberOfLines={2}
-            adjustsFontSizeToFit
-            minimumFontScale={0.7}
+        <View style={[styles.stack, styles[`stack_${size}`]]}>
+          <View style={[styles.lip, { backgroundColor: p.lip }]} />
+          <View
+            style={[
+              styles.face,
+              styles[`face_${size}`],
+              {
+                backgroundColor: p.face,
+                transform: [
+                  { translateX: pressed ? OFFSET - 2 : 0 },
+                  { translateY: pressed ? OFFSET - 2 : 0 },
+                ],
+              },
+            ]}
           >
-            {title}
-          </Text>
-          {subtitle ? (
+            {icon ? <Text style={styles[`icon_${size}`]}>{icon}</Text> : null}
             <Text
-              style={[styles.subtitle, { color: p.text }]}
-              numberOfLines={1}
+              style={[styles[`title_${size}`], { color: p.text }]}
+              numberOfLines={2}
               adjustsFontSizeToFit
-              minimumFontScale={0.75}
+              minimumFontScale={0.7}
             >
-              {subtitle}
+              {title}
             </Text>
-          ) : null}
+            {subtitle ? (
+              <Text
+                style={[styles.subtitle, { color: p.text }]}
+                numberOfLines={1}
+                adjustsFontSizeToFit
+                minimumFontScale={0.75}
+              >
+                {subtitle}
+              </Text>
+            ) : null}
+          </View>
         </View>
       )}
     </Pressable>
@@ -71,7 +80,22 @@ const TileButton = ({
 
 const styles = StyleSheet.create({
   wrapper: {
-    ...SHADOWS.card,
+    // wrapper pads out to fit the offset so the lip never clips siblings
+    paddingRight: OFFSET,
+    paddingBottom: OFFSET,
+  },
+  stack: {
+    position: 'relative',
+  },
+  stack_small: { height: 120 + OFFSET, width: '100%' },
+  stack_medium: { height: 150 + OFFSET, width: '100%' },
+  stack_large: { height: 190 + OFFSET, width: '100%' },
+  lip: {
+    position: 'absolute',
+    top: OFFSET,
+    left: OFFSET,
+    right: 0,
+    bottom: 0,
     borderRadius: SIZING.BORDER_RADIUS.xlarge,
   },
   face: {
@@ -79,18 +103,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: SIZING.PADDING.medium,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: OFFSET,
+    bottom: OFFSET,
   },
   face_small: {
     paddingVertical: SIZING.PADDING.medium,
-    height: 120,
   },
   face_medium: {
     paddingVertical: SIZING.PADDING.large,
-    height: 150,
   },
   face_large: {
     paddingVertical: SIZING.PADDING.xlarge,
-    height: 190,
   },
   icon_small: { fontSize: 36, marginBottom: 6 },
   icon_medium: { fontSize: 48, marginBottom: 10 },

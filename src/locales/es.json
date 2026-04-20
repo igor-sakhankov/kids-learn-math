@@ -19,6 +19,14 @@
     "stay": "Seguir jugando",
     "leave": "Salir"
   },
+  "lesson_complete": {
+    "title": "¡Lección completada!",
+    "again": "Otra vez",
+    "leaf_earned": "+1 Hoja ganada",
+    "perfect": "¡Trabajo perfecto, estrella de matemáticas!",
+    "great": "¡Gran esfuerzo — sigue así!",
+    "keep_growing": "¡Intentemos otra vez y crezcamos!"
+  },
   "welcome": {
     "greeting": "¡Hola! ¡Soy Robot Lógico!",
     "question": "¿Quieres ayudarme a construir la Ciudad de Números?",

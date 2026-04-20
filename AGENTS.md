@@ -109,7 +109,7 @@ npm start             # Metro bundler (terminal 1)
 npm run android       # build + install on Android (terminal 2)
 ```
 
-Troubleshooting is in `README.md` and `QUICK_START.md`.
+Troubleshooting is in `README.md` and `QUICK_START.md`. For packaging a release APK and sideloading onto a device, see the `package-android-apk` skill in `.claude/skills/`.
 
 ## What to avoid
 

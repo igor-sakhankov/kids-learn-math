@@ -8,6 +8,7 @@ import Card from '../components/common/Card';
 import ScreenBackground from '../components/common/ScreenBackground';
 import BackButton from '../components/common/BackButton';
 import { COLORS, SIZING, TYPOGRAPHY, SHADOWS } from '../utils/constants';
+import { ACHIEVEMENT_CATALOG } from '../utils/achievements';
 
 // Number of correct answers a skill needs to fill its bar.
 const SKILL_MASTERY_TARGET = 20;
@@ -21,6 +22,7 @@ const ProgressScreen = ({ navigation }) => {
   const stats = getStats();
   const growth = getGrowthProgress();
   const skills = progress.skillsTracked;
+  const earnedIds = progress.completedAchievements || [];
 
   return (
     <ScreenBackground tint="mint">
@@ -94,6 +96,20 @@ const ProgressScreen = ({ navigation }) => {
             />
           </Card>
 
+          {/* Achievements */}
+          <Card style={styles.achievementsCard}>
+            <Text style={styles.sectionTitle}>{t('achievements.title')}</Text>
+            <View style={styles.achievementsGrid}>
+              {ACHIEVEMENT_CATALOG.map((ach) => (
+                <AchievementTile
+                  key={ach.id}
+                  achievement={ach}
+                  unlocked={earnedIds.includes(ach.id)}
+                />
+              ))}
+            </View>
+          </Card>
+
         </ScrollView>
       </SafeAreaView>
     </ScreenBackground>
@@ -107,6 +123,35 @@ const StatChip = ({ emoji, value, label, color }) => (
     <Text style={styles.statLabel}>{label}</Text>
   </View>
 );
+
+const AchievementTile = ({ achievement, unlocked }) => {
+  const { icon, nameKey, descKey, tint } = achievement;
+  return (
+    <View
+      style={[
+        styles.achievementTile,
+        { backgroundColor: unlocked ? tint : COLORS.lightBlue },
+        !unlocked && styles.achievementLocked,
+      ]}
+    >
+      <Text style={[styles.achievementIcon, !unlocked && styles.achievementIconLocked]}>
+        {unlocked ? icon : '🔒'}
+      </Text>
+      <Text
+        style={[styles.achievementName, !unlocked && styles.achievementTextLocked]}
+        numberOfLines={2}
+      >
+        {t(nameKey)}
+      </Text>
+      <Text
+        style={[styles.achievementDesc, !unlocked && styles.achievementTextLocked]}
+        numberOfLines={2}
+      >
+        {unlocked ? t(descKey) : t('achievements.locked')}
+      </Text>
+    </View>
+  );
+};
 
 const SkillRow = ({ icon, name, percent, color }) => (
   <View style={styles.skillItem}>
@@ -242,6 +287,48 @@ const styles = StyleSheet.create({
   skillFill: {
     height: '100%',
     borderRadius: SIZING.BORDER_RADIUS.pill,
+  },
+  achievementsCard: {
+    marginBottom: SIZING.MARGIN.large,
+  },
+  achievementsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginHorizontal: -6,
+  },
+  achievementTile: {
+    width: '48%',
+    margin: '1%',
+    padding: SIZING.PADDING.medium,
+    borderRadius: SIZING.BORDER_RADIUS.large,
+    alignItems: 'center',
+    minHeight: 140,
+    ...SHADOWS.soft,
+  },
+  achievementLocked: {
+    opacity: 0.6,
+  },
+  achievementIcon: {
+    fontSize: 40,
+    marginBottom: 6,
+  },
+  achievementIconLocked: {
+    fontSize: 32,
+  },
+  achievementName: {
+    fontSize: TYPOGRAPHY.SIZES.body,
+    fontWeight: TYPOGRAPHY.WEIGHTS.bold,
+    color: COLORS.text,
+    textAlign: 'center',
+    marginBottom: 4,
+  },
+  achievementDesc: {
+    fontSize: TYPOGRAPHY.SIZES.small,
+    color: COLORS.textSoft,
+    textAlign: 'center',
+  },
+  achievementTextLocked: {
+    color: COLORS.textSoft,
   },
 });
 

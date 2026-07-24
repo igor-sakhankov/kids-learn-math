@@ -1,0 +1,39 @@
+AGENTS.md
+  s_d4448072d58544::t_90d04f21d61aab 9-11,38-39,45-50,52,56
+ASSET_SPECIFICATIONS.md
+  s_d4448072d58544::t_2e19ad8e8eda50 12-21,24,26,33-34,37-38,40,183
+QUICK_START.md
+  s_d4448072d58544::t_2f832b1a3974ad 49,76,116,130
+README.md
+  s_d4448072d58544::t_2f9ed58830a89d 7,13,44-47,50-51,67-68,73,81,242,251,284,290,316,323,341
+src/components/common/HintBubble.js
+  s_d4448072d58544::t_9fb578d80c6760 7,10
+src/components/common/LeaveConfirmModal.js
+  s_d4448072d58544::t_52580eb4e473a4 18
+src/locales/en.json
+  s_d4448072d58544::t_ca599d60d67d3e 31,66,158
+src/locales/es.json
+  s_d4448072d58544::t_13f319c978fd59 31,66,158
+src/locales/ru.json
+  s_d4448072d58544::t_01220f7626a95e 31,66,158
+src/screens/games/NumberLabyrinthScreen.js
+  s_d4448072d58544::t_7301b6f3d71f81 116
+src/screens/learning/StoryProblemsScreen.js
+  s_d4448072d58544::t_9d0a3a45db8d20 150
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "feff05518401ce910418b1d98a10e8f14da0da79",
+  "prompts": {},
+  "sessions": {
+    "s_d4448072d58544": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "s_d4448072d58544",
+        "model": "unknown"
+      },
+      "human_author": "Igor Sakhankov <igor.sakhankov@glovoapp.com>"
+    }
+  }
+}

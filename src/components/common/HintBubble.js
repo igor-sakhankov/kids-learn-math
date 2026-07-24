@@ -4,10 +4,10 @@ import { t } from '../../utils/i18n';
 import { COLORS, SIZING, TYPOGRAPHY, SHADOWS } from '../../utils/constants';
 
 // Gentle hint card shown after repeated wrong attempts (see useAttemptCounter).
-// Robot-voiced, warm yellow — never framed as punishment.
+// Corgi-voiced, warm yellow — never framed as punishment.
 const HintBubble = ({ text, label }) => (
   <View style={styles.wrap}>
-    <Text style={styles.emoji}>🤖</Text>
+    <Text style={styles.emoji}>🐶</Text>
     <View style={styles.body}>
       <Text style={styles.label}>{label || `💡 ${t('common.hint')}`}</Text>
       <Text style={styles.text}>{text || t('robot.hint_1')}</Text>

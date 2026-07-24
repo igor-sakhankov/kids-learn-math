@@ -6,7 +6,9 @@ Guidance for AI coding assistants working on this repository.
 
 An offline, multilingual React Native app for children aged 6–10 that teaches addition, subtraction, and logical thinking through visual learning modules and minigames. Pedagogy is inspired by Soviet math curricula (Moró, Peterson, Kolmogorov). See `requirements/prd.md` and `requirements/1. MVP.md` for the product spec.
 
-The MVP is implemented (Phase 1 per `README.md`). Visual assets are placeholders (emoji); custom art and audio are planned but not yet in the repo.
+The mascot is **Professor Corgi** — rendered today via the `CorgiHero` component from a placeholder photo (`assets/professor-corgi.jpeg`) on the Welcome / Placement / Ready screens, and as a 🐶 emoji in hint and dialogue bubbles. (The PRD and MVP spec predate this and still call the character "робот Логик / Robot Logik"; treat "Professor Corgi" as the current name — see `requirements/` for the pedagogical intent, not the mascot naming.)
+
+The MVP is implemented (Phase 1 per `README.md`). Custom character art and audio are planned but not yet in the repo.
 
 ## Stack
 
@@ -33,17 +35,25 @@ src/
   contexts/                      State — SettingsContext, ProgressContext, RewardContext
   screens/
     WelcomeScreen.js             Entry + session start
+    PlacementScreen.js           Onboarding placement quiz (gauges starting difficulty)
+    ReadyScreen.js               Post-placement "choose your level" screen
     MainMenuScreen.js            Hub (learn / play / progress / settings)
     ProgressScreen.js            Tree of Reason + stats
     SettingsScreen.js            Language, audio toggles, a11y toggles
     learning/                    AdditionVisual, SubtractionVisual, StoryProblems
     games/                       NumberLabyrinth, FindPair, LostNumbers
-  components/common/             Button, Card (shared UI primitives)
+  components/common/             Shared UI primitives — BackButton, Button, Card, CorgiHero,
+                                 DifficultyPicker, HintBubble, LeaveConfirmModal,
+                                 LessonCompleteModal, NumberPad, ScreenBackground,
+                                 SpeechBubble, StepDots, TileButton
+  hooks/
+    useAttemptCounter.js         Wrong-attempt counter for hint gating (see U10)
   utils/
-    constants.js                 COLORS, DIFFICULTY_LEVELS, GAME_CONFIG, TREE_STAGES, etc.
+    constants.js                 COLORS, DIFFICULTY_LEVELS, GAME_CONFIG, TREE_STAGES, SIZING, etc.
     i18n.js                      i18n instance + t() helper
     storage.js                   AsyncStorage read/write helpers
     questionGenerator.js         Pure functions that produce questions/pairs/sequences
+    achievements.js              Achievement catalog + helpers
   locales/                       en.json, ru.json, es.json
 ```
 

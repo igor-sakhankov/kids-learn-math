@@ -15,7 +15,7 @@ const LeaveConfirmModal = ({ visible, onStay, onLeave }) => (
   >
     <Pressable style={styles.backdrop} onPress={onStay}>
       <Pressable style={styles.card} onPress={() => {}}>
-        <Text style={styles.emoji}>🤖</Text>
+        <Text style={styles.emoji}>🐶</Text>
         <Text style={styles.title}>{t('leave.title')}</Text>
         <Text style={styles.message}>{t('leave.message')}</Text>
         <Button

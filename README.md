@@ -4,13 +4,13 @@ A comprehensive educational React Native app inspired by Soviet pedagogical meth
 
 ## About
 
-Kids Learn Math is a bare React Native application (no Expo) that transforms math education into an engaging, character-driven experience featuring **Robot Logik**. The app combines:
+Kids Learn Math is a bare React Native application (no Expo) that transforms math education into an engaging, character-driven experience featuring **Professor Corgi**. The app combines:
 
 - 📚 **Visual Learning Modules** - Addition, Subtraction, and Story Problems
 - 🎮 **Logic Games** - Number Labyrinth, Find the Pair, Lost Numbers
 - 🌳 **Progress Tracking** - Tree of Reason reward system
 - 🌍 **Multilingual Support** - English, Russian, and Spanish
-- 🎯 **Pedagogical Foundation** - Based on Soviet educational methodology (Moró, Petersen, Kolmogorov)
+- 🎯 **Pedagogical Foundation** - Based on Soviet educational methodology (Moró, Peterson, Kolmogorov)
 
 ## Features
 
@@ -41,12 +41,14 @@ Kids Learn Math is a bare React Native application (no Expo) that transforms mat
 kids-learn-math/
 ├── src/
 │   ├── components/
-│   │   ├── common/          # Reusable UI components (Button, Card)
-│   │   ├── RobotLogik.js    # Animated character (planned)
-│   │   ├── TreeOfReason.js  # Progress visualization (planned)
-│   │   └── ...
+│   │   └── common/          # Shared UI primitives — BackButton, Button, Card,
+│   │                        #   CorgiHero, DifficultyPicker, HintBubble,
+│   │                        #   LeaveConfirmModal, LessonCompleteModal, NumberPad,
+│   │                        #   ScreenBackground, SpeechBubble, StepDots, TileButton
 │   ├── screens/
 │   │   ├── WelcomeScreen.js        # App entry point
+│   │   ├── PlacementScreen.js      # Onboarding placement quiz (gauges starting difficulty)
+│   │   ├── ReadyScreen.js          # Post-placement "choose your level" screen
 │   │   ├── MainMenuScreen.js       # Main navigation hub
 │   │   ├── ProgressScreen.js       # Progress tracking
 │   │   ├── SettingsScreen.js       # App settings
@@ -62,22 +64,21 @@ kids-learn-math/
 │   │   ├── SettingsContext.js      # Language, audio, accessibility
 │   │   ├── ProgressContext.js      # Learning progress tracking
 │   │   └── RewardContext.js        # Tree growth, achievements
+│   ├── hooks/
+│   │   └── useAttemptCounter.js    # Wrong-attempt counter for hint gating
 │   ├── utils/
 │   │   ├── constants.js            # Colors, configs, difficulty levels
 │   │   ├── i18n.js                 # Internationalization setup
 │   │   ├── storage.js              # AsyncStorage helpers
+│   │   ├── achievements.js         # Achievement catalog + helpers
 │   │   └── questionGenerator.js    # Math question generation
 │   ├── locales/
 │   │   ├── en.json                 # English translations
 │   │   ├── ru.json                 # Russian translations
 │   │   └── es.json                 # Spanish translations
-│   ├── assets/
-│   │   ├── characters/             # Robot Logik sprites (planned)
-│   │   ├── objects/                # Visual learning objects (planned)
-│   │   ├── backgrounds/            # Scene backgrounds (planned)
-│   │   └── icons/                  # UI icons and badges (planned)
 │   └── navigation/
 │       └── AppNavigator.js         # React Navigation setup
+├── assets/                         # Static images (currently professor-corgi.jpeg placeholder)
 ├── android/                        # Native Android project
 ├── App.js                          # Root component with context providers
 ├── index.js                        # App entry point
@@ -238,7 +239,7 @@ cd ..
 - [x] Android build hardening (JDK 17 pinned via `.sdkmanrc`)
 
 ### 🚧 In Progress (Phase 2 — Polish & motivation loop)
-- [ ] Custom visual assets (Robot Logik character) — blocked on art production
+- [ ] Custom visual assets (Professor Corgi character) — blocked on art production
 - [ ] Visual learning objects (apples, cubes, etc.) — blocked on art production
 - [ ] Animated Tree of Reason (reanimated growth transitions; tree visual still emoji)
 - [ ] Achievement badges — context scaffolding exists; not wired to screens or triggered from gameplay
@@ -247,7 +248,7 @@ cd ..
 ### 📋 Planned (Phase 3-7)
 - [ ] Audio system (voice guidance, sound effects)
 - [ ] Custom backgrounds
-- [ ] Onboarding flow (structured Robot Logik intro per MVP spec §UX)
+- [ ] Onboarding flow (structured Professor Corgi intro per MVP spec §UX)
 - [ ] Parent dashboard
 - [ ] Weekly progress reports
 - [ ] Unit and integration tests (start with `questionGenerator.js` + context reducers)
@@ -280,13 +281,13 @@ For each screen, produce a short audit note (what works, what fails the checklis
 
 | Screen | Specific things to verify |
 |---|---|
-| `WelcomeScreen` | Start button is the single biggest target; language switch (if any) not mistakable for start; Robot Logik greeting prominent. |
+| `WelcomeScreen` | Start button is the single biggest target; language switch (if any) not mistakable for start; Professor Corgi greeting prominent. |
 | `MainMenuScreen` | Four tiles are equal-weight, each ≥ 120pt square, have icon + label + color. No text-only entries. |
 | `ProgressScreen` | Tree visible without scrolling on a 5" phone; skill bars readable from 50cm; back button reachable with thumb. |
 | `SettingsScreen` | Toggles ≥ 56pt; language chips show flag **and** name; no nested lists. |
 | `AdditionVisualScreen` / `SubtractionVisualScreen` | Objects (apples/cubes) ≥ 72pt; answer input area thumb-reachable; hint appears after 2 wrong tries and is a big button, not a link. |
 | `StoryProblemsScreen` | Story text ≥ 22pt; illustration carries the story if child can't read; answer choices ≥ 72pt. |
-| `NumberLabyrinthScreen` | Path/door tap targets ≥ 72pt; wrong door triggers "Robot thinks" pause, not a red fail; current position always visible. |
+| `NumberLabyrinthScreen` | Path/door tap targets ≥ 72pt; wrong door triggers "Corgi thinks" pause, not a red fail; current position always visible. |
 | `FindPairScreen` | Cards ≥ 88pt square; matched pair animates out clearly; mismatched pair flips back with no penalty text. |
 | `LostNumbersScreen` | Blank slot obvious (pulsing placeholder); number options ≥ 72pt in a single row/grid, no scrolling. |
 
@@ -312,14 +313,14 @@ Self-contained code-only slice that lights up the reward system:
 3. **Reward-event toast** — a lightweight in-app toast/modal on leaf, spark, or badge earn, closing the feedback loop from MVP spec §Story 4.1.
 
 ### M2.3+ — Asset-dependent polish
-Custom Robot Logik art, visual learning objects, voice audio, and onboarding flow — unblocked once asset production lands.
+Custom Professor Corgi art, visual learning objects, voice audio, and onboarding flow — unblocked once asset production lands.
 
 See `requirements/1. MVP.md` and `requirements/prd.md` for the full product spec and roadmap.
 
 ## Asset Development
 
 Custom assets are currently placeholders (emoji). See `ASSET_SPECIFICATIONS.md` for:
-- Robot Logik character specifications
+- Professor Corgi character specifications
 - Visual learning objects
 - Tree of Reason designs
 - Achievement badges
@@ -337,7 +338,7 @@ Based on Soviet pedagogical methods:
 - **Non-competitive motivation** - Internal rewards, no leaderboards
 - **Holistic development** - Logic and critical thinking alongside math
 
-References: Moró, Petersen, Dor0feev, Kolmogorov, Zankov, Suhomlinskii.
+References: Moró, Peterson, Dorofeev, Kolmogorov, Zankov, Suhomlinskii.
 
 ## Contributing
 

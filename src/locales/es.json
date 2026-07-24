@@ -28,7 +28,7 @@
     "keep_growing": "¡Intentemos otra vez y crezcamos!"
   },
   "welcome": {
-    "greeting": "¡Hola! ¡Soy Robot Lógico!",
+    "greeting": "¡Hola! ¡Soy el Profesor Corgi!",
     "question": "¿Quieres ayudarme a construir la Ciudad de Números?",
     "lets_start": "¡Empecemos!"
   },
@@ -63,7 +63,7 @@
     "number_labyrinth": "Laberinto de Números",
     "find_pair": "Encuentra el Par",
     "lost_numbers": "Números Perdidos",
-    "help_robot": "¡Ayuda a Robot Lógico a encontrar el camino!",
+    "help_robot": "¡Ayuda al Profesor Corgi a encontrar el camino!",
     "match_cards": "¡Empareja ecuaciones con respuestas!",
     "complete_sequence": "¡Completa la secuencia!"
   },
@@ -155,7 +155,7 @@
     "age_9": "9 años",
     "age_10": "10 años",
     "tutorial_1": "Toca los objetos para interactuar con ellos",
-    "tutorial_2": "Ayuda a Robot Lógico a resolver problemas",
+    "tutorial_2": "Ayuda al Profesor Corgi a resolver problemas",
     "tutorial_3": "Gana hojas para tu Árbol de la Razón",
     "ready": "¡Estoy Listo!",
     "parent_link": "Para Adultos",

@@ -46,7 +46,7 @@ npm run android
 
 ### Current State (Placeholders)
 - **Visual Objects**: Emoji (🍎🧊🧸🐦🌸⭐)
-- **Robot Logik**: Emoji (🤖)
+- **Professor Corgi**: Photo placeholder (`professor-corgi.jpeg`) as hero; 🐶 emoji in hint/dialogue bubbles
 - **Tree**: Text + progress bar
 - **Backgrounds**: Professor Corgi photo
 
@@ -73,7 +73,7 @@ npm run android
 - [ ] Switch to Russian - verify Cyrillic displays
 - [ ] Switch to Spanish - verify accents display
 - [ ] Story problems translate correctly
-- [ ] Robot Logik messages translate
+- [ ] Professor Corgi messages translate
 
 ### Progress Testing
 - [ ] Complete a lesson → verify +1 leaf
@@ -113,7 +113,7 @@ npm start
 ## Expected Behavior
 
 ### On First Launch
-1. Welcome screen appears with Robot emoji
+1. Welcome screen appears with Professor Corgi hero image
 2. Language detected from device (or defaults to English)
 3. Empty progress (0 leaves, 0 sparks)
 
@@ -127,7 +127,7 @@ npm start
 1. All UI text updates immediately
 2. Preference saved
 3. Story problems regenerate in new language
-4. Robot messages update
+4. Professor Corgi messages update
 
 ## Performance Expectations
 

@@ -113,7 +113,7 @@ const NumberLabyrinthScreen = ({ navigation }) => {
           </View>
 
           <View style={styles.doorRow}>
-            <Text style={styles.robotEmoji}>🤖</Text>
+            <Text style={styles.robotEmoji}>🐶</Text>
             <View style={styles.questionBubble}>
               <Text style={styles.questionText}>{question.text} = ?</Text>
             </View>

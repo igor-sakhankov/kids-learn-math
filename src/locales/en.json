@@ -28,7 +28,7 @@
     "keep_growing": "Let's try again and grow!"
   },
   "welcome": {
-    "greeting": "Hello! I'm Robot Logik!",
+    "greeting": "Hello! I'm Professor Corgi!",
     "question": "Do you want to help me build the Number City?",
     "lets_start": "Let's Start!"
   },
@@ -63,7 +63,7 @@
     "number_labyrinth": "Number Labyrinth",
     "find_pair": "Find the Pair",
     "lost_numbers": "Lost Numbers",
-    "help_robot": "Help Robot Logik find the way!",
+    "help_robot": "Help Professor Corgi find the way!",
     "match_cards": "Match equations with answers!",
     "complete_sequence": "Complete the sequence!"
   },
@@ -155,7 +155,7 @@
     "age_9": "9 years",
     "age_10": "10 years",
     "tutorial_1": "Tap objects to interact with them",
-    "tutorial_2": "Help Robot Logik solve problems",
+    "tutorial_2": "Help Professor Corgi solve problems",
     "tutorial_3": "Earn leaves for your Tree of Reason",
     "ready": "I'm Ready!",
     "parent_link": "For Grown-ups",

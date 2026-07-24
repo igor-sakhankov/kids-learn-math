@@ -147,7 +147,7 @@ const StoryProblemsScreen = ({ navigation }) => {
           </View>
 
           <View style={styles.robotBubble}>
-            <Text style={styles.robotEmoji}>🤖</Text>
+            <Text style={styles.robotEmoji}>🐶</Text>
             <View style={styles.robotTextWrap}>
               <Text style={styles.robotSpeech}>{t('robot.encourage_1')}</Text>
             </View>

@@ -9,26 +9,35 @@ This document specifies all visual and audio assets needed for the MVP.
 - **Character**: Friendly, approachable, encouraging
 - **Format**: PNG for images, SVG where possible for scalability
 
-## 1. Robot Logik Character
+> **Note on paths:** The `/src/assets/...` locations below are the *planned* home for
+> custom art. Today the repo ships assets at the top-level `assets/` folder (currently
+> just `professor-corgi.jpeg`). Create `src/assets/` (or keep top-level `assets/`) when
+> the real art lands and update code `require(...)` paths accordingly.
+
+## 1. Professor Corgi Character
+
+> The mascot is **Professor Corgi**. A placeholder photo (`assets/professor-corgi.jpeg`)
+> ships today, rendered via the `CorgiHero` component; the states below are the
+> planned custom-art replacement.
 
 ### Required States
-1. **Greeting** - Robot waving
+1. **Greeting** - Corgi waving a paw
 2. **Happy** - Smiling, thumbs up
-3. **Thinking** - Hand on chin, thoughtful expression
+3. **Thinking** - Paw on chin, thoughtful expression
 4. **Encouraging** - Pointing forward, motivating gesture
 5. **Celebrating** - Jumping, stars around
 
 ### Specifications
 - **Size**: 512x512px base resolution
 - **Export sizes**: @1x, @2x, @3x for React Native
-- **File naming**: `robot_logik_greeting.png`, `robot_logik_happy.png`, etc.
-- **Location**: `/src/assets/characters/`
+- **File naming**: `professor_corgi_greeting.png`, `professor_corgi_happy.png`, etc.
+- **Location**: `assets/` (or a `assets/characters/` subfolder once art lands)
 
 ### Design Notes
-- Friendly robot with rounded features
-- Warm color palette (blues, oranges, gentle metallics)
+- Friendly corgi professor with rounded features (glasses / mortarboard optional)
+- Warm color palette (soft oranges, creams, gentle earth tones)
 - Large, expressive eyes
-- Simple geometric shapes
+- Simple, readable shapes
 - Soviet illustration style reference
 
 ## 2. Visual Learning Objects
@@ -171,7 +180,7 @@ This document specifies all visual and audio assets needed for the MVP.
 
 ### Phase 2: Core Assets
 Priority order:
-1. Robot Logik character (5 states)
+1. Professor Corgi character (5 states)
 2. Visual learning objects (6 types)
 3. Tree of Reason (3 stages + elements)
 4. Achievement badges (4 types)
